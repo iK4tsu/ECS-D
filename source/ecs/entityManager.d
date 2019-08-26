@@ -82,7 +82,12 @@ class EntityManager
 
 	public bool HasEntity(EntityId id)
 	{
-		return (((id in _mEntities) != null) ? true : false);
+		return (((id in _mEntities) !is null) ? true : false);
+	}
+
+	public Entity GetEntity(EntityId id)
+	{
+		return (((id in _mEntities) !is null) ? _mEntities[id] : null);
 	}
 }
 
