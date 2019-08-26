@@ -32,10 +32,13 @@ class EntityManager
 	}
 
 
-	public void AddComponent(EntityId id, ComponentType index, IComponent component)
+	template AddComponent(T)
 	{
-		if (HasEntity(id))
-			_mEntities[id].AddComponent(index, component);
+		public void AddComponent(EntityId id, ComponentType index)
+		{
+			if (HasEntity(id))
+				_mEntities[id].AddComponent!(T)(index);
+		}
 	}
 
 	public void RemoveComponent(EntityId id, ComponentType index)
@@ -44,9 +47,12 @@ class EntityManager
 			_mEntities[id].RemoveComponent(index);
 	}
 
-	public IComponent GetComponent(EntityId id, ComponentType index)
+	template GetComponent(T)
 	{
-		return HasEntity(id) ? _mEntities[id].GetComponent(index) : null;
+		public T GetComponent(EntityId id, ComponentType index)
+		{
+			return HasEntity(id) ? _mEntities[id].GetComponent!(T)(index) : null;
+		}
 	}
 
 	public IComponent[] GetComponents(EntityId id, ComponentType index)
@@ -95,17 +101,16 @@ unittest
 {
 	EntityManager manager = new EntityManager();
 	EntityId eid = manager.CreateEntity();
-	PositionComponent position = new PositionComponent();
 
-	manager.AddComponent(eid, Position, position);
+	manager.AddComponent!(PositionComponent)(eid, Position);
 
 	assert(manager.HasComponent(eid, Position));
-	assert(manager.GetComponent(eid, Position) == position);
+	assert(is(typeof(manager.GetComponent!(PositionComponent)(eid, Position)) == PositionComponent));
 
 	manager.RemoveComponent(eid, Position);
 
 	assert(!manager.HasComponent(eid, Position));
-	assert(manager.GetComponent(eid, Position) is null);
+	assert(manager.GetComponent!(PositionComponent)(eid, Position) is null);
 
 }
 

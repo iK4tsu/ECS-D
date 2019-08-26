@@ -5,10 +5,10 @@ import ecs.componentType;
 
 public interface IEntity
 {
-	public void AddComponent(ComponentType index, IComponent component);
+	template AddComponent(T) { public void AddComponent(ComponentType index); }
 	public void RemoveComponent(ComponentType index);
 
-	public IComponent GetComponent(ComponentType index);
+	template GetComponent(T) { public IComponent GetComponent(ComponentType index); }
 	public IComponent[] GetComponents();
 	public ComponentType[] GetComponentTypes();
 

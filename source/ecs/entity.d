@@ -25,11 +25,15 @@ class Entity : IEntity
 	 * Each component has a an unique index based on it's type
 	 * Use it's type instead of manual inserting an index
 	 */
-	public void AddComponent(ComponentType index, IComponent component)
+	template AddComponent(T)
 	{
-		if (!HasComponent(index))
+		public void AddComponent(ComponentType index)
 		{
-			_components[index] = component;
+			if (!HasComponent(index))
+			{
+				T t = new T();
+				_components[index] = t;
+			}
 		}
 	}
 
@@ -53,16 +57,20 @@ class Entity : IEntity
 	 * Each component has an unique index based on it's type
 	 * Use it's type instead of manual inserting an index 
 	 */
-	public IComponent GetComponent(ComponentType index)
+	template GetComponent(T)
 	{
-		if (HasComponent(index))
-			return _components[index];
-		return null;
+		public T GetComponent(ComponentType index)
+		{
+			if (HasComponent(index))
+				return cast(T)(_components[index]);
+			return null;
+		}
 	}
 
 
 	/*
 	 * Get all components
+	 * If possible use the GetComponent template, as it returns the respective type
 	 */
 	public IComponent[] GetComponents()
 	{
@@ -153,16 +161,15 @@ unittest
 
 	Entity e = new Entity();
 
-	_PositionComponent position = new _PositionComponent();
-	e.AddComponent(Position, position);
+	e.AddComponent!(PositionComponent)(Position);
 
 	assert(e.HasAnyComponent([Position, Health]));
 	assert(e.HasComponent(Position));
-	assert(e.GetComponent(Position) == position);
+	assert(is(typeof(e.GetComponent!(PositionComponent)(Position)) == PositionComponent));
 
 	e.RemoveComponent(Position);
 
 	assert(!e.HasAnyComponent([Position, Health]));
 	assert(!e.HasComponent(Position));
-	assert(e.GetComponent(Position) is null);
+	assert(e.GetComponent!(PositionComponent)(Position) is null);
 }
