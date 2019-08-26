@@ -42,7 +42,7 @@ class System
 		{
 			foreach(system; _systems)
 			{
-				system.update(eid);
+				system.Update(eid);
 			}
 		}
 	}

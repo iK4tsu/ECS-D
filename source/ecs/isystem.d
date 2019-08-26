@@ -7,7 +7,7 @@ import ecs.hub;
 
 public interface ISystem
 {
-	public void update(EntityId eid);
+	public void Update(EntityId eid);
 	public void SetHub(Hub hub);
 }
 
@@ -18,7 +18,7 @@ class MovementSystem : ISystem
 
 	public void SetHub(Hub hub) { _hub = hub; }
 
-	public void update(EntityId eid)
+	public void Update(EntityId eid)
 	{
 		PositionComponent position;
 		MovableComponent movable;
@@ -32,4 +32,30 @@ class MovementSystem : ISystem
 			position.y += movable.moveY;
 		}
 	}
+}
+
+
+unittest
+{
+	Hub _hub = new Hub;
+	MovementSystem _system = new MovementSystem();
+	_system.SetHub(_hub);
+
+	EntityId e = _hub._entityManager.CreateEntity();
+	Entity _entity = _hub._entityManager.GetEntity(e);
+
+	_entity.AddComponent!(PositionComponent)(Position);
+	_entity.AddComponent!(MovableComponent)(Movable);
+
+	_entity.GetComponent!(MovableComponent)(Movable).moveX = 4;
+
+	_system.Update(e);
+
+	assert(_entity.GetComponent!(PositionComponent)(Position).x == 4);
+
+	_entity.RemoveComponent(Movable);
+
+	_system.Update(e);
+
+	assert(_entity.GetComponent!(PositionComponent)(Position).x == 4);
 }
