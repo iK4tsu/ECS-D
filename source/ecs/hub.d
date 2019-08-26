@@ -5,17 +5,20 @@ import ecs.icomponent;
 import ecs.componentType;
 import ecs.entityManager;
 import ecs.componentManager;
+import ecs.system;
 
 
 class Hub
 {
 	public EntityManager _entityManager;
 	public ComponentManager _componentManager;
+	public System _system;
 
 	public this()
 	{
 		_entityManager = new EntityManager();
 		_componentManager = new ComponentManager();
+		_system = new System(this);
 	}
 
 
@@ -51,6 +54,11 @@ class Hub
 	{
 		return _componentManager.HasComponent(index);
 	}
+
+	public void UpdateSystems()
+	{
+		_system.Update();
+	}
 }
 
 
@@ -60,5 +68,5 @@ unittest
 
 	_hub.CreateComponent!(PositionComponent)(Position);
 
-	assert(is(typeof(_hub._componentManager.GetComponent!(PositionComponent)(Position)) == PositionComponent));
+	assert(is(typeof(_hub.GetComponent!(PositionComponent)(Position)) == PositionComponent));
 }
