@@ -38,6 +38,19 @@ class Hub
 			_componentManager.CreateComponent!(T)(index);
 		}
 	}
+
+	template GetComponent(T)
+	{
+		public T GetComponent(ComponentType index)
+		{
+			return _componentManager.GetComponent!(T)(index);
+		}
+	}
+
+	public bool ComponentExists(ComponentType index)
+	{
+		return _componentManager.HasComponent(index);
+	}
 }
 
 
