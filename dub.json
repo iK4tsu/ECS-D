@@ -1,0 +1,22 @@
+{
+	"name": "searchandsurvive",
+	"description": "Never fail, always conquer",
+	"license": "MIT",
+
+	"authors": [
+		"katsu"
+	],
+
+	"sourcePaths": ["source"],
+	"importPaths": [
+		"source"
+	],
+
+	"targetName": "searchAndSurvive",
+	"targetPath": "bin",
+
+	"dependencies": {
+		"silly": "~>0.8.2",
+		"riverd-ncurses": "~>1.0.4"
+	}
+}
