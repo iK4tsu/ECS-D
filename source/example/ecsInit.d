@@ -11,14 +11,18 @@ import ecs.isystem;
 import ecs.entity;
 
 
+import std.stdio;
+import std.string : chomp;
+
+
 void exampleInit()
 {
 	Hub _hub = new Hub();
 
+
 	/*
 	 * you should generate systems and components first and entities last
 	 */
-
 	generateSystems(_hub);
 	generateComponents(_hub);
 	generateEntities(_hub);
@@ -30,13 +34,12 @@ void exampleInit()
 	assert(_hub._entityManager.HasComponents(playerExample, [Position, Movable]));
 	assert(is(typeof(_hub._system._systems["MovementSystem"]) == ISystem));
 
+
 	/*
 	 * for now you have to set ids manualy to your systems
 	 */
 	_hub._system.SetEids([playerExample]);
 
-	import std.stdio;
-	import std.string : chomp;
 
 	do
 	{
@@ -48,13 +51,13 @@ void exampleInit()
 		switch (readln.chomp)
 		{
 			case "move":
-				_hub.EnableComponent(playerExample, Movable);
+				_hub.EntityEnableComponent(playerExample, Movable);
 				break;
 			default:
-				_hub.DisableComponent(playerExample, Movable);
+				_hub.EntityDisableComponent(playerExample, Movable);
 		}
 
 		_hub.UpdateSystems;
-		writeln("Your 'x' position: ", _hub.GetComponent!(PositionComponent)(playerExample, Position).x);
+		writeln("Your 'x' position: ", _hub.EntityGetComponent!(PositionComponent)(playerExample).x);
 	} while (true);
 }

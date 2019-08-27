@@ -23,15 +23,31 @@ class System
 	{
 		public void CreateSystem()
 		{
-			string name = T.stringof;
-			import std.stdio;
-			writeln(name);
-			if (name !in _systems)
+			if (!ExistsSystem!T)
 			{
 				T t = new T();
-				_systems[name] = t;
+				_systems[T.stringof] = t;
 				t.SetHub(_hub);
 			}
+		}
+	}
+
+	template GetSystem(T)
+	{
+		public T GetSystem()
+		{
+			if (ExistsSystem!T)
+			{
+				return cast(T)(_systems[T.stringof]);
+			}
+		}
+	}
+
+	template ExistsSystem(T)
+	{
+		public bool ExistsSystem()
+		{
+			return (((T.stringof in _systems) !is null) ? true : false); 
 		}
 	}
 
