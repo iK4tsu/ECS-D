@@ -9,12 +9,12 @@ import ecs.componentType;
 
 public static EntityId createPlayerExample(ref Hub hub)
 {
-	EntityId playerExample = hub.CreateEntity;
+	EntityId playerExample = hub.EntityCreate;
 
-	hub.AddComponent!(PositionComponent)(playerExample, Position);
-	hub.AddComponent!(MovableComponent)(playerExample, Movable);
+	hub.EntityAddComponent!(PositionComponent)(playerExample);
+	hub.EntityAddComponent!(MovableComponent)(playerExample);
 
-	hub.GetComponent!(MovableComponent)(playerExample, Movable).moveX = 4;
+	hub.EntityGetComponent!(MovableComponent)(playerExample).moveX = 4;
 
 	return playerExample;
 }
