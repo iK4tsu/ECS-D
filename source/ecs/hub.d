@@ -52,6 +52,16 @@ class Hub
 		return _entityManager.CreateEntity;
 	}
 
+	public void EnableComponent(EntityId id, ComponentType index)
+	{
+		_entityManager.EnableComponent(id, index);
+	}
+
+	public void DisableComponent(EntityId id, ComponentType index)
+	{
+		_entityManager.DisableComponent(id, index);
+	}
+
 
 	/********************************************* COMPONENT MANAGER FUNCTIONS *********************************************/
 	template CreateComponent(T)

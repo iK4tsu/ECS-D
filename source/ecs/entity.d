@@ -12,6 +12,7 @@ class Entity : IEntity
 {
 	public EntityId _id;
 	public IComponent[ComponentType] _components;
+	public IComponent[ComponentType] _disabledComponents;
 
 
 	public this()
@@ -47,7 +48,36 @@ class Entity : IEntity
 	{
 		if (HasComponent(index))
 		{
+			destroy(_components[index]);
 			_components.remove(index);
+		}
+	}
+
+
+	/*
+	 * Moves an existing component to the disbled component array
+	 * Only use this function if the entity needs the component in the future
+	 * If the entity doesn't need it anymore use the 'RemoveComponent' function
+	 */
+	public void DisableComponent(ComponentType index)
+	{
+		if (HasComponent(index))
+		{
+			_disabledComponents[index] = _components[index];
+			_components.remove(index);
+		}
+	}
+
+
+	/*
+	 * Enables a component if this is disabled
+	 */
+	public void EnableComponent(ComponentType index)
+	{
+		if (IsComponentDisabled(index))
+		{
+			_components[index] = _disabledComponents[index];
+			_disabledComponents.remove(index);
 		}
 	}
 
@@ -140,6 +170,18 @@ class Entity : IEntity
 		}
 		return false;
 	}
+
+
+	/*
+	 * Returns if a component is disabled
+	 * It doesn't return any info about the existance of the component
+	 * If the entity doesn't contain the component neither in '_components' nor '_disabledComponents' it will just return false
+	 * For that reason it is recomended not to use this function
+	 */
+	public bool IsComponentDisabled(ComponentType index)
+	{
+		return (((index in _disabledComponents) !is null) ? true : false);
+	}
 }
 
 
@@ -154,11 +196,6 @@ unittest
 
 unittest
 {
-	class _PositionComponent : IComponent
-	{
-		int data = 0;
-	}
-
 	Entity e = new Entity();
 
 	e.AddComponent!(PositionComponent)(Position);
@@ -172,4 +209,18 @@ unittest
 	assert(!e.HasAnyComponent([Position, Health]));
 	assert(!e.HasComponent(Position));
 	assert(e.GetComponent!(PositionComponent)(Position) is null);
+}
+
+unittest
+{
+	Entity e = new Entity();
+
+	e.AddComponent!(PositionComponent)(Position);
+
+	assert(!e.IsComponentDisabled(Position));
+
+	e.DisableComponent(Position);
+
+	assert(!e.HasComponent(Position));
+	assert(e.IsComponentDisabled(Position));
 }
