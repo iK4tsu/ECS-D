@@ -3,10 +3,12 @@ module ecs.componentManager;
 import ecs.componentType;
 import ecs.icomponent;
 
+alias ComponentName = string;
 
 class ComponentManager
 {
-	private IComponent[ComponentType] _components;
+	private IComponent[ComponentName] _components;
+	private ComponentType[ComponentName] _types;
 
 
 	public this() {}
@@ -16,25 +18,37 @@ class ComponentManager
 	{
 		public void CreateComponent(ComponentType index)
 		{
-			T t = new T();
-			if (!HasComponent(index))
-				_components[index] = t;
+			if (!(HasComponent!T))
+			{
+				_components[T.stringof] = new T();
+				_types[T.stringof] = index;
+			}
 		}
 	}
 
-	public bool HasComponent(ComponentType index)
+	template HasComponent(T)
 	{
-		return (((index in _components) != null) ? true : false);
+		public bool HasComponent()
+		{
+			return (((T.stringof in _components) !is null) ? true : false);
+		}
 	}
-
 
 	template GetComponent(T)
 	{
-		public T GetComponent(ComponentType index)
+		public T GetComponent()
 		{
-			if (HasComponent(index))
-				return cast(T)(_components[index]);
+			if (HasComponent!T)
+				return cast(T)(_components[T.stringof]);
 			return null;
+		}
+	}
+
+	template GetType(T)
+	{
+		public ComponentType GetType()
+		{
+			return _types[T.stringof];
 		}
 	}
 }
@@ -42,12 +56,16 @@ class ComponentManager
 
 unittest
 {
-	ComponentManager manager = new ComponentManager;
+	ComponentManager manager = new ComponentManager();
 	manager.CreateComponent!(PositionComponent)(Position);
 
-	assert(manager.HasComponent(Position));
+	assert(manager.HasComponent!PositionComponent);
 
-	PositionComponent position = manager.GetComponent!(PositionComponent)(Position);
+	PositionComponent position = manager.GetComponent!PositionComponent;
 
-	assert(manager.GetComponent!(PositionComponent)(Position) == position);
+	assert(manager.GetComponent!PositionComponent == position);
+
+	assert((manager.GetType!PositionComponent) == Position);
+
+	//assert(is(typeof(manager.GetComponent!PositionComponent) == PositionComponent));
 }
