@@ -19,15 +19,19 @@ class System
 	}
 
 
-	public void CreateSystem(ISystem system)
+	template CreateSystem(T)
 	{
-		import std.conv : to;
-		SystemName name = to!(string)(system);
-		
-		if (name !in _systems)
+		public void CreateSystem()
 		{
-			_systems[name] = system;
-			system.SetHub(_hub);
+			string name = T.stringof;
+			import std.stdio;
+			writeln(name);
+			if (name !in _systems)
+			{
+				T t = new T();
+				_systems[name] = t;
+				t.SetHub(_hub);
+			}
 		}
 	}
 
