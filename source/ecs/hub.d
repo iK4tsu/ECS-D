@@ -23,58 +23,77 @@ class Hub
 
 
 	/********************************************* ENTITY MANAGER FUNCTIONS *********************************************/
-	template AddComponent(T)
+	template EntityAddComponent(T)
 	{
-		public void AddComponent(EntityId id, ComponentType index)
+		public void EntityAddComponent(EntityId id)
 		{
-			if (ComponentExists(index))
+			if (ComponentExists!T)
 			{
-				_entityManager.AddComponent!(T)(id, index);
+				_entityManager.AddComponent!(T)(id, ComponentGetType!T);
 			}
 		}
 	}
 
-	public void RemoveComponent(EntityId id, ComponentType index)
+	public void EntityRemoveComponent(EntityId id, ComponentType index)
 	{
 		_entityManager.RemoveComponent(id, index);
 	}
 
-	template GetComponent(T)
+	template EntityGetComponent(T)
 	{
-		public T GetComponent(EntityId id, ComponentType index)
+		public T EntityGetComponent(EntityId id)
 		{
-			return _entityManager.GetComponent!(T)(id, index);
+			return _entityManager.GetComponent!(T)(id, ComponentGetType!T);
 		}
 	}
 
-	public EntityId CreateEntity()
+	public EntityId EntityCreate()
 	{
 		return _entityManager.CreateEntity;
 	}
 
-	public void EnableComponent(EntityId id, ComponentType index)
+	public void EntityEnableComponent(EntityId id, ComponentType index)
 	{
 		_entityManager.EnableComponent(id, index);
 	}
 
-	public void DisableComponent(EntityId id, ComponentType index)
+	public void EntityDisableComponent(EntityId id, ComponentType index)
 	{
 		_entityManager.DisableComponent(id, index);
 	}
 
 
 	/********************************************* COMPONENT MANAGER FUNCTIONS *********************************************/
-	template CreateComponent(T)
+	template ComponentCreate(T)
 	{
-		public void CreateComponent(ComponentType index)
+		public void ComponentCreate(ComponentType index)
 		{
 			_componentManager.CreateComponent!(T)(index);
 		}
 	}
 
-	public bool ComponentExists(ComponentType index)
+	template ComponentExists(T)
 	{
-		return _componentManager.HasComponent(index);
+		public bool ComponentExists()
+		{
+			return _componentManager.HasComponent!T;
+		}
+	}
+
+	template ComponentGet(T)
+	{
+		public T ComponentGet()
+		{
+			return _componentManager.GetComponent!T;
+		}
+	}
+
+	template ComponentGetType(T)
+	{
+		public T ComponentGetType()
+		{
+			return _componentManager.GetType!T;
+		}
 	}
 
 
@@ -84,11 +103,27 @@ class Hub
 		_system.Update();
 	}
 
-	template CreateSystem(T)
+	template SystemCreate(T)
 	{
-		public void CreateSystem()
+		public void SystemCreate()
 		{
-			_system.CreateSystem!(T);
+			_system.CreateSystem!T;
+		}
+	}
+
+	template SystemGet(T)
+	{
+		public T SystemGet()
+		{
+			return _system.GetSystem!T;
+		}
+	}
+
+	template SystemExists(T)
+	{
+		public bool SystemExists()
+		{
+			return _system.ExistsSystem!T;
 		}
 	}
 }
@@ -98,7 +133,21 @@ unittest
 {
 	Hub mHub = new Hub();
 
-	mHub.CreateComponent!(PositionComponent)(Position);
+	mHub.ComponentCreate!(PositionComponent)(Position);
 
-	assert(is(typeof(mHub._componentManager.GetComponent!(PositionComponent)(Position)) == PositionComponent));
+	assert(mHub.ComponentExists!PositionComponent);
+	assert(!mHub.ComponentExists!MovableComponent);
+}
+
+unittest
+{
+	Hub hub = new Hub();
+
+	hub.ComponentCreate!(PositionComponent)(Position);
+
+	EntityId e = hub.EntityCreate;
+
+	hub.EntityAddComponent!PositionComponent(e);
+	
+	assert(is(typeof(hub.EntityGetComponent!PositionComponent(e)) == PositionComponent));
 }
