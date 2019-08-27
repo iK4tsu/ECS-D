@@ -8,6 +8,7 @@ import example.entityFactory;
 import ecs.icomponent;
 import ecs.componentType;
 import ecs.isystem;
+import ecs.entity;
 
 
 void exampleInit()
@@ -22,15 +23,17 @@ void exampleInit()
 	generateComponents(_hub);
 	generateEntities(_hub);
 
+	EntityId playerExample = 1;
 
-	assert(_hub._entityManager.HasEntity(0));
-	assert(_hub._entityManager.HasComponents(0, [Position, Movable]));
+
+	assert(_hub._entityManager.HasEntity(playerExample));
+	assert(_hub._entityManager.HasComponents(playerExample, [Position, Movable]));
 	assert(is(typeof(_hub._system._systems["MovementSystem"]) == ISystem));
 
 	/*
 	 * for now you have to set ids manualy to your systems
 	 */
-	_hub._system.SetEids([0]);
+	_hub._system.SetEids([playerExample]);
 
 	import std.stdio;
 	import std.string : chomp;
@@ -45,14 +48,14 @@ void exampleInit()
 		switch (readln.chomp)
 		{
 			case "move":
-				_hub.AddComponent!(MovableComponent)(0, Movable);
-				_hub.GetComponent!(MovableComponent)(0, Movable).moveX = 4;
+				_hub.AddComponent!(MovableComponent)(playerExample, Movable);
+				_hub.GetComponent!(MovableComponent)(playerExample, Movable).moveX = 4;
 				break;
 			default:
-				_hub.RemoveComponent(0, Movable);
+				_hub.RemoveComponent(playerExample, Movable);
 		}
 
 		_hub.UpdateSystems;
-		writeln("Your 'x' position: ", _hub.GetComponent!(PositionComponent)(0, Position).x);
+		writeln("Your 'x' position: ", _hub.GetComponent!(PositionComponent)(playerExample, Position).x);
 	} while (true);
 }
