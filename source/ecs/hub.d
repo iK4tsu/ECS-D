@@ -22,18 +22,38 @@ class Hub
 	}
 
 
+	/********************************************* ENTITY MANAGER FUNCTIONS *********************************************/
 	template AddComponent(T)
 	{
 		public void AddComponent(EntityId id, ComponentType index)
 		{
-			if (_componentManager.HasComponent(index))
+			if (ComponentExists(index))
 			{
-				_entityManager.AddComponent(id, index, new T());
+				_entityManager.AddComponent!(T)(id, index);
 			}
 		}
 	}
 
+	public void RemoveComponent(EntityId id, ComponentType index)
+	{
+		_entityManager.RemoveComponent(id, index);
+	}
 
+	template GetComponent(T)
+	{
+		public T GetComponent(EntityId id, ComponentType index)
+		{
+			return _entityManager.GetComponent!(T)(id, index);
+		}
+	}
+
+	public EntityId CreateEntity()
+	{
+		return _entityManager.CreateEntity;
+	}
+
+
+	/********************************************* COMPONENT MANAGER FUNCTIONS *********************************************/
 	template CreateComponent(T)
 	{
 		public void CreateComponent(ComponentType index)
@@ -42,31 +62,33 @@ class Hub
 		}
 	}
 
-	template GetComponent(T)
-	{
-		public T GetComponent(ComponentType index)
-		{
-			return _componentManager.GetComponent!(T)(index);
-		}
-	}
-
 	public bool ComponentExists(ComponentType index)
 	{
 		return _componentManager.HasComponent(index);
 	}
 
+
+	/*************************************************** SYSTEM FUNCTIONS **************************************************/
 	public void UpdateSystems()
 	{
 		_system.Update();
+	}
+
+	template CreateSystem(T)
+	{
+		public void CreateSystem()
+		{
+			_system.CreateSystem!(T);
+		}
 	}
 }
 
 
 unittest
 {
-	Hub _hub = new Hub();
+	Hub mHub = new Hub();
 
-	_hub.CreateComponent!(PositionComponent)(Position);
+	mHub.CreateComponent!(PositionComponent)(Position);
 
-	assert(is(typeof(_hub.GetComponent!(PositionComponent)(Position)) == PositionComponent));
+	assert(is(typeof(mHub._componentManager.GetComponent!(PositionComponent)(Position)) == PositionComponent));
 }
