@@ -90,7 +90,7 @@ class Hub
 
 	template ComponentGetType(T)
 	{
-		public T ComponentGetType()
+		public ComponentType ComponentGetType()
 		{
 			return _componentManager.GetType!T;
 		}
