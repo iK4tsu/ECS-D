@@ -48,11 +48,10 @@ void exampleInit()
 		switch (readln.chomp)
 		{
 			case "move":
-				_hub.AddComponent!(MovableComponent)(playerExample, Movable);
-				_hub.GetComponent!(MovableComponent)(playerExample, Movable).moveX = 4;
+				_hub.EnableComponent(playerExample, Movable);
 				break;
 			default:
-				_hub.RemoveComponent(playerExample, Movable);
+				_hub.DisableComponent(playerExample, Movable);
 		}
 
 		_hub.UpdateSystems;

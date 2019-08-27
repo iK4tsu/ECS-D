@@ -55,6 +55,18 @@ class EntityManager
 		}
 	}
 
+	public void EnableComponent(EntityId id, ComponentType index)
+	{
+		if (HasEntity(id))
+			_mEntities[id].EnableComponent(index);
+	}
+
+	public void DisableComponent(EntityId id, ComponentType index)
+	{
+		if (HasEntity(id))
+			_mEntities[id].DisableComponent(index);
+	}
+
 	public IComponent[] GetComponents(EntityId id, ComponentType index)
 	{
 		return HasEntity(id) ? _mEntities[id].GetComponents : null;
