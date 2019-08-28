@@ -78,33 +78,24 @@ class Hub
 
 
 	/*************************************************** SYSTEM FUNCTIONS **************************************************/
-	public void UpdateSystems()
+	public void updateSystems()
 	{
-		_system.Update();
+		_system.update();
 	}
 
-	template SystemCreate(T)
+	public void systemCreate(T)()
 	{
-		public void SystemCreate()
-		{
-			_system.CreateSystem!T;
-		}
+		_system.createSystem!T;
 	}
 
-	template SystemGet(T)
+	public T systemGet(T)()
 	{
-		public T SystemGet()
-		{
-			return _system.GetSystem!T;
-		}
+		return _system.getSystem!T;
 	}
 
-	template SystemExists(T)
+	public bool systemExists(T)()
 	{
-		public bool SystemExists()
-		{
-			return _system.ExistsSystem!T;
-		}
+		return _system.existsSystem!T;
 	}
 }
 

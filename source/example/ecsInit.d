@@ -38,7 +38,7 @@ void exampleInit()
 	/*
 	 * for now you have to set ids manualy to your systems
 	 */
-	_hub._system.SetEids([playerExample]);
+	_hub._system.setEids([playerExample]);
 
 
 	do
@@ -57,7 +57,7 @@ void exampleInit()
 				_hub.entityDisableComponent(playerExample, Movable);
 		}
 
-		_hub.UpdateSystems;
+		_hub.updateSystems;
 		writeln("Your 'x' position: ", _hub.entityGetComponent!PositionComponent(playerExample).x);
 	} while (true);
 }

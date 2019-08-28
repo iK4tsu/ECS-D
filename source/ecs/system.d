@@ -19,50 +19,41 @@ class System
 	}
 
 
-	template CreateSystem(T)
+	public void createSystem(T)()
 	{
-		public void CreateSystem()
+		if (!existsSystem!T)
 		{
-			if (!ExistsSystem!T)
-			{
-				T t = new T();
-				_systems[T.stringof] = t;
-				t.SetHub(_hub);
-			}
+			T t = new T();
+			_systems[T.stringof] = t;
+			t.setHub(_hub);
 		}
 	}
 
-	template GetSystem(T)
+	public T getSystem(T)()
 	{
-		public T GetSystem()
+		if (ExistsSystem!T)
 		{
-			if (ExistsSystem!T)
-			{
-				return cast(T)(_systems[T.stringof]);
-			}
+			return cast(T)(_systems[T.stringof]);
 		}
 	}
 
-	template ExistsSystem(T)
+	public bool existsSystem(T)()
 	{
-		public bool ExistsSystem()
-		{
-			return (((T.stringof in _systems) !is null) ? true : false); 
-		}
+		return (T.stringof in _systems) !is null; 
 	}
 
-	public void SetEids(EntityId[] eids)
+	public void setEids(EntityId[] eids)
 	{
 		_eids = eids;
 	}
 
-	public void Update()
+	public void update()
 	{
 		foreach(eid; _eids)
 		{
 			foreach(system; _systems)
 			{
-				system.Update(eid);
+				system.update(eid);
 			}
 		}
 	}
