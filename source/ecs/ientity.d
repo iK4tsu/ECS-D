@@ -2,17 +2,18 @@ module ecs.ientity;
 
 import ecs.icomponent;
 import ecs.componentType;
+import ecs.componentManager;
 
 public interface IEntity
 {
-	template AddComponent(T) { public void AddComponent(ComponentType index); }
-	public void RemoveComponent(ComponentType index);
+	public void addComponent(T)(ComponentTypeId id);
+	public void removeComponent(ComponentTypeId id);
 
-	template GetComponent(T) { public IComponent GetComponent(ComponentType index); }
-	public IComponent[] GetComponents();
-	public ComponentType[] GetComponentTypes();
+	public T getComponent(T)();
+	public IComponent[] getComponents();
+	public ComponentTypeId[] getComponentTypes();
 
-	public bool HasComponent(ComponentType index);
-	public bool HasComponents(ComponentType[] indices);
-	public bool HasAnyComponent(ComponentType[] indices);
+	public bool hasComponent(ComponentTypeId id);
+	public bool hasComponents(ComponentTypeId[] ids);
+	public bool hasAnyComponent(ComponentTypeId[] ids);
 }

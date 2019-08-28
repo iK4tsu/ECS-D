@@ -3,6 +3,7 @@ module ecs.entityManager;
 import ecs.entity;
 import ecs.icomponent;
 import ecs.componentType;
+import ecs.componentManager;
 
 
 class EntityManager
@@ -13,7 +14,7 @@ class EntityManager
 	public this() {}
 
 
-	public EntityId CreateEntity()
+	public EntityId createEntity()
 	{
 		Entity e = new Entity();
 		_mEntities[e._id] = e;
@@ -21,9 +22,9 @@ class EntityManager
 	}
 
 
-	public void KillEntity(EntityId id)
+	public void killEntity(EntityId id)
 	{
-		if (HasEntity(id))
+		if (hasEntity(id))
 		{
 			destroy(_mEntities[id]);
 			_mEntities.remove(id);
@@ -32,74 +33,68 @@ class EntityManager
 	}
 
 
-	template AddComponent(T)
+	public void addComponent(T)(EntityId id, ComponentTypeId index)
 	{
-		public void AddComponent(EntityId id, ComponentType index)
-		{
-			if (HasEntity(id))
-				_mEntities[id].AddComponent!(T)(index);
-		}
+		if (hasEntity(id))
+			_mEntities[id].addComponent!(T)(index);
 	}
 
-	public void RemoveComponent(EntityId id, ComponentType index)
+	public void removeComponent(EntityId id, ComponentTypeId index)
 	{
-		if (HasEntity(id))
-			_mEntities[id].RemoveComponent(index);
+		if (hasEntity(id))
+			_mEntities[id].removeComponent(index);
 	}
 
-	template GetComponent(T)
+	public T getComponent(T)(EntityId id)
 	{
-		public T GetComponent(EntityId id, ComponentType index)
-		{
-			return HasEntity(id) ? _mEntities[id].GetComponent!(T)(index) : null;
-		}
+		return hasEntity(id) ? _mEntities[id].getComponent!T : null;
 	}
 
-	public void EnableComponent(EntityId id, ComponentType index)
+	public void enableComponent(EntityId id, ComponentTypeId index)
 	{
-		if (HasEntity(id))
-			_mEntities[id].EnableComponent(index);
+		if (hasEntity(id))
+			_mEntities[id].enableComponent(index);
 	}
 
-	public void DisableComponent(EntityId id, ComponentType index)
+	public void disableComponent(EntityId id, ComponentTypeId index)
 	{
-		if (HasEntity(id))
-			_mEntities[id].DisableComponent(index);
+		if (hasEntity(id))
+			_mEntities[id].disableComponent(index);
 	}
 
-	public IComponent[] GetComponents(EntityId id, ComponentType index)
+	public IComponent[] getComponents(EntityId id)
 	{
-		return HasEntity(id) ? _mEntities[id].GetComponents : null;
+		return hasEntity(id) ? _mEntities[id].getComponents : null;
 	}
 
-	public ComponentType[] GetComponentTypes(EntityId id, ComponentType index)
+	public ComponentTypeId[] getComponentTypes(EntityId id)
 	{
-		return HasEntity(id) ? _mEntities[id].GetComponentTypes : null;
+		return hasEntity(id) ? _mEntities[id].getComponentTypes : null;
 	}
 
-	public bool HasComponent(EntityId id, ComponentType index)
+	public bool hasComponent(EntityId id, ComponentTypeId index)
 	{
-		return HasEntity(id) ? _mEntities[id].HasComponent(index) : false;
+		return hasEntity(id) ? _mEntities[id].hasComponent(index) : false;
 	}
 
-	public bool HasComponents(EntityId id, ComponentType[] indices)
+	public bool hasComponents(EntityId id, ComponentTypeId[] indices)
 	{
-		return HasEntity(id) ? _mEntities[id].HasComponents(indices) : false;
+		return hasEntity(id) ? _mEntities[id].hasComponents(indices) : false;
 	}
 
-	public bool HasAnyComponent(EntityId id, ComponentType[] indices)
+	public bool hasAnyComponent(EntityId id, ComponentTypeId[] indices)
 	{
-		return HasEntity(id) ? _mEntities[id].HasAnyComponent(indices) : false;
+		return hasEntity(id) ? _mEntities[id].hasAnyComponent(indices) : false;
 	}
 
-	public bool HasEntity(EntityId id)
+	public bool hasEntity(EntityId id)
 	{
-		return (((id in _mEntities) !is null) ? true : false);
+		return (id in _mEntities) !is null;
 	}
 
-	public Entity GetEntity(EntityId id)
+	public Entity getEntity(EntityId id)
 	{
-		return (((id in _mEntities) !is null) ? _mEntities[id] : null);
+		return hasEntity(id) ? _mEntities[id] : null;
 	}
 }
 
@@ -108,26 +103,26 @@ unittest
 {
 	EntityManager manager = new EntityManager();
 
-	EntityId eid = manager.CreateEntity();
+	EntityId eid = manager.createEntity();
 
-	assert(manager.HasEntity(eid));
+	assert(manager.hasEntity(eid));
 }
 
 
 unittest
 {
 	EntityManager manager = new EntityManager();
-	EntityId eid = manager.CreateEntity();
+	EntityId eid = manager.createEntity();
 
-	manager.AddComponent!(PositionComponent)(eid, Position);
+	manager.addComponent!(PositionComponent)(eid, Position);
 
-	assert(manager.HasComponent(eid, Position));
-	assert(is(typeof(manager.GetComponent!(PositionComponent)(eid, Position)) == PositionComponent));
+	assert(manager.hasComponent(eid, Position));
+	assert(cast(PositionComponent)(manager.getComponent!(PositionComponent)(eid)) !is null);
 
-	manager.RemoveComponent(eid, Position);
+	manager.removeComponent(eid, Position);
 
-	assert(!manager.HasComponent(eid, Position));
-	assert(manager.GetComponent!(PositionComponent)(eid, Position) is null);
+	assert(!manager.hasComponent(eid, Position));
+	assert(manager.getComponent!(PositionComponent)(eid) is null);
 
 }
 
@@ -135,6 +130,6 @@ unittest
 {
 	EntityManager manager = new EntityManager();
 
-	assert(!manager.HasEntity(0));
-	assert(!manager.HasComponent(0, Position));
+	assert(!manager.hasEntity(0));
+	assert(!manager.hasComponent(0, Position));
 }

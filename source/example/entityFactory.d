@@ -13,19 +13,18 @@ void generateEntities(ref Hub hub)
 	 * generate all your entities
 	 * you should generate all of them and it's components through the hub
 	 */
-
-	EntityId exampleId = hub.EntityCreate;
+	EntityId exampleId = hub.entityCreate;
 	
 	/*
 	 * when adding components, you have to specify wich component, and it's corresponding type
 	 */
-	hub.EntityAddComponent!(PositionComponent)(exampleId);
-	hub.EntityAddComponent!(MovableComponent)(exampleId);
+	hub.entityAddComponent!PositionComponent(exampleId);
+	hub.entityAddComponent!MovableComponent(exampleId);
 
 	/*
 	 * you can init all your component variables with values you need
 	 */
-	hub.EntityGetComponent!(MovableComponent)(exampleId).moveX = 4;
+	hub.entityGetComponent!MovableComponent(exampleId).moveX = 4;
 
 
 	/*
