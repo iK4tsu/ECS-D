@@ -30,9 +30,9 @@ void exampleInit()
 	EntityId playerExample = 1;
 
 
-	assert(_hub._entityManager.HasEntity(playerExample));
-	assert(_hub._entityManager.HasComponents(playerExample, [Position, Movable]));
-	assert(is(typeof(_hub._system._systems["MovementSystem"]) == ISystem));
+	assert(_hub._entityManager.hasEntity(playerExample));
+	assert(_hub._entityManager.hasComponents(playerExample, [1, 2]));
+	assert(cast(ISystem)(_hub._system._systems["MovementSystem"]) !is null);
 
 
 	/*
@@ -51,13 +51,13 @@ void exampleInit()
 		switch (readln.chomp)
 		{
 			case "move":
-				_hub.EntityEnableComponent(playerExample, Movable);
+				_hub.entityEnableComponent(playerExample, Movable);
 				break;
 			default:
-				_hub.EntityDisableComponent(playerExample, Movable);
+				_hub.entityDisableComponent(playerExample, Movable);
 		}
 
 		_hub.UpdateSystems;
-		writeln("Your 'x' position: ", _hub.EntityGetComponent!(PositionComponent)(playerExample).x);
+		writeln("Your 'x' position: ", _hub.entityGetComponent!PositionComponent(playerExample).x);
 	} while (true);
 }

@@ -3,6 +3,7 @@ module ecs.entity;
 import ecs.icomponent;
 import ecs.ientity;
 import ecs.componentType;
+import ecs.componentManager;
 
 
 alias EntityId = uint;
@@ -11,8 +12,8 @@ static EntityId next_id = 0;
 class Entity : IEntity
 {
 	public EntityId _id;
-	public IComponent[ComponentType] _components;
-	public IComponent[ComponentType] _disabledComponents;
+	public IComponent[ComponentTypeId] _components;
+	public IComponent[ComponentTypeId] _disabledComponents;
 
 
 	public this()
@@ -26,16 +27,10 @@ class Entity : IEntity
 	 * Each component has a an unique index based on it's type
 	 * Use it's type instead of manual inserting an index
 	 */
-	template AddComponent(T)
+	public void addComponent(T)(ComponentTypeId id)
 	{
-		public void AddComponent(ComponentType index)
-		{
-			if (!HasComponent(index))
-			{
-				T t = new T();
-				_components[index] = t;
-			}
-		}
+		if (!hasComponent(id))
+			_components[id] = new T;
 	}
 
 
@@ -44,12 +39,12 @@ class Entity : IEntity
 	 * Each component has an unique index based on it's type
 	 * Use it's type instead of manual inserting an index 
 	 */
-	public void RemoveComponent(ComponentType index)
+	public void removeComponent(ComponentTypeId id)
 	{
-		if (HasComponent(index))
+		if (hasComponent(id))
 		{
-			destroy(_components[index]);
-			_components.remove(index);
+			destroy(_components[id]);
+			_components.remove(id);
 		}
 	}
 
@@ -59,12 +54,12 @@ class Entity : IEntity
 	 * Only use this function if the entity needs the component in the future
 	 * If the entity doesn't need it anymore use the 'RemoveComponent' function
 	 */
-	public void DisableComponent(ComponentType index)
+	public void disableComponent(ComponentTypeId id)
 	{
-		if (HasComponent(index))
+		if (hasComponent(id))
 		{
-			_disabledComponents[index] = _components[index];
-			_components.remove(index);
+			_disabledComponents[id] = _components[id];
+			_components.remove(id);
 		}
 	}
 
@@ -72,12 +67,12 @@ class Entity : IEntity
 	/*
 	 * Enables a component if this is disabled
 	 */
-	public void EnableComponent(ComponentType index)
+	public void enableComponent(ComponentTypeId id)
 	{
-		if (IsComponentDisabled(index))
+		if (isComponentDisabled(id))
 		{
-			_components[index] = _disabledComponents[index];
-			_disabledComponents.remove(index);
+			_components[id] = _disabledComponents[id];
+			_disabledComponents.remove(id);
 		}
 	}
 
@@ -87,14 +82,12 @@ class Entity : IEntity
 	 * Each component has an unique index based on it's type
 	 * Use it's type instead of manual inserting an index 
 	 */
-	template GetComponent(T)
+	public T getComponent(T)()
 	{
-		public T GetComponent(ComponentType index)
-		{
-			if (HasComponent(index))
-				return cast(T)(_components[index]);
-			return null;
-		}
+		const ComponentTypeId id = getComponentType!T;
+		if (hasComponent(id))
+			return cast(T)(_components[id]);
+		return null;
 	}
 
 
@@ -102,14 +95,11 @@ class Entity : IEntity
 	 * Get all components
 	 * If possible use the GetComponent template, as it returns the respective type
 	 */
-	public IComponent[] GetComponents()
+	public IComponent[] getComponents()
 	{
 		IComponent[] ret;
 		foreach(component; _components)
-		{
-			if (component !is null)
-				ret ~= component;
-		}
+			ret ~= component;
 		return ret;
 	}
 
@@ -117,14 +107,11 @@ class Entity : IEntity
 	/*
 	 * Get all component types
 	 */
-	public ComponentType[] GetComponentTypes()
+	public ComponentTypeId[] getComponentTypes()
 	{
-		ComponentType[] ret;
+		ComponentTypeId[] ret;
 		foreach(key, component; _components)
-		{
-			if (component !is null)
-				ret ~= key;
-		}
+			ret ~= key;
 		return ret;
 	}
 
@@ -134,9 +121,9 @@ class Entity : IEntity
 	 * Every component has an unique index based on it's type
 	 * Use it's type instead of manual inserting an index
 	 */
-	public bool HasComponent(ComponentType index)
+	public bool hasComponent(ComponentTypeId id)
 	{
-		return (((index in _components) !is null) ? true : false);
+		return (id in _components) !is null;
 	}
 
 
@@ -145,11 +132,11 @@ class Entity : IEntity
 	 * Every component has an unique index based on it's type
 	 * Use it's type instead of manual inserting an index
 	 */
-	public bool HasComponents(ComponentType[] indices)
+	public bool hasComponents(ComponentTypeId[] ids)
 	{
-		foreach(index; indices)
+		foreach(id; ids)
 		{
-			if (!HasComponent(index))
+			if (!hasComponent(id))
 				return false;
 		}
 		return true;
@@ -161,11 +148,11 @@ class Entity : IEntity
 	 * Every component has an unique index based on it's type
 	 * Use it's type instead of manual inserting an index
 	 */
-	public bool HasAnyComponent(ComponentType[] indices)
+	public bool hasAnyComponent(ComponentTypeId[] ids)
 	{
-		foreach(index; indices)
+		foreach(id; ids)
 		{
-			if (HasComponent(index))
+			if (hasComponent(id))
 				return true;
 		}
 		return false;
@@ -178,9 +165,20 @@ class Entity : IEntity
 	 * If the entity doesn't contain the component neither in '_components' nor '_disabledComponents' it will just return false
 	 * For that reason it is recomended not to use this function
 	 */
-	public bool IsComponentDisabled(ComponentType index)
+	public bool isComponentDisabled(ComponentTypeId id)
 	{
-		return (((index in _disabledComponents) !is null) ? true : false);
+		return (id in _disabledComponents) !is null;
+	}
+
+
+	public ComponentTypeId getComponentType(T)()
+	{
+		foreach(key, component; _components)
+		{
+			if (cast(T)(component) !is null)
+				return key;
+		}
+		return 0;
 	}
 }
 
@@ -198,29 +196,29 @@ unittest
 {
 	Entity e = new Entity();
 
-	e.AddComponent!(PositionComponent)(Position);
+	e.addComponent!(PositionComponent)(1);
 
-	assert(e.HasAnyComponent([Position, Health]));
-	assert(e.HasComponent(Position));
-	assert(is(typeof(e.GetComponent!(PositionComponent)(Position)) == PositionComponent));
+	assert(e.hasAnyComponent([1, 2]));
+	assert(e.hasComponent(1));
+	assert(cast(PositionComponent)(e.getComponent!PositionComponent) !is null);
 
-	e.RemoveComponent(Position);
+	e.removeComponent(1);
 
-	assert(!e.HasAnyComponent([Position, Health]));
-	assert(!e.HasComponent(Position));
-	assert(e.GetComponent!(PositionComponent)(Position) is null);
+	assert(!e.hasAnyComponent([1, 2]));
+	assert(!e.hasComponent(1));
+	assert(e.getComponent!PositionComponent is null);
 }
 
 unittest
 {
 	Entity e = new Entity();
 
-	e.AddComponent!(PositionComponent)(Position);
+	e.addComponent!(PositionComponent)(1);
 
-	assert(!e.IsComponentDisabled(Position));
+	assert(!e.isComponentDisabled(1));
 
-	e.DisableComponent(Position);
+	e.disableComponent(1);
 
-	assert(!e.HasComponent(Position));
-	assert(e.IsComponentDisabled(Position));
+	assert(!e.hasComponent(1));
+	assert(e.isComponentDisabled(1));
 }

@@ -4,52 +4,47 @@ import ecs.componentType;
 import ecs.icomponent;
 
 alias ComponentName = string;
+alias ComponentTypeId = uint;
+
+static uint next_id = 1;
 
 class ComponentManager
 {
-	private IComponent[ComponentName] _components;
-	private ComponentType[ComponentName] _types;
+	private IComponent[ComponentTypeId] _components;
 
 
 	public this() {}
 
 
-	template CreateComponent(T)
+	public ComponentTypeId createComponent(T)()
 	{
-		public void CreateComponent(ComponentType index)
-		{
-			if (!(HasComponent!T))
-			{
-				_components[T.stringof] = new T();
-				_types[T.stringof] = index;
-			}
-		}
+		if (!hasComponent!T)
+			_components[next_id++] = new T;
+		return getType!T;
 	}
 
-	template HasComponent(T)
+
+	public bool hasComponent(T)()
 	{
-		public bool HasComponent()
-		{
-			return (((T.stringof in _components) !is null) ? true : false);
-		}
+		return getType!T > 0;
 	}
 
-	template GetComponent(T)
+
+	public T getComponent(T)()
 	{
-		public T GetComponent()
-		{
-			if (HasComponent!T)
-				return cast(T)(_components[T.stringof]);
-			return null;
-		}
+		if (hasComponent!T)
+			return cast(T)(_components[getType!T]);
+		return null;
 	}
 
-	template GetType(T)
+	public ComponentTypeId getType(T)()
 	{
-		public ComponentType GetType()
+		foreach(key, component; _components)
 		{
-			return _types[T.stringof];
+			if (cast(T)(component) !is null)
+				return key;
 		}
+		return 0;
 	}
 }
 
@@ -57,15 +52,15 @@ class ComponentManager
 unittest
 {
 	ComponentManager manager = new ComponentManager();
-	manager.CreateComponent!(PositionComponent)(Position);
+	manager.createComponent!(PositionComponent);
 
-	assert(manager.HasComponent!PositionComponent);
+	assert(manager.hasComponent!PositionComponent);
 
-	PositionComponent position = manager.GetComponent!PositionComponent;
+	PositionComponent position = manager.getComponent!PositionComponent;
 
-	assert(manager.GetComponent!PositionComponent == position);
+	assert(manager.getComponent!PositionComponent == position);
 
-	assert((manager.GetType!PositionComponent) == Position);
+	assert((manager.getType!PositionComponent) == 1);
 
-	//assert(is(typeof(manager.GetComponent!PositionComponent) == PositionComponent));
+	assert(cast(PositionComponent)(manager.getComponent!PositionComponent) !is null);
 }

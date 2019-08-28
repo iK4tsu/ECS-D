@@ -23,10 +23,10 @@ class MovementSystem : ISystem
 		PositionComponent position;
 		MovableComponent movable;
 
-		if (_hub._entityManager.HasComponents(eid, [Position, Movable]))
+		if (_hub._entityManager.hasComponents(eid, [1, 2]))
 		{
-			position = _hub._entityManager.GetComponent!(PositionComponent)(eid, Position);
-			movable = _hub._entityManager.GetComponent!(MovableComponent)(eid, Movable);
+			position = _hub._entityManager.getComponent!(PositionComponent)(eid);
+			movable = _hub._entityManager.getComponent!(MovableComponent)(eid);
 
 			position.x += movable.moveX;
 			position.y += movable.moveY;
@@ -41,21 +41,23 @@ unittest
 	MovementSystem _system = new MovementSystem();
 	_system.SetHub(_hub);
 
-	EntityId e = _hub._entityManager.CreateEntity();
-	Entity _entity = _hub._entityManager.GetEntity(e);
+	EntityId e = _hub._entityManager.createEntity();
+	Entity _entity = _hub._entityManager.getEntity(e);
 
-	_entity.AddComponent!(PositionComponent)(Position);
-	_entity.AddComponent!(MovableComponent)(Movable);
+	_entity.addComponent!(PositionComponent)(1);
+	_entity.addComponent!(MovableComponent)(2);
 
-	_entity.GetComponent!(MovableComponent)(Movable).moveX = 4;
+	_entity.getComponent!(MovableComponent).moveX = 4;
 
-	_system.Update(e);
-
-	assert(_entity.GetComponent!(PositionComponent)(Position).x == 4);
-
-	_entity.RemoveComponent(Movable);
+	assert(_entity.hasComponents([1, 2]));
 
 	_system.Update(e);
 
-	assert(_entity.GetComponent!(PositionComponent)(Position).x == 4);
+	assert(_entity.getComponent!PositionComponent.x == 4);
+
+	_entity.removeComponent(2);
+
+	_system.Update(e);
+
+	assert(_entity.getComponent!PositionComponent.x == 4);
 }
