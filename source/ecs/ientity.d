@@ -1,7 +1,6 @@
 module ecs.ientity;
 
 import ecs.icomponent;
-import ecs.componentType;
 import ecs.componentManager;
 
 public interface IEntity
