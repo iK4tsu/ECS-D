@@ -2,11 +2,12 @@ module ecs.hub;
 
 import ecs.entity;
 import ecs.icomponent;
-import ecs.componentType;
 import ecs.entityManager;
 import ecs.componentManager;
 import ecs.system;
 
+alias EntityId = uint;
+alias ComponentTypeId = uint;
 
 class Hub
 {
@@ -23,15 +24,14 @@ class Hub
 
 
 	/********************************************* ENTITY MANAGER FUNCTIONS *********************************************/
-	public void entityAddComponent(T)(EntityId id)
+	public T entityAddComponent(T)(EntityId id)
 	{
-		if (componentExists!T)
-			_entityManager.addComponent!(T)(id, componentGetType!T);
+		return componentExists!T ? _entityManager.addComponent!(T)(id, componentGetType!T) : null;
 	}
 
-	public void entityRemoveComponent(EntityId id, ComponentType index)
+	public void entityRemoveComponent(EntityId eid, ComponentTypeId id)
 	{
-		_entityManager.removeComponent(id, index);
+		_entityManager.removeComponent(eid, id);
 	}
 
 	public T entityGetComponent(T)(EntityId id)
@@ -41,24 +41,52 @@ class Hub
 
 	public EntityId entityCreate()
 	{
-		return _entityManager.createEntity;
+		EntityId id = _entityManager.createEntity;
+		_system.addEid(id);
+		return id;
 	}
 
-	public void entityEnableComponent(EntityId id, ComponentType index)
+	public void entityKill(EntityId id)
 	{
-		_entityManager.enableComponent(id, index);
+		_system.removeEid(id);
+		_entityManager.killEntity(id);
 	}
 
-	public void entityDisableComponent(EntityId id, ComponentType index)
+	public Entity entityGetEntity(EntityId id)
 	{
-		_entityManager.disableComponent(id, index);
+		return _entityManager.getEntity(id);
+	}
+
+	public void entityEnableComponent(EntityId eid, ComponentTypeId id)
+	{
+		_entityManager.enableComponent(eid, id);
+	}
+
+	public void entityDisableComponent(EntityId eid, ComponentTypeId id)
+	{
+		_entityManager.disableComponent(eid, id);
+	}
+
+	public bool entityHasComponents(EntityId eid, ComponentTypeId[] ids)
+	{
+		return _entityManager.hasComponents(eid, ids);
+	}
+
+	public bool entityHasAnyComponent(EntityId eid, ComponentTypeId[] ids)
+	{
+		return _entityManager.hasAnyComponent(eid, ids);
+	}
+
+	public bool entityHasComponent(EntityId eid, ComponentTypeId id)
+	{
+		return _entityManager.hasComponent(eid, id);
 	}
 
 
 	/********************************************* COMPONENT MANAGER FUNCTIONS *********************************************/
-	public void componentCreate(T)()
+	public ComponentTypeId componentCreate(T)()
 	{
-		_componentManager.createComponent!T;
+		return _componentManager.createComponent!T;
 	}
 
 	public bool componentExists(T)()
@@ -80,7 +108,7 @@ class Hub
 	/*************************************************** SYSTEM FUNCTIONS **************************************************/
 	public void updateSystems()
 	{
-		_system.update();
+		_system.update;
 	}
 
 	public void systemCreate(T)()
@@ -97,28 +125,4 @@ class Hub
 	{
 		return _system.existsSystem!T;
 	}
-}
-
-
-unittest
-{
-	Hub mHub = new Hub();
-
-	mHub.componentCreate!(PositionComponent);
-
-	assert(mHub.componentExists!PositionComponent);
-	assert(!mHub.componentExists!MovableComponent);
-}
-
-unittest
-{
-	Hub hub = new Hub();
-
-	hub.componentCreate!(PositionComponent);
-
-	EntityId e = hub.entityCreate;
-
-	hub.entityAddComponent!PositionComponent(e);
-	
-	assert(cast(PositionComponent)(hub.entityGetComponent!PositionComponent(e)) !is null);
 }
