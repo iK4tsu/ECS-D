@@ -47,12 +47,6 @@ class ComponentManager
 }
 
 
-version(unittest)
-{
-	class Foo : IComponent { int someData; }
-	class Goo : IComponent { string someData; }
-}
-
 @safe unittest
 {
 	ComponentManager manager = new ComponentManager();
