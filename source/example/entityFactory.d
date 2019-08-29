@@ -1,35 +1,30 @@
 module example.entityFactory;
 
-import ecs.entity;
-import ecs.ientity;
-import ecs.hub;
-import ecs.icomponent;
-import ecs.componentType;
 
+import ecs.hub;
+
+
+// import your components
+import example.components.position;
+import example.components.movable;
 
 void generateEntities(ref Hub hub)
 {
-	/*
-	 * generate all your entities
-	 * you should generate all of them and it's components through the hub
-	 */
+	// Generate all your entities through the hub
 	EntityId exampleId = hub.entityCreate;
 	
-	/*
-	 * when adding components, you have to specify wich component, and it's corresponding type
-	 */
-	hub.entityAddComponent!PositionComponent(exampleId);
-	hub.entityAddComponent!MovableComponent(exampleId);
+	// Add the components for you entity
+	Position examplePosition = hub.entityAddComponent!Position(exampleId);
+	Movable exampleMovable = hub.entityAddComponent!Movable(exampleId);
 
-	/*
-	 * you can init all your component variables with values you need
-	 */
-	hub.entityGetComponent!MovableComponent(exampleId).moveX = 4;
+	// Init all your component variables with values you need
+	examplePosition.x = 2;
+	examplePosition.y = 5;
+	exampleMovable.speed = 3;
 
 
-	/*
-	 * you can also generate them this way
-	 */
-	import example.playerExample;
-	EntityId playerExample = createPlayerExample(hub);
+
+	// You can also create an entity this way
+	import example.entities.player;
+	EntityId playerId = createPlayer(hub);
 }
