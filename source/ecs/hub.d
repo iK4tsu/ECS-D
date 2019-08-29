@@ -58,6 +58,11 @@ class Hub
 		return _entityManager.getEntity(id);
 	}
 
+	public Entity entityGetEntity(EntityType type)
+	{
+		return _entityManager.getEntity(type);
+	}
+
 	public void entityEnableComponent(EntityId eid, ComponentTypeId id)
 	{
 		_entityManager.enableComponent(eid, id);

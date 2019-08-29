@@ -8,6 +8,7 @@ import ecs.componentManager;
 class EntityManager
 {
 	private Entity[EntityId] _mEntities;
+	private EntityId[EntityType] _mTypes;
 	private EntityId[] _deletedEntities;
 
 	public this() {}
@@ -17,6 +18,7 @@ class EntityManager
 	{
 		Entity e = new Entity(name, type);
 		_mEntities[e._id] = e;
+		_mTypes[type] = e._id;
 		return e._id;
 	}
 
@@ -114,5 +116,10 @@ class EntityManager
 	{
 		if (hasEntity(eid))
 			_mEntities[eid].setDescription(description);
+	}
+
+	public Entity getEntity(EntityType type)
+	{
+		return (type in _mTypes) ? getEntity(_mTypes[type]) : null;
 	}
 }
