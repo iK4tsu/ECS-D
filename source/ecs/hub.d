@@ -8,6 +8,7 @@ import ecs.system;
 
 alias EntityId = uint;
 alias ComponentTypeId = uint;
+alias EntityType = string;
 
 class Hub
 {
@@ -39,9 +40,9 @@ class Hub
 		return _entityManager.getComponent!(T)(id);
 	}
 
-	public EntityId entityCreate()
+	public EntityId entityCreate(const string name, const EntityType type)
 	{
-		EntityId id = _entityManager.createEntity;
+		EntityId id = _entityManager.createEntity(name, type);
 		_system.addEid(id);
 		return id;
 	}
@@ -80,6 +81,26 @@ class Hub
 	public bool entityHasComponent(EntityId eid, ComponentTypeId id)
 	{
 		return _entityManager.hasComponent(eid, id);
+	}
+
+	public string entityGetName(EntityId eid)
+	{
+		return _entityManager.getName(eid);
+	}
+
+	public string entityGetDescription(EntityId eid)
+	{
+		return _entityManager.getDescription(eid);
+	}
+
+	public EntityType entityGetType(EntityId eid)
+	{
+		return _entityManager.getType(eid);
+	}
+
+	public void setDescription(EntityId eid, const string description)
+	{
+		_entityManager.setDescription(eid, description);
 	}
 
 

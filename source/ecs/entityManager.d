@@ -13,9 +13,9 @@ class EntityManager
 	public this() {}
 
 
-	public EntityId createEntity()
+	public EntityId createEntity(const string name, const EntityType type)
 	{
-		Entity e = new Entity();
+		Entity e = new Entity(name, type);
 		_mEntities[e._id] = e;
 		return e._id;
 	}
@@ -93,5 +93,26 @@ class EntityManager
 	public Entity getEntity(EntityId eid)
 	{
 		return hasEntity(eid) ? _mEntities[eid] : null;
+	}
+
+	public string getName(EntityId eid)
+	{
+		return hasEntity(eid) ? _mEntities[eid].getName : null;
+	}
+
+	public string getDescription(EntityId eid)
+	{
+		return hasEntity(eid) ? _mEntities[eid].getDescription : null;
+	}
+
+	public EntityType getType(EntityId eid)
+	{
+		return hasEntity(eid) ? _mEntities[eid].getType : null;
+	}
+
+	public void setDescription(EntityId eid, const string description)
+	{
+		if (hasEntity(eid))
+			_mEntities[eid].setDescription(description);
 	}
 }

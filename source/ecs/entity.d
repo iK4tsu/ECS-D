@@ -8,16 +8,24 @@ import ecs.componentManager;
 alias EntityId = uint;
 static EntityId next_id = 0;
 
+alias EntityType = string;
+
 class Entity : IEntity
 {
 	public EntityId _id;
-	public IComponent[ComponentTypeId] _components;
-	public IComponent[ComponentTypeId] _disabledComponents;
+	private IComponent[ComponentTypeId] _components;
+	private IComponent[ComponentTypeId] _disabledComponents;
+	private const EntityType _type;
+	private const string _name;
+	private string _description;
+	
 
 
-	public this()
+	public this(const string name, const EntityType type)
 	{
 		_id = next_id++;
+		_type = type;
+		_name = name;
 	}
 
 
@@ -180,4 +188,11 @@ class Entity : IEntity
 		}
 		return 0;
 	}
+
+
+	public string getName() { return _name; }
+	public string getDescription() { return _description; }
+	public EntityType getType() { return _type; }
+
+	public void setDescription(const string description) { _description = description; }
 }
