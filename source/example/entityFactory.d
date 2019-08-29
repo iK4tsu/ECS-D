@@ -11,7 +11,7 @@ import example.components.movable;
 void generateEntities(ref Hub hub)
 {
 	// Generate all your entities through the hub
-	EntityId exampleId = hub.entityCreate;
+	EntityId exampleId = hub.entityCreate("exampleId", "noType");
 	
 	// Add the components for you entity
 	Position examplePosition = hub.entityAddComponent!Position(exampleId);
@@ -21,8 +21,7 @@ void generateEntities(ref Hub hub)
 	examplePosition.x = 2;
 	examplePosition.y = 5;
 	exampleMovable.speed = 3;
-
-
+	
 
 	// You can also create an entity this way
 	import example.entities.player;

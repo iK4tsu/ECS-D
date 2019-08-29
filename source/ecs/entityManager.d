@@ -8,15 +8,17 @@ import ecs.componentManager;
 class EntityManager
 {
 	private Entity[EntityId] _mEntities;
+	private EntityId[EntityType] _mTypes;
 	private EntityId[] _deletedEntities;
 
 	public this() {}
 
 
-	public EntityId createEntity()
+	public EntityId createEntity(const string name, const EntityType type)
 	{
-		Entity e = new Entity();
+		Entity e = new Entity(name, type);
 		_mEntities[e._id] = e;
+		_mTypes[type] = e._id;
 		return e._id;
 	}
 
@@ -93,5 +95,36 @@ class EntityManager
 	public Entity getEntity(EntityId eid)
 	{
 		return hasEntity(eid) ? _mEntities[eid] : null;
+	}
+
+	public string getName(EntityId eid)
+	{
+		return hasEntity(eid) ? _mEntities[eid].getName : null;
+	}
+
+	public string getDescription(EntityId eid)
+	{
+		return hasEntity(eid) ? _mEntities[eid].getDescription : null;
+	}
+
+	public EntityType getType(EntityId eid)
+	{
+		return hasEntity(eid) ? _mEntities[eid].getType : null;
+	}
+
+	public void setDescription(EntityId eid, const string description)
+	{
+		if (hasEntity(eid))
+			_mEntities[eid].setDescription(description);
+	}
+
+	public Entity getEntity(EntityType type)
+	{
+		return (type in _mTypes) ? getEntity(_mTypes[type]) : null;
+	}
+
+	public EntityId[] getDeletedEntities()
+	{
+		return _deletedEntities;
 	}
 }

@@ -8,6 +8,7 @@ import ecs.system;
 
 alias EntityId = uint;
 alias ComponentTypeId = uint;
+alias EntityType = string;
 
 class Hub
 {
@@ -39,9 +40,9 @@ class Hub
 		return _entityManager.getComponent!(T)(id);
 	}
 
-	public EntityId entityCreate()
+	public EntityId entityCreate(const string name, const EntityType type)
 	{
-		EntityId id = _entityManager.createEntity;
+		EntityId id = _entityManager.createEntity(name, type);
 		_system.addEid(id);
 		return id;
 	}
@@ -55,6 +56,11 @@ class Hub
 	public Entity entityGetEntity(EntityId id)
 	{
 		return _entityManager.getEntity(id);
+	}
+
+	public Entity entityGetEntity(EntityType type)
+	{
+		return _entityManager.getEntity(type);
 	}
 
 	public void entityEnableComponent(EntityId eid, ComponentTypeId id)
@@ -80,6 +86,31 @@ class Hub
 	public bool entityHasComponent(EntityId eid, ComponentTypeId id)
 	{
 		return _entityManager.hasComponent(eid, id);
+	}
+
+	public string entityGetName(EntityId eid)
+	{
+		return _entityManager.getName(eid);
+	}
+
+	public string entityGetDescription(EntityId eid)
+	{
+		return _entityManager.getDescription(eid);
+	}
+
+	public EntityType entityGetType(EntityId eid)
+	{
+		return _entityManager.getType(eid);
+	}
+
+	public void entitySetDescription(EntityId eid, const string description)
+	{
+		_entityManager.setDescription(eid, description);
+	}
+
+	public EntityId[] entityGetDeleted()
+	{
+		_entityManager.getDeletedEntities;
 	}
 
 
