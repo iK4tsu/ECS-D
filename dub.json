@@ -1,6 +1,6 @@
 {
-	"name": "searchandsurvive",
-	"description": "Never fail, always conquer",
+	"name": "ecs",
+	"description": "An Entity-Component-System based framework in D",
 	"license": "MIT",
 
 	"authors": [
@@ -12,11 +12,10 @@
 		"source"
 	],
 
-	"targetName": "searchAndSurvive",
+	"targetName": "ecs",
 	"targetPath": "bin",
 
 	"dependencies": {
-		"silly": "~>0.8.2",
-		"riverd-ncurses": "~>1.0.4"
+		"silly": "~>0.8.2"
 	}
 }
