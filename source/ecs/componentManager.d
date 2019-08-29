@@ -5,7 +5,7 @@ import ecs.icomponent;
 alias ComponentName = string;
 alias ComponentTypeId = uint;
 
-static uint next_id = 1;
+static ComponentTypeId next_id = 1;
 
 
 class ComponentManager
