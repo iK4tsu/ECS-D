@@ -2,7 +2,6 @@ module ecs.entityManager;
 
 import ecs.entity;
 import ecs.icomponent;
-import ecs.componentType;
 import ecs.componentManager;
 
 
@@ -22,114 +21,77 @@ class EntityManager
 	}
 
 
-	public void killEntity(EntityId id)
+	public void killEntity(EntityId eid)
 	{
-		if (hasEntity(id))
+		if (hasEntity(eid))
 		{
-			destroy(_mEntities[id]);
-			_mEntities.remove(id);
-			_deletedEntities ~= id;
+			destroy(_mEntities[eid]);
+			_mEntities.remove(eid);
+			_deletedEntities ~= eid;
 		}
 	}
 
 
-	public void addComponent(T)(EntityId id, ComponentTypeId index)
+	public T addComponent(T)(EntityId eid, ComponentTypeId id)
 	{
-		if (hasEntity(id))
-			_mEntities[id].addComponent!(T)(index);
+		return hasEntity(eid) ? _mEntities[eid].addComponent!(T)(id) : null;
 	}
 
-	public void removeComponent(EntityId id, ComponentTypeId index)
+	public void removeComponent(EntityId eid, ComponentTypeId id)
 	{
-		if (hasEntity(id))
-			_mEntities[id].removeComponent(index);
+		if (hasEntity(eid))
+			_mEntities[eid].removeComponent(id);
 	}
 
-	public T getComponent(T)(EntityId id)
+	public T getComponent(T)(EntityId eid)
 	{
-		return hasEntity(id) ? _mEntities[id].getComponent!T : null;
+		return hasEntity(eid) ? _mEntities[eid].getComponent!T : null;
 	}
 
-	public void enableComponent(EntityId id, ComponentTypeId index)
+	public void enableComponent(EntityId eid, ComponentTypeId id)
 	{
-		if (hasEntity(id))
-			_mEntities[id].enableComponent(index);
+		if (hasEntity(eid))
+			_mEntities[eid].enableComponent(id);
 	}
 
-	public void disableComponent(EntityId id, ComponentTypeId index)
+	public void disableComponent(EntityId eid, ComponentTypeId id)
 	{
-		if (hasEntity(id))
-			_mEntities[id].disableComponent(index);
+		if (hasEntity(eid))
+			_mEntities[eid].disableComponent(id);
 	}
 
-	public IComponent[] getComponents(EntityId id)
+	public IComponent[] getComponents(EntityId eid)
 	{
-		return hasEntity(id) ? _mEntities[id].getComponents : null;
+		return hasEntity(eid) ? _mEntities[eid].getComponents : null;
 	}
 
-	public ComponentTypeId[] getComponentTypes(EntityId id)
+	public ComponentTypeId[] getComponentTypes(EntityId eid)
 	{
-		return hasEntity(id) ? _mEntities[id].getComponentTypes : null;
+		return hasEntity(eid) ? _mEntities[eid].getComponentTypes : null;
 	}
 
-	public bool hasComponent(EntityId id, ComponentTypeId index)
+	public bool hasComponent(EntityId eid, ComponentTypeId id)
 	{
-		return hasEntity(id) ? _mEntities[id].hasComponent(index) : false;
+		return hasEntity(eid) ? _mEntities[eid].hasComponent(id) : false;
 	}
 
-	public bool hasComponents(EntityId id, ComponentTypeId[] indices)
+	public bool hasComponents(EntityId eid, ComponentTypeId[] indices)
 	{
-		return hasEntity(id) ? _mEntities[id].hasComponents(indices) : false;
+		return hasEntity(eid) ? _mEntities[eid].hasComponents(indices) : false;
 	}
 
-	public bool hasAnyComponent(EntityId id, ComponentTypeId[] indices)
+	public bool hasAnyComponent(EntityId eid, ComponentTypeId[] indices)
 	{
-		return hasEntity(id) ? _mEntities[id].hasAnyComponent(indices) : false;
+		return hasEntity(eid) ? _mEntities[eid].hasAnyComponent(indices) : false;
 	}
 
-	public bool hasEntity(EntityId id)
+	public bool hasEntity(EntityId eid)
 	{
-		return (id in _mEntities) !is null;
+		return (eid in _mEntities) !is null;
 	}
 
-	public Entity getEntity(EntityId id)
+	public Entity getEntity(EntityId eid)
 	{
-		return hasEntity(id) ? _mEntities[id] : null;
+		return hasEntity(eid) ? _mEntities[eid] : null;
 	}
-}
-
-
-unittest
-{
-	EntityManager manager = new EntityManager();
-
-	EntityId eid = manager.createEntity();
-
-	assert(manager.hasEntity(eid));
-}
-
-
-unittest
-{
-	EntityManager manager = new EntityManager();
-	EntityId eid = manager.createEntity();
-
-	manager.addComponent!(PositionComponent)(eid, Position);
-
-	assert(manager.hasComponent(eid, Position));
-	assert(cast(PositionComponent)(manager.getComponent!(PositionComponent)(eid)) !is null);
-
-	manager.removeComponent(eid, Position);
-
-	assert(!manager.hasComponent(eid, Position));
-	assert(manager.getComponent!(PositionComponent)(eid) is null);
-
-}
-
-unittest
-{
-	EntityManager manager = new EntityManager();
-
-	assert(!manager.hasEntity(0));
-	assert(!manager.hasComponent(0, Position));
 }
