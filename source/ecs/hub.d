@@ -110,7 +110,7 @@ class Hub
 
 	public EntityId[] entityGetDeleted()
 	{
-		_entityManager.getDeletedEntities;
+		return _entityManager.getDeletedEntities;
 	}
 
 
