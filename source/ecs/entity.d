@@ -2,7 +2,6 @@ module ecs.entity;
 
 import ecs.icomponent;
 import ecs.ientity;
-import ecs.componentType;
 import ecs.componentManager;
 
 
@@ -27,10 +26,11 @@ class Entity : IEntity
 	 * Each component has a an unique index based on it's type
 	 * Use it's type instead of manual inserting an index
 	 */
-	public void addComponent(T)(ComponentTypeId id)
+	public T addComponent(T)(ComponentTypeId id)
 	{
 		if (!hasComponent(id))
 			_components[id] = new T;
+		return getComponent!T;
 	}
 
 
@@ -180,45 +180,4 @@ class Entity : IEntity
 		}
 		return 0;
 	}
-}
-
-
-unittest
-{
-	Entity e = new Entity();
-
-	assert(e._id == 0);
-	assert(next_id == 1);
-}
-
-
-unittest
-{
-	Entity e = new Entity();
-
-	e.addComponent!(PositionComponent)(1);
-
-	assert(e.hasAnyComponent([1, 2]));
-	assert(e.hasComponent(1));
-	assert(cast(PositionComponent)(e.getComponent!PositionComponent) !is null);
-
-	e.removeComponent(1);
-
-	assert(!e.hasAnyComponent([1, 2]));
-	assert(!e.hasComponent(1));
-	assert(e.getComponent!PositionComponent is null);
-}
-
-unittest
-{
-	Entity e = new Entity();
-
-	e.addComponent!(PositionComponent)(1);
-
-	assert(!e.isComponentDisabled(1));
-
-	e.disableComponent(1);
-
-	assert(!e.hasComponent(1));
-	assert(e.isComponentDisabled(1));
 }

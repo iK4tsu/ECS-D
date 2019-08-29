@@ -4,6 +4,9 @@ import ecs.isystem;
 import ecs.entity;
 import ecs.hub;
 
+
+import std.traits;
+
 alias SystemName = string;
 
 class System
@@ -23,9 +26,9 @@ class System
 	{
 		if (!existsSystem!T)
 		{
-			T t = new T();
-			_systems[T.stringof] = t;
-			t.setHub(_hub);
+			T t = new T;
+			_systems[__traits(identifier, T)] = t;
+			t.init(_hub);
 		}
 	}
 
@@ -33,7 +36,7 @@ class System
 	{
 		if (ExistsSystem!T)
 		{
-			return cast(T)(_systems[T.stringof]);
+			return cast(T)(_systems[__traits(identifier, T)]);
 		}
 	}
 
@@ -42,9 +45,15 @@ class System
 		return (T.stringof in _systems) !is null; 
 	}
 
-	public void setEids(EntityId[] eids)
+	public void addEid(EntityId eid)
 	{
-		_eids = eids;
+		_eids ~= eid;
+	}
+
+	public void removeEid(EntityId eid)
+	{
+		import std.algorithm : remove;
+		remove!(a => a = eid)(_eids);
 	}
 
 	public void update()

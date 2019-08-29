@@ -2,13 +2,10 @@ module example.ecsInit;
 
 
 import ecs.hub;
+
 import example.componentFactory;
 import example.systemFactory;
 import example.entityFactory;
-import ecs.icomponent;
-import ecs.componentType;
-import ecs.isystem;
-import ecs.entity;
 
 
 import std.stdio;
@@ -20,25 +17,23 @@ void exampleInit()
 	Hub _hub = new Hub();
 
 
-	/*
-	 * you should generate systems and components first and entities last
-	 */
-	generateSystems(_hub);
+	// generate components, systems, and entities by this order
 	generateComponents(_hub);
+	generateSystems(_hub);
 	generateEntities(_hub);
 
-	EntityId playerExample = 1;
+	EntityId playerId = 1;
 
+	import example.components.position;
+	import example.components.movable;
+	ComponentTypeId positionId = _hub.componentGetType!Position;
+	ComponentTypeId movableId = _hub.componentGetType!Movable;
 
-	assert(_hub._entityManager.hasEntity(playerExample));
-	assert(_hub._entityManager.hasComponents(playerExample, [1, 2]));
-	assert(cast(ISystem)(_hub._system._systems["MovementSystem"]) !is null);
+	assert(_hub._entityManager.hasEntity(playerId));
+	assert(_hub.entityHasComponents(playerId, [positionId, movableId]));
 
-
-	/*
-	 * for now you have to set ids manualy to your systems
-	 */
-	_hub._system.setEids([playerExample]);
+	import ecs.isystem;
+	assert(cast(ISystem)(_hub._system._systems["Movement"]) !is null);
 
 
 	do
@@ -51,13 +46,13 @@ void exampleInit()
 		switch (readln.chomp)
 		{
 			case "move":
-				_hub.entityEnableComponent(playerExample, Movable);
+				_hub.entityEnableComponent(playerId, movableId);
 				break;
 			default:
-				_hub.entityDisableComponent(playerExample, Movable);
+				_hub.entityDisableComponent(playerId, movableId);
 		}
 
 		_hub.updateSystems;
-		writeln("Your 'x' position: ", _hub.entityGetComponent!PositionComponent(playerExample).x);
+		writeln("Your 'x' position: ", _hub.entityGetComponent!Position(playerId).x);
 	} while (true);
 }

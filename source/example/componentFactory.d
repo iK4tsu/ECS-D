@@ -1,8 +1,9 @@
 module example.componentFactory;
 
-import ecs.componentType;
-import ecs.icomponent;
 import ecs.hub;
+
+import example.components.position;
+import example.components.movable;
 
 
 void generateComponents(ref Hub hub)
@@ -13,6 +14,6 @@ void generateComponents(ref Hub hub)
 	 * when you add a component to an entity, one of the same type will get pulled from the parent array
 	 * and then it will generate a new one based on the same type
 	 */
-	hub.componentCreate!(PositionComponent);
-	hub.componentCreate!(MovableComponent);
+	hub.componentCreate!Position;
+	hub.componentCreate!Movable;
 }

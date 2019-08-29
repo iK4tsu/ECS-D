@@ -1,12 +1,12 @@
 module ecs.componentManager;
 
-import ecs.componentType;
 import ecs.icomponent;
 
 alias ComponentName = string;
 alias ComponentTypeId = uint;
 
 static uint next_id = 1;
+
 
 class ComponentManager
 {
@@ -46,21 +46,4 @@ class ComponentManager
 		}
 		return 0;
 	}
-}
-
-
-unittest
-{
-	ComponentManager manager = new ComponentManager();
-	manager.createComponent!(PositionComponent);
-
-	assert(manager.hasComponent!PositionComponent);
-
-	PositionComponent position = manager.getComponent!PositionComponent;
-
-	assert(manager.getComponent!PositionComponent == position);
-
-	assert((manager.getType!PositionComponent) == 1);
-
-	assert(cast(PositionComponent)(manager.getComponent!PositionComponent) !is null);
 }
