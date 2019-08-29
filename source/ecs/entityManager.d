@@ -122,4 +122,9 @@ class EntityManager
 	{
 		return (type in _mTypes) ? getEntity(_mTypes[type]) : null;
 	}
+
+	public EntityId[] getDeletedEntities()
+	{
+		return _deletedEntities;
+	}
 }

@@ -103,9 +103,14 @@ class Hub
 		return _entityManager.getType(eid);
 	}
 
-	public void setDescription(EntityId eid, const string description)
+	public void entitySetDescription(EntityId eid, const string description)
 	{
 		_entityManager.setDescription(eid, description);
+	}
+
+	public EntityId[] entityGetDeleted()
+	{
+		_entityManager.getDeletedEntities;
 	}
 
 
