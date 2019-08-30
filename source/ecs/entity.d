@@ -5,8 +5,10 @@ import ecs.ientity;
 import ecs.componentManager;
 
 
+import std.typecons;
+
 alias EntityId = uint;
-static EntityId next_id = 0;
+static EntityId next_id = 1;
 
 alias EntityType = string;
 
@@ -21,9 +23,13 @@ class Entity : IEntity
 	
 
 
-	public this(const string name, const EntityType type)
+	public this(const string name, const EntityType type) { this(0, name, type); }
+	public this(EntityId id, const string name, const EntityType type)
 	{
-		_id = next_id++;
+		if (!id)
+			_id = next_id++;
+		else
+			_id = id;
 		_type = type;
 		_name = name;
 	}
@@ -202,7 +208,7 @@ class Entity : IEntity
 {
 	Entity e = new Entity("I'm alive", "Group");
 
-	assert(e._id == 0);
+	assert(e._id == 1);
 	
 	ComponentTypeId fooID = 1;
 	ComponentTypeId gooID = 2;
