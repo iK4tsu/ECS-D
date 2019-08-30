@@ -1,6 +1,6 @@
 module example.components.position;
 
-import ecs.icomponent;
+import ecs;
 
 
 /*

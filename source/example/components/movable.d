@@ -1,7 +1,7 @@
 module example.components.movable;
 
 
-import ecs.icomponent;
+import ecs;
 
 /*
  * This component exists only to tell if an entity can move or not

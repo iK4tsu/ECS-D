@@ -1,9 +1,9 @@
-module example.systemFactory;
+module example.factories.systemFactory;
 
-import ecs.hub;
+import ecs;
 
 // import your systems
-import example.systems.movement;
+import example.systems;
 
 void generateSystems(ref Hub hub)
 {

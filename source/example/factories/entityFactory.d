@@ -1,12 +1,11 @@
-module example.entityFactory;
+module example.factories.entityFactory;
 
 
-import ecs.hub;
+import ecs;
 
 
 // import your components
-import example.components.position;
-import example.components.movable;
+import example.components;
 
 void generateEntities(ref Hub hub)
 {
@@ -24,6 +23,6 @@ void generateEntities(ref Hub hub)
 	
 
 	// You can also create an entity this way
-	import example.entities.player;
+	import example.entities;
 	EntityId playerId = createPlayer(hub);
 }

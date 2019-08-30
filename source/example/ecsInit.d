@@ -1,11 +1,10 @@
 module example.ecsInit;
 
 
-import ecs.hub;
+import ecs;
 
-import example.componentFactory;
-import example.systemFactory;
-import example.entityFactory;
+// Import your factories
+import example.factories;
 
 
 import std.stdio;
@@ -24,8 +23,7 @@ void exampleInit()
 
 	EntityId playerId = 1;
 
-	import example.components.position;
-	import example.components.movable;
+	import example.components;
 	ComponentTypeId positionId = _hub.componentGetType!Position;
 	ComponentTypeId movableId = _hub.componentGetType!Movable;
 
