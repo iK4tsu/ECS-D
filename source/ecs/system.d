@@ -11,9 +11,9 @@ alias SystemName = string;
 
 class System
 {
-	public Hub _hub;
-	public ISystem[SystemName] _systems;
-	public EntityId[] _eids;
+	private Hub _hub;
+	private ISystem[SystemName] _systems;
+	private EntityId[] _eids;
 
 
 	public this(Hub hub)
@@ -34,10 +34,7 @@ class System
 
 	public T getSystem(T)()
 	{
-		if (ExistsSystem!T)
-		{
-			return cast(T)(_systems[__traits(identifier, T)]);
-		}
+		return existsSystem!T ? cast(T)(_systems[__traits(identifier, T)]) : null;
 	}
 
 	public bool existsSystem(T)()
@@ -66,4 +63,14 @@ class System
 			}
 		}
 	}
+}
+
+
+@System unittest
+{
+	System system = new System(new Hub());
+	system.createSystem!FooSys;
+
+	assert(system.existsSystem!FooSys);
+	assert(cast(FooSys) system.getSystem!FooSys !is null);
 }

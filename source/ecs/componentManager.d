@@ -65,9 +65,8 @@ class ComponentManager
 @safe unittest
 {
 	ComponentManager manager = new ComponentManager();
+	manager.createComponent!Foo;
 
-	assert(manager.createComponent!Foo == 1);
 	assert(manager.createComponent!Goo == 2);
-
 	assert(manager.createComponent!Foo == 1);
 }
