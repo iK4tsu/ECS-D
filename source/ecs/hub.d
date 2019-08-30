@@ -7,6 +7,11 @@ import ecs.componentManager;
 import ecs.system;
 import ecs.isystem;
 
+import ecs.exceptions.entity;
+
+
+import std.traits;
+
 alias EntityId = uint;
 alias ComponentTypeId = uint;
 alias EntityType = string;
@@ -33,7 +38,13 @@ class Hub
 
 	public void entityRemoveComponent(EntityId eid, ComponentTypeId id)
 	{
-		_entityManager.removeComponent(eid, id);
+		if(!_entityManager.removeComponent(eid, id))
+			throw new EntityDoesNotContainComponentException(
+				id, "Cannot remove component '" ~
+				componentGetName(id) ~ "' from '" ~
+				entityGetName(eid) ~ "'!",
+				"You should verify if an entity has a component before " ~
+				"removing it.");
 	}
 
 	public T entityGetComponent(T)(EntityId id)
@@ -139,6 +150,11 @@ class Hub
 	public T componentGet(T)()
 	{
 		return _componentManager.getComponent!T;
+	}
+
+	public ComponentName componentGetName(ComponentTypeId id)
+	{
+		return _componentManager.getComponentName(id);
 	}
 
 	public ComponentTypeId componentGetType(T)()
