@@ -114,6 +114,16 @@ class Hub
 		return _entityManager.getDeletedEntities;
 	}
 
+	public EntityId entityGetId(Entity e)
+	{
+		return _entityManager.getId(e);
+	}
+
+	public EntityId entityGetId(EntityType type)
+	{
+		return _entityManager.getId(type);
+	}
+
 
 	/********************************************* COMPONENT MANAGER FUNCTIONS *********************************************/
 	public ComponentTypeId componentCreate(T)()
