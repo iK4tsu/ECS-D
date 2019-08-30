@@ -146,7 +146,7 @@ class EntityManager
 
 	public EntityId getId(EntityType type)
 	{
-		return getId(getEntity(type));
+		return (type in _mTypes) !is null ? _mTypes[type] : 0;
 	}
 }
 
