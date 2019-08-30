@@ -32,9 +32,6 @@ void exampleInit()
 	assert(_hub._entityManager.hasEntity(playerId));
 	assert(_hub.entityHasComponents(playerId, [positionId, movableId]));
 
-	import ecs.isystem;
-	assert(cast(ISystem)(_hub._system._systems["Movement"]) !is null);
-
 
 	do
 	{
