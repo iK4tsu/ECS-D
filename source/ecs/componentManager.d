@@ -7,16 +7,22 @@ alias ComponentTypeId = uint;
 
 static ComponentTypeId next_id = 1;
 
+import std.traits;
 
 class ComponentManager
 {
 	private IComponent[ComponentTypeId] _components;
+	private ComponentName[ComponentTypeId] _componentNames;
 
 
 	public ComponentTypeId createComponent(T)()
 	{
 		if (!hasComponent!T)
-			_components[next_id++] = new T();
+		{
+			ComponentTypeId id = next_id++;
+			_components[id] = new T();
+			_componentNames[id] = __traits(identifier, T);
+		}
 		return getType!T;
 	}
 
@@ -32,6 +38,12 @@ class ComponentManager
 		if (hasComponent!T)
 			return cast(T)(_components[getType!T]);
 		return null;
+	}
+
+
+	public ComponentName getComponentName(ComponentTypeId id)
+	{
+		return (id in _componentNames) !is null ? _componentNames[id] : null;
 	}
 
 
