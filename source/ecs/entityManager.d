@@ -140,10 +140,8 @@ class EntityManager
 
 	public EntityId getId(Entity e)
 	{
-		foreach(id, entity; _mEntities)
-			if (e == entity)
-				return id;
-		return 0;
+		import std.algorithm : canFind;
+		return canFind(_mEntities.values, e) ? e._id : 0;
 	}
 
 	public EntityId getId(EntityType type)
