@@ -47,10 +47,11 @@ class EntityManager
 		return hasEntity(eid) ? _mEntities[eid].addComponent!(T)(id) : null;
 	}
 
-	public void removeComponent(EntityId eid, ComponentTypeId id)
+	public bool removeComponent(EntityId eid, ComponentTypeId id)
 	{
 		if (hasEntity(eid))
-			_mEntities[eid].removeComponent(id);
+			return _mEntities[eid].removeComponent(id);
+		return false;
 	}
 
 	public T getComponent(T)(EntityId eid)

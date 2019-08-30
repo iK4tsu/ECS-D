@@ -53,13 +53,15 @@ class Entity : IEntity
 	 * Each component has an unique index based on it's type
 	 * Use it's type instead of manual inserting an index 
 	 */
-	public void removeComponent(ComponentTypeId id)
+	public bool removeComponent(ComponentTypeId id)
 	{
 		if (hasComponent(id))
 		{
 			destroy(_components[id]);
 			_components.remove(id);
+			return true;
 		}
+		return false;
 	}
 
 
