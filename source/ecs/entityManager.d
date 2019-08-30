@@ -16,10 +16,20 @@ class EntityManager
 
 	public EntityId createEntity(const string name, const EntityType type)
 	{
-		Entity e = new Entity(name, type);
+		Entity e = _deletedEntities.length > 0 ?
+			new Entity(pullDeletedId, name, type) :
+			new Entity(name, type);
 		_mEntities[e._id] = e;
 		_mTypes[type] = e._id;
 		return e._id;
+	}
+
+
+	public EntityId pullDeletedId()
+	{
+		EntityId eid = _deletedEntities[0];
+		_deletedEntities = _deletedEntities.length > 1 ? _deletedEntities[1 .. $] : null;
+		return eid;
 	}
 
 
@@ -127,6 +137,19 @@ class EntityManager
 	{
 		return _deletedEntities;
 	}
+
+	public EntityId getId(Entity e)
+	{
+		foreach(id, entity; _mEntities)
+			if (e == entity)
+				return id;
+		return 0;
+	}
+
+	public EntityId getId(EntityType type)
+	{
+		return getId(getEntity(type));
+	}
 }
 
 
@@ -153,4 +176,24 @@ class EntityManager
 	assert(manager.getDeletedEntities[0] == eid);
 	assert(!manager.hasEntity(eid));
 	assert(manager.getEntity(eid) is null);
+}
+
+@system unittest
+{
+	EntityManager manager = new EntityManager();
+	EntityId eid1 = manager.createEntity("I'm gonna die", "Dead");
+	EntityId eid2 = manager.createEntity("I'm subject number 2!", "Guinea Pig");
+
+	assert(eid1 == 1);
+	assert(eid2 == 2);
+
+	manager.killEntity(eid1);
+	eid1 = manager.createEntity("Wait I revived?", "Blessing");
+
+	assert(manager.getDeletedEntities.length == 0);
+	assert(eid1 == 1);
+
+	EntityId eid3 = manager.createEntity("I'm subject number 3!", "Guinea Pig");
+	
+	assert(eid3 == 3);
 }

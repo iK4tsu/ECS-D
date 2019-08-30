@@ -21,7 +21,7 @@ void exampleInit()
 	generateSystems(_hub);
 	generateEntities(_hub);
 
-	EntityId playerId = 1;
+	EntityId playerId = _hub.entityGetId("Player");
 
 	import example.components;
 	ComponentTypeId positionId = _hub.componentGetType!Position;
