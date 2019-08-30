@@ -8,10 +8,8 @@ import ecs.componentManager;
 class EntityManager
 {
 	private Entity[EntityId] _mEntities;
-	private EntityId[EntityType] _mTypes;
+	private EntityType[EntityId] _mTypes;
 	private EntityId[] _deletedEntities;
-
-	public this() {}
 
 
 	public EntityId createEntity(const string name, const EntityType type)
@@ -20,7 +18,7 @@ class EntityManager
 			new Entity(pullDeletedId, name, type) :
 			new Entity(name, type);
 		_mEntities[e._id] = e;
-		_mTypes[type] = e._id;
+		_mTypes[e._id] = type;
 		return e._id;
 	}
 
@@ -130,7 +128,10 @@ class EntityManager
 
 	public Entity getEntity(EntityType type)
 	{
-		return (type in _mTypes) ? getEntity(_mTypes[type]) : null;
+		foreach(id, _type; _mTypes)
+			if (_type == type)
+				return getEntity(id);
+		return null;
 	}
 
 	public EntityId[] getDeletedEntities()
@@ -146,7 +147,7 @@ class EntityManager
 
 	public EntityId getId(EntityType type)
 	{
-		return (type in _mTypes) !is null ? _mTypes[type] : 0;
+		return getId(getEntity(type));
 	}
 }
 
