@@ -1,8 +1,6 @@
 module example.systems.movement;
 
-// always import these two
-import ecs.isystem;
-import ecs.hub;
+import ecs;
 
 
 // imports of the necessary components needed for this system

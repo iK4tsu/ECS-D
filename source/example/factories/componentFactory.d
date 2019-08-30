@@ -1,9 +1,8 @@
-module example.componentFactory;
+module example.factories.componentFactory;
 
-import ecs.hub;
+import ecs;
 
-import example.components.position;
-import example.components.movable;
+import example.components;
 
 
 void generateComponents(ref Hub hub)

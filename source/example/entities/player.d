@@ -1,7 +1,7 @@
 module example.entities.player;
 
 
-import ecs.hub;
+import ecs;
 
 import example.components.position;
 import example.components.movable;
