@@ -128,3 +128,29 @@ class EntityManager
 		return _deletedEntities;
 	}
 }
+
+
+@system unittest
+{
+	EntityManager manager = new EntityManager();
+	EntityId eid = manager.createEntity("Am I just a number?", "Math");
+
+	assert(manager.hasEntity(eid));
+	assert(!manager.hasEntity(++eid));
+}
+
+@system unittest
+{
+	EntityManager manager = new EntityManager();
+	EntityId eid = manager.createEntity("Should I worry", "Sad");
+
+	assert(manager.getEntity(eid) == manager.getEntity("Sad"));
+	assert(manager.getDeletedEntities.length == 0);
+	
+	manager.killEntity(eid);
+
+	assert(manager.getDeletedEntities.length == 1);
+	assert(manager.getDeletedEntities[0] == eid);
+	assert(!manager.hasEntity(eid));
+	assert(manager.getEntity(eid) is null);
+}

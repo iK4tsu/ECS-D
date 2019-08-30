@@ -196,3 +196,57 @@ class Entity : IEntity
 
 	public void setDescription(const string description) { _description = description; }
 }
+
+
+@system unittest
+{
+	Entity e = new Entity("I'm alive", "Group");
+
+	assert(e._id == 0);
+	
+	ComponentTypeId fooID = 1;
+	ComponentTypeId gooID = 2;
+	e.addComponent!Foo(fooID);
+
+	assert(e.hasAnyComponent([fooID, gooID]));
+	assert(e.hasComponent(fooID));
+
+	assert(!e.hasComponent(gooID));
+
+	assert(cast(Foo) e.getComponent!Foo !is null);
+	assert(cast(Goo) e.getComponent!Goo is null);
+}
+
+@system unittest
+{
+	Entity e = new Entity("I'm also alive", "Alive");
+
+	ComponentTypeId fooID = 1;
+	ComponentTypeId gooID = 2;
+	e.addComponent!Foo(fooID);
+
+	assert(!e.isComponentDisabled(fooID));
+	assert(!e.isComponentDisabled(gooID));
+
+	e.disableComponent(fooID);
+
+	assert(e.isComponentDisabled(fooID));
+	assert(!e.hasComponent(fooID));
+
+	e.enableComponent(fooID);
+	e.removeComponent(fooID);
+
+	assert(!e.hasComponent(fooID));
+}
+
+@system unittest
+{
+	Entity e = new Entity("Just e it", "e");
+
+	assert(e.getName == "Just e it");
+	assert(e.getType == "e");
+
+	e.setDescription("Feel the e");
+
+	assert(e.getDescription == "Feel the e");
+}

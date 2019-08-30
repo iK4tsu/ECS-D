@@ -5,6 +5,7 @@ import ecs.icomponent;
 import ecs.entityManager;
 import ecs.componentManager;
 import ecs.system;
+import ecs.isystem;
 
 alias EntityId = uint;
 alias ComponentTypeId = uint;
@@ -156,4 +157,30 @@ class Hub
 	{
 		return _system.existsSystem!T;
 	}
+}
+
+
+@system unittest
+{
+	Hub _hub = new Hub();
+
+	ComponentTypeId fooID = _hub.componentCreate!Foo;
+	_hub.componentCreate!Goo;
+	_hub.systemCreate!FooSys;
+	EntityId eid = _hub.entityCreate("Nobody", "Alone");
+
+	_hub.entityAddComponent!Foo(eid);
+	
+	assert(_hub.entityGetComponent!Foo(eid).someData == int.init);
+	assert(_hub.systemExists!FooSys);
+
+	_hub.updateSystems;
+
+	assert(_hub.entityGetComponent!Foo(eid).someData == 1);
+
+	_hub.entityDisableComponent(eid, fooID);
+	_hub.updateSystems;
+	_hub.entityEnableComponent(eid, fooID);
+
+	assert(_hub.entityGetComponent!Foo(eid).someData == 1);
 }
