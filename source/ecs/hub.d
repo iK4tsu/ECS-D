@@ -79,6 +79,11 @@ class Hub
 		_entityManager.disableComponent(eid, id);
 	}
 
+	public bool entityIsComponentDisabled(EntityId eid, ComponentTypeId id)
+	{
+		return _entityManager.isComponentDisabled(eid, id);
+	}
+
 	public bool entityHasComponents(EntityId eid, ComponentTypeId[] ids)
 	{
 		return _entityManager.hasComponents(eid, ids);

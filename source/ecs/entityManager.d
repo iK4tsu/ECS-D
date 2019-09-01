@@ -87,6 +87,11 @@ class EntityManager
 			_mEntities[eid].disableComponent(id);
 	}
 
+	public bool isComponentDisabled(EntityId eid, ComponentTypeId id)
+	{
+		return _mEntities[eid].isComponentDisabled(id);
+	}
+
 	public IComponent[] getComponents(EntityId eid)
 	{
 		return hasEntity(eid) ? _mEntities[eid].getComponents : null;
