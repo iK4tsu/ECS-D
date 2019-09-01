@@ -122,7 +122,7 @@ class Entity : IEntity
 		throw new EntityComponentIsNotDisabledException(
 			id, "Cannot disable component '" ~
 			_entityManager._hub.componentGetName(id) ~
-			"' from '" ~ _name ~ "!", "You should check " ~
+			"' from '" ~ _name ~ "'!", "You should check " ~
 			"if a component is disabled beafore enabling it.");
 	}
 
@@ -141,7 +141,7 @@ class Entity : IEntity
 		throw new EntityDoesNotContainComponentException(
 			id, "Cannot get component '" ~
 			_entityManager._hub.componentGetName(id) ~
-			"' from '" ~ _name ~ "!", "You should check if " ~
+			"' from '" ~ _name ~ "'!", "You should check if " ~
 			"an entity has a component before getting it.");
 	}
 
@@ -228,12 +228,16 @@ class Entity : IEntity
 
 	public ComponentTypeId getComponentType(T)()
 	{
-		foreach(key, component; _components)
-		{
-			if (cast(T)(component) !is null)
-				return key;
-		}
-		return 0;
+		if (hasComponent!T)
+			foreach(key, component; _components)
+				if (cast(T)(component) !is null)
+					return key;
+
+		throw new EntityDoesNotContainComponentException(
+			id, "Cannot get component '" ~
+			_entityManager._hub.componentGetName(id) ~ "' type from '" ~
+			_name ~ "'!", "You should check if an entity " ~
+			"has a component before getting it's type.");
 	}
 
 
