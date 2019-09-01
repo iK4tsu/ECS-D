@@ -2,3 +2,4 @@ module ecs.exceptions.entity;
 
 public:
 	import ecs.exceptions.entity.entityDoesNotContainComponentException;
+	import ecs.exceptions.entity.entityAlreadyContainsComponentException;
