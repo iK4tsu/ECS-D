@@ -116,7 +116,14 @@ class Entity : IEntity
 		{
 			_components[id] = _disabledComponents[id];
 			_disabledComponents.remove(id);
+			return;
 		}
+
+		throw new EntityComponentIsNotDisabledException(
+			id, "Cannot disable component '" ~
+			_entityManager._hub.componentGetName(id) ~
+			"' from '" ~ _name ~ "!", "You should check " ~
+			"if a component is disabled beafore enabling it.");
 	}
 
 
