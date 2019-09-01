@@ -23,6 +23,7 @@ void exampleInit()
 
 	EntityId playerId = _hub.entityGetId("Player");
 
+
 	import example.components;
 	ComponentTypeId positionId = _hub.componentGetType!Position;
 	ComponentTypeId movableId = _hub.componentGetType!Movable;
@@ -41,10 +42,12 @@ void exampleInit()
 		switch (readln.chomp)
 		{
 			case "move":
-				_hub.entityEnableComponent(playerId, movableId);
+				if (_hub.entityIsComponentDisabled(playerId, movableId))
+					_hub.entityEnableComponent(playerId, movableId);
 				break;
 			default:
-				_hub.entityDisableComponent(playerId, movableId);
+				if (_hub.entityHasComponent(playerId, movableId))
+					_hub.entityDisableComponent(playerId, movableId);
 		}
 
 		_hub.updateSystems;
