@@ -52,7 +52,7 @@ class Entity : IEntity
 		{
 			T t = new T();
 			_components[id] = t;
-			return getComponent!T;
+			return t;
 		}
 
 		throw new EntityAlreadyContainsComponentException(
@@ -134,15 +134,11 @@ class Entity : IEntity
 	 */
 	public T getComponent(T)()
 	{
-		const ComponentTypeId id = getComponentType!T;
-		if (hasComponent(id))
-			return cast(T)(_components[id]);
+		foreach(component; _components)
+			if (cast(T) component !is null)
+				return cast(T) component;
 
-		throw new EntityDoesNotContainComponentException(
-			id, "Cannot get component '" ~
-			_entityManager._hub.componentGetName(id) ~
-			"' from '" ~ _name ~ "'!", "You should check if " ~
-			"an entity has a component before getting it.");
+		return null;
 	}
 
 
@@ -223,21 +219,6 @@ class Entity : IEntity
 	public bool isComponentDisabled(ComponentTypeId id)
 	{
 		return (id in _disabledComponents) !is null;
-	}
-
-
-	public ComponentTypeId getComponentType(T)()
-	{
-		if (hasComponent!T)
-			foreach(key, component; _components)
-				if (cast(T)(component) !is null)
-					return key;
-
-		throw new EntityDoesNotContainComponentException(
-			id, "Cannot get component '" ~
-			_entityManager._hub.componentGetName(id) ~ "' type from '" ~
-			_name ~ "'!", "You should check if an entity " ~
-			"has a component before getting it's type.");
 	}
 
 
