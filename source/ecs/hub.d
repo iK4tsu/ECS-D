@@ -24,8 +24,8 @@ class Hub
 
 	public this()
 	{
-		_entityManager = new EntityManager();
-		_componentManager = new ComponentManager();
+		_entityManager = new EntityManager(this);
+		_componentManager = new ComponentManager(this);
 		_system = new System(this);
 	}
 
@@ -38,13 +38,7 @@ class Hub
 
 	public void entityRemoveComponent(EntityId eid, ComponentTypeId id)
 	{
-		if(!_entityManager.removeComponent(eid, id))
-			throw new EntityDoesNotContainComponentException(
-				id, "Cannot remove component '" ~
-				componentGetName(id) ~ "' from '" ~
-				entityGetName(eid) ~ "'!",
-				"You should verify if an entity has a component before " ~
-				"removing it.");
+		_entityManager.removeComponent(eid, id);
 	}
 
 	public T entityGetComponent(T)(EntityId id)
@@ -83,6 +77,11 @@ class Hub
 	public void entityDisableComponent(EntityId eid, ComponentTypeId id)
 	{
 		_entityManager.disableComponent(eid, id);
+	}
+
+	public bool entityIsComponentDisabled(EntityId eid, ComponentTypeId id)
+	{
+		return _entityManager.isComponentDisabled(eid, id);
 	}
 
 	public bool entityHasComponents(EntityId eid, ComponentTypeId[] ids)

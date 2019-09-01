@@ -1,6 +1,7 @@
 module ecs.componentManager;
 
 import ecs.icomponent;
+import ecs.hub;
 
 alias ComponentName = string;
 alias ComponentTypeId = uint;
@@ -13,6 +14,14 @@ class ComponentManager
 {
 	private IComponent[ComponentTypeId] _components;
 	private ComponentName[ComponentTypeId] _componentNames;
+	private Hub _hub;
+
+
+	public this() { this(null); }
+	public this(Hub hub)
+	{
+		_hub = hub;
+	}
 
 
 	public ComponentTypeId createComponent(T)()
@@ -59,7 +68,7 @@ class ComponentManager
 }
 
 
-@safe unittest
+@system unittest
 {
 	ComponentManager manager = new ComponentManager();
 	manager.createComponent!Foo;
@@ -74,7 +83,7 @@ class ComponentManager
 	assert(manager.getType!Goo == 0);
 }
 
-@safe unittest
+@system unittest
 {
 	ComponentManager manager = new ComponentManager();
 	manager.createComponent!Foo;

@@ -3,6 +3,10 @@ module ecs.entityManager;
 import ecs.entity;
 import ecs.icomponent;
 import ecs.componentManager;
+import ecs.hub;
+
+
+import ecs.exceptions.entity;
 
 
 class EntityManager
@@ -10,13 +14,21 @@ class EntityManager
 	private Entity[EntityId] _mEntities;
 	private EntityType[EntityId] _mTypes;
 	private EntityId[] _deletedEntities;
+	public Hub _hub;
+
+
+	public this() { this(null); }
+	public this(Hub hub)
+	{
+		_hub = hub;
+	}
 
 
 	public EntityId createEntity(const string name, const EntityType type)
 	{
 		Entity e = _deletedEntities.length > 0 ?
-			new Entity(pullDeletedId, name, type) :
-			new Entity(name, type);
+			new Entity(this, pullDeletedId, name, type) :
+			new Entity(this, 0, name, type);
 		_mEntities[e._id] = e;
 		_mTypes[e._id] = type;
 		return e._id;
@@ -38,7 +50,12 @@ class EntityManager
 			destroy(_mEntities[eid]);
 			_mEntities.remove(eid);
 			_deletedEntities ~= eid;
+			return;
 		}
+
+		throw new EntityDoesNotExistException(eid, 
+			"Cannot destroy entity!", "You should check " ~
+			"if an entity exists before killing it.");
 	}
 
 
@@ -47,11 +64,10 @@ class EntityManager
 		return hasEntity(eid) ? _mEntities[eid].addComponent!(T)(id) : null;
 	}
 
-	public bool removeComponent(EntityId eid, ComponentTypeId id)
+	public void removeComponent(EntityId eid, ComponentTypeId id)
 	{
 		if (hasEntity(eid))
-			return _mEntities[eid].removeComponent(id);
-		return false;
+			_mEntities[eid].removeComponent(id);
 	}
 
 	public T getComponent(T)(EntityId eid)
@@ -69,6 +85,11 @@ class EntityManager
 	{
 		if (hasEntity(eid))
 			_mEntities[eid].disableComponent(id);
+	}
+
+	public bool isComponentDisabled(EntityId eid, ComponentTypeId id)
+	{
+		return _mEntities[eid].isComponentDisabled(id);
 	}
 
 	public IComponent[] getComponents(EntityId eid)

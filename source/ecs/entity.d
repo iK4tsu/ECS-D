@@ -3,7 +3,9 @@ module ecs.entity;
 import ecs.icomponent;
 import ecs.ientity;
 import ecs.componentManager;
+import ecs.entityManager;
 
+import ecs.exceptions.entity;
 
 import std.typecons;
 
@@ -20,18 +22,22 @@ class Entity : IEntity
 	private const EntityType _type;
 	private const string _name;
 	private string _description;
+	private EntityManager _entityManager;
 	
 
 
-	public this(const string name, const EntityType type) { this(0, name, type); }
-	public this(EntityId id, const string name, const EntityType type)
+	public this(const string name, const EntityType type) { this(null, 0, name, type); }
+	public this(EntityId id, const string name, const EntityType type) {  this(null, id, name, type); }
+	public this(EntityManager manager, EntityId id, const string name, const EntityType type)
 	{
 		if (!id)
 			_id = next_id++;
 		else
 			_id = id;
+
 		_type = type;
 		_name = name;
+		_entityManager = manager;
 	}
 
 
@@ -43,8 +49,17 @@ class Entity : IEntity
 	public T addComponent(T)(ComponentTypeId id)
 	{
 		if (!hasComponent(id))
-			_components[id] = new T;
-		return getComponent!T;
+		{
+			T t = new T();
+			_components[id] = t;
+			return t;
+		}
+
+		throw new EntityAlreadyContainsComponentException(
+			id, "Cannot add component '" ~
+			_entityManager._hub.componentGetName(id) ~
+			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
+			"contains a component before adding it.");
 	}
 
 
@@ -53,15 +68,20 @@ class Entity : IEntity
 	 * Each component has an unique index based on it's type
 	 * Use it's type instead of manual inserting an index 
 	 */
-	public bool removeComponent(ComponentTypeId id)
+	public void removeComponent(ComponentTypeId id)
 	{
 		if (hasComponent(id))
 		{
 			destroy(_components[id]);
 			_components.remove(id);
-			return true;
+			return;
 		}
-		return false;
+
+		throw new EntityDoesNotContainComponentException(
+			id, "Cannot remove component '" ~
+			_entityManager._hub.componentGetName(id) ~ "' from '" ~
+			_name ~ "'!", "You should check if an entity has a " ~
+			"component before removing it.");
 	}
 
 
@@ -76,7 +96,14 @@ class Entity : IEntity
 		{
 			_disabledComponents[id] = _components[id];
 			_components.remove(id);
+			return;
 		}
+
+		throw new EntityDoesNotContainComponentException(
+			id, "Cannot disable component '" ~
+			_entityManager._hub.componentGetName(id) ~
+			"' in '" ~ _name ~ "'!", "You should check if " ~
+			"an entity has a component before disabling it");
 	}
 
 
@@ -89,7 +116,14 @@ class Entity : IEntity
 		{
 			_components[id] = _disabledComponents[id];
 			_disabledComponents.remove(id);
+			return;
 		}
+
+		throw new EntityComponentIsNotDisabledException(
+			id, "Cannot disable component '" ~
+			_entityManager._hub.componentGetName(id) ~
+			"' from '" ~ _name ~ "'!", "You should check " ~
+			"if a component is disabled beafore enabling it.");
 	}
 
 
@@ -100,9 +134,10 @@ class Entity : IEntity
 	 */
 	public T getComponent(T)()
 	{
-		const ComponentTypeId id = getComponentType!T;
-		if (hasComponent(id))
-			return cast(T)(_components[id]);
+		foreach(component; _components)
+			if (cast(T) component !is null)
+				return cast(T) component;
+
 		return null;
 	}
 
@@ -184,17 +219,6 @@ class Entity : IEntity
 	public bool isComponentDisabled(ComponentTypeId id)
 	{
 		return (id in _disabledComponents) !is null;
-	}
-
-
-	public ComponentTypeId getComponentType(T)()
-	{
-		foreach(key, component; _components)
-		{
-			if (cast(T)(component) !is null)
-				return key;
-		}
-		return 0;
 	}
 
 

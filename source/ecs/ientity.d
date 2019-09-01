@@ -6,7 +6,7 @@ import ecs.componentManager;
 public interface IEntity
 {
 	public void addComponent(T)(ComponentTypeId id);
-	public bool removeComponent(ComponentTypeId id);
+	public void removeComponent(ComponentTypeId id);
 
 	public T getComponent(T)();
 	public IComponent[] getComponents();
