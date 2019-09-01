@@ -50,7 +50,12 @@ class EntityManager
 			destroy(_mEntities[eid]);
 			_mEntities.remove(eid);
 			_deletedEntities ~= eid;
+			return;
 		}
+
+		throw new EntityDoesNotExistException(eid, 
+			"Cannot destroy entity!", "You should check " ~
+			"if an entity exists before killing it.");
 	}
 
 
