@@ -137,7 +137,12 @@ class Entity : IEntity
 		const ComponentTypeId id = getComponentType!T;
 		if (hasComponent(id))
 			return cast(T)(_components[id]);
-		return null;
+
+		throw new EntityDoesNotContainComponentException(
+			id, "Cannot get component '" ~
+			_entityManager._hub.componentGetName(id) ~
+			"' from '" ~ _name ~ "!", "You should check if " ~
+			"an entity has a component before getting it.");
 	}
 
 
