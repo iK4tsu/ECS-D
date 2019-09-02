@@ -12,11 +12,13 @@ import ecs.exceptions.entity;
 
 import std.traits;
 
+
 alias EntityId = uint;
 alias ComponentTypeId = uint;
 alias EntityType = string;
 
-class Hub
+
+final class Hub
 {
 	public EntityManager _entityManager;
 	public ComponentManager _componentManager;

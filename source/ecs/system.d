@@ -9,7 +9,7 @@ import std.traits;
 
 alias SystemName = string;
 
-class System
+final class System
 {
 	private Hub _hub;
 	private ISystem[SystemName] _systems;
