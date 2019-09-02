@@ -68,6 +68,9 @@ class Entity : IEntity
 
 	public T addComponent(T)(T t, ComponentTypeId id)
 	{
+		if (t is null)
+			return t;
+
 		if (!hasComponent(id))
 		{
 			_components[id] = t;
