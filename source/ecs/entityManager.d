@@ -70,6 +70,7 @@ class EntityManager
 			"before adding a component to it");
 	}
 
+
 	public void removeComponent(EntityId eid, ComponentTypeId id)
 	{
 		if (hasEntity(eid))
@@ -81,10 +82,18 @@ class EntityManager
 			"before remoing a component from it");
 	}
 
+
 	public T getComponent(T)(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getComponent!T : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getComponent!T;
+		
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get the component '" ~ _hub.componentGetName(id) ~
+			"' to the entity!", "You should verify if an entity exists " ~
+			"before getting a component from it");
 	}
+
 
 	public void enableComponent(EntityId eid, ComponentTypeId id)
 	{
