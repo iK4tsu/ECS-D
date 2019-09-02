@@ -74,7 +74,10 @@ class EntityManager
 	public void removeComponent(EntityId eid, ComponentTypeId id)
 	{
 		if (hasEntity(eid))
+		{
 			_mEntities[eid].removeComponent(id);
+			return;
+		}
 
 		throw new EntityDoesNotExistException(
 			eid, "Cannot remove the component '" ~ _hub.componentGetName(id) ~
