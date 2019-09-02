@@ -72,17 +72,18 @@ class ComponentManager
 
 		throw new ComponentDoesNotExistException(
 			"Cannot get the component's name!", "You should check if a component " ~
-			"exists before getting it.");
+			"exists before getting it's name.");
 	}
 
 
 	public ComponentName getComponentName(T)()
 	{
-		foreach(key, component; _components)
-			if (cast(T) component !is null)
-				return _componentNames[key];
+		if (hasComponent!T)
+			return _componentNames[getComponentTypeId!T];
 
-		return null;
+		throw new ComponentDoesNotExistException(
+			"Cannot get the component's name!", "You should check if a component " ~
+			"exists before getting it's name.");
 	}
 
 
