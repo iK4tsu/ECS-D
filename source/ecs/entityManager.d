@@ -274,7 +274,12 @@ class EntityManager
 
 	public EntityId getId(EntityType type)
 	{
-		return getId(getEntity(type));
+		if (typeExists(type))
+			return getId(getEntity(type));
+
+		throw new EntityDoesNotExistException(
+			-1, "Cannot get entity's type!", "You should verify if an entity " ~
+			"exists before getting it's type.");
 	}
 
 	public bool typeExists(EntityType type)
