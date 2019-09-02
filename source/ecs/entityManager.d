@@ -204,7 +204,12 @@ class EntityManager
 
 	public string getName(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getName : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getName;
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get the entity's name!", "You should verify if an " ~
+			"entity exists before getting it's name");
 	}
 
 	public string getDescription(EntityId eid)
