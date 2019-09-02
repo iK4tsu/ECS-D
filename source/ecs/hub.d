@@ -156,6 +156,11 @@ class Hub
 		return _componentManager.getComponentName(id);
 	}
 
+	public ComponentName componentGetName(T)()
+	{
+		return _componentManager.getComponentName!T;
+	}
+
 	public ComponentTypeId componentGetType(T)()
 	{
 		return _componentManager.getType!T;
