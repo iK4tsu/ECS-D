@@ -139,7 +139,13 @@ class EntityManager
 
 	public IComponent[] getComponents(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getComponents : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getComponents;
+		
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get the components '" ~ _hub.componentGetName(id) ~
+			"' from the entity!", "You should verify if an entity exists " ~
+			"before getting components from it");
 	}
 
 	public ComponentTypeId[] getComponentTypes(EntityId eid)
