@@ -40,7 +40,11 @@ class ComponentManager
 
 	public bool hasComponent(T)()
 	{
-		return getComponentTypeId!T > 0;
+		foreach(component; _components)
+			if (cast(T) component !is null)
+				return true;
+
+		return false;
 	}
 
 
