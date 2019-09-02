@@ -149,7 +149,12 @@ class EntityManager
 
 	public ComponentTypeId[] getComponentTypes(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getComponentTypes : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getComponentTypes;
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get the components ids from the entity",
+			"You should verify if an entity exists before getting components ids");
 	}
 
 	public bool hasComponent(EntityId eid, ComponentTypeId id)
