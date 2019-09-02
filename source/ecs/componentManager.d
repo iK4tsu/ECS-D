@@ -34,13 +34,13 @@ class ComponentManager
 			_components[id] = new T();
 			_componentNames[id] = __traits(identifier, T);
 		}
-		return getType!T;
+		return getComponentTypeId!T;
 	}
 
 
 	public bool hasComponent(T)()
 	{
-		return getType!T > 0;
+		return getComponentTypeId!T > 0;
 	}
 
 
@@ -53,17 +53,22 @@ class ComponentManager
 	public T getComponent(T)()
 	{
 		if (hasComponent!T)
-			return cast(T)(_components[getType!T]);
+			return cast(T)(_components[getComponentTypeId!T]);
 
 		throw new ComponentDoesNotExistException(
-			"Cannot get component!", "You should check if a component " ~
+			"Cannot get the component!", "You should check if a component " ~
 			"exists before getting it.");
 	}
 
 
 	public ComponentName getComponentName(ComponentTypeId id)
 	{
-		return (id in _componentNames) !is null ? _componentNames[id] : null;
+		if (hasComponent(id))
+			return _componentNames[id];
+
+		throw new ComponentDoesNotExistException(
+			"Cannot get the component's name!", "You should check if a component " ~
+			"exists before getting it.");
 	}
 
 
@@ -77,7 +82,7 @@ class ComponentManager
 	}
 
 
-	public ComponentTypeId getType(T)()
+	public ComponentTypeId getComponentTypeId(T)()
 	{
 		foreach(key, component; _components)
 		{
