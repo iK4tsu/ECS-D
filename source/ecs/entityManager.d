@@ -128,7 +128,13 @@ class EntityManager
 
 	public bool isComponentDisabled(EntityId eid, ComponentTypeId id)
 	{
-		return _mEntities[eid].isComponentDisabled(id);
+		if (hasEntity(eid))
+			return _mEntities[eid].isComponentDisabled(id);
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot check if the component '" ~ _hub.componentGetName(id) ~
+			"' is disabled in the entity!", "You should verify if an entity exists " ~
+			"before checking a component's status");
 	}
 
 	public IComponent[] getComponents(EntityId eid)
