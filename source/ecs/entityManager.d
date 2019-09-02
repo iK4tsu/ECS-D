@@ -281,7 +281,6 @@ class EntityManager
 	assert(manager.getDeletedEntities.length == 1);
 	assert(manager.getDeletedEntities[0] == eid);
 	assert(!manager.hasEntity(eid));
-	assert(manager.getEntity(eid) is null);
 }
 
 @system unittest
