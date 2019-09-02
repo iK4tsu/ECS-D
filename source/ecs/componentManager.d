@@ -90,11 +90,12 @@ class ComponentManager
 	public ComponentTypeId getComponentTypeId(T)()
 	{
 		foreach(key, component; _components)
-		{
 			if (cast(T)(component) !is null)
 				return key;
-		}
-		return 0;
+
+		throw new ComponentDoesNotExistException(
+			"Cannot get the component's id!", "You should check if a component " ~
+			"exists before getting it's id.");
 	}
 }
 
