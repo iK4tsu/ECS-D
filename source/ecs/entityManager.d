@@ -9,7 +9,7 @@ import ecs.hub;
 import ecs.exceptions.entity;
 
 
-class EntityManager
+final class EntityManager
 {
 	private Entity[EntityId] _mEntities;
 	private EntityType[EntityId] _mTypes;
@@ -29,9 +29,9 @@ class EntityManager
 		Entity e = _deletedEntities.length > 0 ?
 			new Entity(this, pullDeletedId, name, type) :
 			new Entity(this, 0, name, type);
-		_mEntities[e._id] = e;
-		_mTypes[e._id] = type;
-		return e._id;
+		_mEntities[e.getId] = e;
+		_mTypes[e.getId] = type;
+		return e.getId;
 	}
 
 
@@ -265,7 +265,7 @@ class EntityManager
 	{
 		import std.algorithm : canFind;
 		if (canFind(_mEntities.values, e))
-			return e._id;
+			return e.getId;
 
 		throw new EntityDoesNotExistException(
 			-1, "Cannot get entity id!", "You should verify if an entity exists " ~

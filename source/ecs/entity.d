@@ -16,7 +16,7 @@ alias EntityType = string;
 
 class Entity : IEntity
 {
-	public EntityId _id;
+	private EntityId _id;
 	private IComponent[ComponentTypeId] _components;
 	private IComponent[ComponentTypeId] _disabledComponents;
 	private const EntityType _type;
@@ -249,6 +249,7 @@ class Entity : IEntity
 	public string getName() { return _name; }
 	public string getDescription() { return _description; }
 	public EntityType getType() { return _type; }
+	public EntityId getId() { return _id; }
 
 	public void setDescription(const string description) { _description = description; }
 }
@@ -258,7 +259,7 @@ class Entity : IEntity
 {
 	Entity e = new Entity("I'm alive", "Group");
 
-	assert(e._id == 1);
+	assert(e.getId == 1);
 	
 	ComponentTypeId fooID = 1;
 	ComponentTypeId gooID = 2;

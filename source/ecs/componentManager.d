@@ -1,18 +1,20 @@
 module ecs.componentManager;
 
+
 import ecs.icomponent;
 import ecs.hub;
-
 import ecs.exceptions.component;
 
-alias ComponentName = string;
-alias ComponentTypeId = uint;
-
-static ComponentTypeId next_id = 1;
 
 import std.traits;
 
-class ComponentManager
+
+alias ComponentName = string;
+alias ComponentTypeId = uint;
+static ComponentTypeId next_id = 1;
+
+
+final class ComponentManager
 {
 	private IComponent[ComponentTypeId] _components;
 	private ComponentName[ComponentTypeId] _componentNames;
