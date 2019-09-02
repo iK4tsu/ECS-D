@@ -252,7 +252,7 @@ class EntityManager
 				return getEntity(id);
 
 		throw new EntityDoesNotExistException(
-			eid, "Cannot get entity!", "You should verify if an entity exists " ~
+			-1, "Cannot get entity!", "You should verify if an entity exists " ~
 			"before getting it.");
 	}
 
@@ -268,13 +268,19 @@ class EntityManager
 			return e._id;
 
 		throw new EntityDoesNotExistException(
-			eid, "Cannot get entity id!", "You should verify if an entity exists " ~
+			-1, "Cannot get entity id!", "You should verify if an entity exists " ~
 			"before getting it's id.");
 	}
 
 	public EntityId getId(EntityType type)
 	{
 		return getId(getEntity(type));
+	}
+
+	public bool typeExists(EntityType type)
+	{
+		import std.algorithm : canFind;
+		return canFind(_mTypes.values, type);
 	}
 }
 
