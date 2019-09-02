@@ -101,7 +101,15 @@ class EntityManager
 	public void enableComponent(EntityId eid, ComponentTypeId id)
 	{
 		if (hasEntity(eid))
+		{
 			_mEntities[eid].enableComponent(id);
+			return;
+		}
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot enable the component '" ~ _hub.componentGetName(id) ~
+			"' in the entity!", "You should verify if an entity exists " ~
+			"before enabling a component in it");
 	}
 
 	public void disableComponent(EntityId eid, ComponentTypeId id)
