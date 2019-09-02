@@ -10,6 +10,8 @@ import ecs;
  */
 class Position : IComponent
 {
+	this(int _x = int.init, int _y = int.init) { x = _x; y = _y;}
+
 	int x;
 	int y;
 }
