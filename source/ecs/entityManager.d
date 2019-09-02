@@ -235,7 +235,14 @@ class EntityManager
 	public void setDescription(EntityId eid, const string description)
 	{
 		if (hasEntity(eid))
+		{
 			_mEntities[eid].setDescription(description);
+			return;
+		}
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot set entity's description!", "You should verify if an " ~
+			"entity exists before setting it's description.");
 	}
 
 	public Entity getEntity(EntityType type)
