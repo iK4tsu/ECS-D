@@ -264,7 +264,12 @@ class EntityManager
 	public EntityId getId(Entity e)
 	{
 		import std.algorithm : canFind;
-		return canFind(_mEntities.values, e) ? e._id : 0;
+		if (canFind(_mEntities.values, e))
+			return e._id;
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get entity id!", "You should verify if an entity exists " ~
+			"before getting it's id.");
 	}
 
 	public EntityId getId(EntityType type)
