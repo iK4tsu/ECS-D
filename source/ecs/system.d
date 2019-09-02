@@ -66,11 +66,13 @@ class System
 }
 
 
+import ecs.icomponent;
 @System unittest
 {
-	System system = new System(new Hub());
-	system.createSystem!FooSys;
+	Hub hub = new Hub();
+	hub.componentCreate!Foo;
+	hub.systemCreate!FooSys;
 
-	assert(system.existsSystem!FooSys);
-	assert(cast(FooSys) system.getSystem!FooSys !is null);
+	assert(hub.systemExists!FooSys);
+	assert(cast(FooSys) hub.systemGet!FooSys !is null);
 }
