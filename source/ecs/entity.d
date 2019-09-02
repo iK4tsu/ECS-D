@@ -42,9 +42,12 @@ class Entity : IEntity
 
 
 	/*
-	 * Add a component to the refered index
-	 * Each component has a an unique index based on it's type
-	 * Use it's type instead of manual inserting an index
+	 * Add a component with a respective key
+	 * The key is the component's id
+	 * Every time you inittialize a new component, an id is generated
+	 * For this reason, you should always use this function through the Hub
+	 * As it will get the id internaly
+	 * If you decide otherwise, you'll also need to perform other functions manualy
 	 */
 	public T addComponent(T)(ComponentTypeId id)
 	{
@@ -64,9 +67,10 @@ class Entity : IEntity
 
 
 	/*
-	 * Removes a component from the respective index
-	 * Each component has an unique index based on it's type
-	 * Use it's type instead of manual inserting an index 
+	 * Removes a component and the respective key from the AA _components
+	 * The key is the component's id
+	 * It's highly recomended you to always use the Hub when accessing this functions
+	 * However, if you decide to get the component id first you can use it directly, but not recomended
 	 */
 	public void removeComponent(ComponentTypeId id)
 	{
@@ -86,9 +90,14 @@ class Entity : IEntity
 
 
 	/*
-	 * Moves an existing component to the disbled component array
-	 * Only use this function if the entity needs the component in the future
-	 * If the entity doesn't need it anymore use the 'RemoveComponent' function
+	 * Moves an existing component to the disabled component array
+	 * Use this function if you're certaint you'll need the component again
+	 * If you're unsure, or you have the knowledge that the component is not going to be used again
+	 * Use the removeComponent function instead
+	 * You disable a component by using the AA's keys
+	 * The key is the component's id
+	 * It's highly recomended you to always use the Hub when accessing this functions
+	 * However, if you decide to get the component id first you can use it directly, but not recomended
 	 */
 	public void disableComponent(ComponentTypeId id)
 	{
@@ -109,6 +118,10 @@ class Entity : IEntity
 
 	/*
 	 * Enables a component if this is disabled
+	 * You enable it by using the AA's keys
+	 * The key is the component's id
+	 * It's highly recomended you to always use the Hub when accessing this functions
+	 * However, if you decide to get the component id first you can use it directly, but not recomended
 	 */
 	public void enableComponent(ComponentTypeId id)
 	{
@@ -128,9 +141,11 @@ class Entity : IEntity
 
 
 	/*
-	 * Get a component from the respective index
-	 * Each component has an unique index based on it's type
-	 * Use it's type instead of manual inserting an index 
+	 * Get a specific component
+	 * You pass a T type of component and you'll recive the same type if it exists
+	 * If you do not, you it'll return null
+	 * It's highly recomended you to always use the Hub when accessing this functions
+	 * However, if you decide otherwise you can do it, but it is not recomended
 	 */
 	public T getComponent(T)()
 	{
@@ -144,33 +159,37 @@ class Entity : IEntity
 
 	/*
 	 * Get all components
-	 * If possible use the GetComponent template, as it returns the respective type
+	 * This will return an array of components which are contained in an entity
+	 * However if you want to use any of this, it is not recomended calling this function
+	 * Use the template 'getComponent' as it will return the type of that component
+	 * Or use 'hasComponent', 'hasAnyComponent', 'hasComponents' if you want to know which components an entity is holding
+	 * It's highly recomended you to always use the Hub when accessing this functions
+	 * However, if you decide otherwise, you can use it directly, but it is not recomended
 	 */
 	public IComponent[] getComponents()
 	{
-		IComponent[] ret;
-		foreach(component; _components)
-			ret ~= component;
-		return ret;
+		return _components.values;
 	}
 
 
 	/*
 	 * Get all component types
+	 * This will return an array of keys in the AA _components
+	 * It's highly recomended you to always use the Hub when accessing this functions
+	 * However, if you decide otherwise you can use it directly, but it is not recomended
 	 */
 	public ComponentTypeId[] getComponentTypes()
 	{
-		ComponentTypeId[] ret;
-		foreach(key, component; _components)
-			ret ~= key;
-		return ret;
+		return _components.keys;
 	}
 
 
 	/*
-	 * Returns true if the component in the respective index exists
-	 * Every component has an unique index based on it's type
-	 * Use it's type instead of manual inserting an index
+	 * Returns true if the component exists
+	 * You check by using the AA _components keys
+	 * The key is a components id
+	 * It's highly recomended to always use the Hub when accessing this functions
+	 * However, if you decide to get the component id first, you can use it directly, but it is not recomended
 	 */
 	public bool hasComponent(ComponentTypeId id)
 	{
@@ -179,42 +198,47 @@ class Entity : IEntity
 
 
 	/*
-	 * Returns true if all of the components in the respective indices exist
-	 * Every component has an unique index based on it's type
-	 * Use it's type instead of manual inserting an index
+	 * Returns true if all of the components exist
+	 * You check by using an array of the AA _components keys
+	 * The key is a components id
+	 * It's highly recomended to always use the Hub when accessing this functions
+	 * However, if you decide to get the component id first, you can use it directly, but it is not recomended
 	 */
 	public bool hasComponents(ComponentTypeId[] ids)
 	{
 		foreach(id; ids)
-		{
 			if (!hasComponent(id))
 				return false;
-		}
+
 		return true;
 	}
 
 
 	/*
-	 * Returns true there's at least one of the component in the respective indices exist
-	 * Every component has an unique index based on it's type
-	 * Use it's type instead of manual inserting an index
+	 * Returns true if an entity contains at least one of the components
+	 * You check by using an array of the AA _components keys
+	 * The key is a components id
+	 * It's highly recomended to always use the Hub when accessing this functions
+	 * However, if you decide to get the component id first, you can use it directly, but it is not recomended
 	 */
 	public bool hasAnyComponent(ComponentTypeId[] ids)
 	{
 		foreach(id; ids)
-		{
 			if (hasComponent(id))
 				return true;
-		}
+
 		return false;
 	}
 
 
 	/*
-	 * Returns if a component is disabled
+	 * Returns true if a component is disabled
 	 * It doesn't return any info about the existance of the component
 	 * If the entity doesn't contain the component neither in '_components' nor '_disabledComponents' it will just return false
-	 * For that reason it is recomended not to use this function
+	 * You check by using the AA _components keys
+	 * The key is a components id
+	 * It's highly recomended to always use the Hub when accessing this functions
+	 * However, if you decide to get the component id first, you can use it directly, but it is not recomended
 	 */
 	public bool isComponentDisabled(ComponentTypeId id)
 	{

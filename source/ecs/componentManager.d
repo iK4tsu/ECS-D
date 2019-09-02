@@ -56,6 +56,16 @@ class ComponentManager
 	}
 
 
+	public ComponentName getComponentName(T)()
+	{
+		foreach(key, component; _components)
+			if (cast(T) component !is null)
+				return _componentNames[key];
+
+		return null;
+	}
+
+
 	public ComponentTypeId getType(T)()
 	{
 		foreach(key, component; _components)

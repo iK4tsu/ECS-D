@@ -61,60 +61,130 @@ class EntityManager
 
 	public T addComponent(T)(EntityId eid, ComponentTypeId id)
 	{
-		return hasEntity(eid) ? _mEntities[eid].addComponent!(T)(id) : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].addComponent!(T)(id);
+		
+		throw new EntityDoesNotExistException(
+			eid, "Cannot add the component '" ~ _hub.componentGetName(id) ~
+			"' to the entity!", "You should verify if an entity exists " ~
+			"before adding a component to it.");
 	}
+
 
 	public void removeComponent(EntityId eid, ComponentTypeId id)
 	{
 		if (hasEntity(eid))
+		{
 			_mEntities[eid].removeComponent(id);
+			return;
+		}
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot remove the component '" ~ _hub.componentGetName(id) ~
+			"' to the entity!", "You should verify if an entity exists " ~
+			"before remoing a component from it.");
 	}
+
 
 	public T getComponent(T)(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getComponent!T : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getComponent!T;
+		
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get the component '" ~ _hub.componentGetName!T ~
+			"' to the entity!", "You should verify if an entity exists " ~
+			"before getting a component from it.");
 	}
+
 
 	public void enableComponent(EntityId eid, ComponentTypeId id)
 	{
 		if (hasEntity(eid))
+		{
 			_mEntities[eid].enableComponent(id);
+			return;
+		}
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot enable the component '" ~ _hub.componentGetName(id) ~
+			"' in the entity!", "You should verify if an entity exists " ~
+			"before enabling a component in it.");
 	}
 
 	public void disableComponent(EntityId eid, ComponentTypeId id)
 	{
 		if (hasEntity(eid))
+		{
 			_mEntities[eid].disableComponent(id);
+			return;
+		}
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot disable the component '" ~ _hub.componentGetName(id) ~
+			"' in the entity!", "You should verify if an entity exists " ~
+			"before disabling a component in it.");
 	}
 
 	public bool isComponentDisabled(EntityId eid, ComponentTypeId id)
 	{
-		return _mEntities[eid].isComponentDisabled(id);
+		if (hasEntity(eid))
+			return _mEntities[eid].isComponentDisabled(id);
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot check if the component '" ~ _hub.componentGetName(id) ~
+			"' is disabled in the entity!", "You should verify if an entity exists " ~
+			"before checking a component's status.");
 	}
 
 	public IComponent[] getComponents(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getComponents : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getComponents;
+		
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get the components from the entity!",
+			"You should verify if an entity exists " ~ "before getting components from it.");
 	}
 
 	public ComponentTypeId[] getComponentTypes(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getComponentTypes : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getComponentTypes;
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get the components ids from the entity",
+			"You should verify if an entity exists before getting components ids.");
 	}
 
 	public bool hasComponent(EntityId eid, ComponentTypeId id)
 	{
-		return hasEntity(eid) ? _mEntities[eid].hasComponent(id) : false;
+		if (hasEntity(eid))
+			return _mEntities[eid].hasComponent(id);
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot check if the entity contains the component '" ~ _hub.componentGetName(id) ~
+			"'!", "You should verify if an entity exists before checking it's existance.");
 	}
 
 	public bool hasComponents(EntityId eid, ComponentTypeId[] indices)
 	{
-		return hasEntity(eid) ? _mEntities[eid].hasComponents(indices) : false;
+		if (hasEntity(eid))
+			return _mEntities[eid].hasComponents(indices);
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot check if the entity has the components!",
+			"You should verify if an entity exists before checking the existance of a set of components.");
 	}
 
 	public bool hasAnyComponent(EntityId eid, ComponentTypeId[] indices)
 	{
-		return hasEntity(eid) ? _mEntities[eid].hasAnyComponent(indices) : false;
+		if (hasEntity(eid))
+			return _mEntities[eid].hasAnyComponent(indices);
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot check if the entity has any of the components!",
+			"You should verify if an entity exists before checking the existance of any component.");
 	}
 
 	public bool hasEntity(EntityId eid)
@@ -124,28 +194,55 @@ class EntityManager
 
 	public Entity getEntity(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid] : null;
+		if (hasEntity(eid))
+			return _mEntities[eid];
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get entity!", "You should verify if an entity exists " ~
+			"before getting it.");
 	}
 
 	public string getName(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getName : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getName;
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get the entity's name!", "You should verify if an " ~
+			"entity exists before getting it's name.");
 	}
 
 	public string getDescription(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getDescription : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getDescription;
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get the entity's description!", "You should verify if " ~
+			"an entity exists before getting it's description.");
 	}
 
 	public EntityType getType(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getType : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getType;
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get entity's type!", "You should verify if an " ~
+			"entity exists before getting it's type.");
 	}
 
 	public void setDescription(EntityId eid, const string description)
 	{
 		if (hasEntity(eid))
+		{
 			_mEntities[eid].setDescription(description);
+			return;
+		}
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot set entity's description!", "You should verify if an " ~
+			"entity exists before setting it's description.");
 	}
 
 	public Entity getEntity(EntityType type)
@@ -153,7 +250,10 @@ class EntityManager
 		foreach(id, _type; _mTypes)
 			if (_type == type)
 				return getEntity(id);
-		return null;
+
+		throw new EntityDoesNotExistException(
+			-1, "Cannot get entity!", "You should verify if an entity exists " ~
+			"before getting it.");
 	}
 
 	public EntityId[] getDeletedEntities()
@@ -161,15 +261,31 @@ class EntityManager
 		return _deletedEntities;
 	}
 
-	public EntityId getId(Entity e)
+	public EntityId getEntityId(Entity e)
 	{
 		import std.algorithm : canFind;
-		return canFind(_mEntities.values, e) ? e._id : 0;
+		if (canFind(_mEntities.values, e))
+			return e._id;
+
+		throw new EntityDoesNotExistException(
+			-1, "Cannot get entity id!", "You should verify if an entity exists " ~
+			"before getting it's id.");
 	}
 
-	public EntityId getId(EntityType type)
+	public EntityId getEntityId(EntityType type)
 	{
-		return getId(getEntity(type));
+		if (typeExists(type))
+			return getEntityId(getEntity(type));
+
+		throw new EntityDoesNotExistException(
+			-1, "Cannot get entity's type!", "You should verify if an entity " ~
+			"exists before getting it's type.");
+	}
+
+	public bool typeExists(EntityType type)
+	{
+		import std.algorithm : canFind;
+		return canFind(_mTypes.values, type);
 	}
 }
 
@@ -196,7 +312,6 @@ class EntityManager
 	assert(manager.getDeletedEntities.length == 1);
 	assert(manager.getDeletedEntities[0] == eid);
 	assert(!manager.hasEntity(eid));
-	assert(manager.getEntity(eid) is null);
 }
 
 @system unittest

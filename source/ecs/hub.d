@@ -126,12 +126,12 @@ class Hub
 
 	public EntityId entityGetId(Entity e)
 	{
-		return _entityManager.getId(e);
+		return _entityManager.getEntityId(e);
 	}
 
 	public EntityId entityGetId(EntityType type)
 	{
-		return _entityManager.getId(type);
+		return _entityManager.getEntityId(type);
 	}
 
 
@@ -154,6 +154,11 @@ class Hub
 	public ComponentName componentGetName(ComponentTypeId id)
 	{
 		return _componentManager.getComponentName(id);
+	}
+
+	public ComponentName componentGetName(T)()
+	{
+		return _componentManager.getComponentName!T;
 	}
 
 	public ComponentTypeId componentGetType(T)()
