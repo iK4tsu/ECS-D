@@ -224,7 +224,12 @@ class EntityManager
 
 	public EntityType getType(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getType : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getType;
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get entity's type!", "You should verify if an " ~
+			"entity exists before getting it's type.");
 	}
 
 	public void setDescription(EntityId eid, const string description)
