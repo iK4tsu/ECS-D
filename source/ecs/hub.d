@@ -33,9 +33,14 @@ final class Hub
 
 
 	/********************************************* ENTITY MANAGER FUNCTIONS *********************************************/
-	public T entityAddComponent(T)(EntityId id)
+	public T entityAddComponent(T)(EntityId eid)
 	{
-		return componentExists!T ? _entityManager.addComponent!(T)(id, componentGetTypeId!T) : null;
+		return componentExists!T ? _entityManager.addComponent!(T)(eid, componentGetTypeId!T) : null;
+	}
+
+	public T entityAddComponent(T)(T t, EntityId eid)
+	{
+		return componentExists!T ? _entityManager.addComponent!(T)(eid, t, componentGetTypeId!T) : null;
 	}
 
 	public void entityRemoveComponent(EntityId eid, ComponentTypeId id)
@@ -139,6 +144,11 @@ final class Hub
 	public bool entityTypeExists(EntityType type)
 	{
 		return _entityManager.typeExists(type);
+	}
+
+	public bool entityExists(EntityId eid)
+	{
+		return _entityManager.hasEntity(eid);
 	}
 
 

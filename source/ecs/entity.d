@@ -66,6 +66,25 @@ class Entity : IEntity
 	}
 
 
+	public T addComponent(T)(T t, ComponentTypeId id)
+	{
+		if (t is null)
+			return t;
+
+		if (!hasComponent(id))
+		{
+			_components[id] = t;
+			return t;
+		}
+
+		throw new EntityAlreadyContainsComponentException(
+			id, "Cannot add component '" ~
+			_entityManager._hub.componentGetName(id) ~
+			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
+			"contains a component before adding it.");
+	}
+
+
 	/*
 	 * Removes a component and the respective key from the AA _components
 	 * The key is the component's id
