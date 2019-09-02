@@ -92,7 +92,7 @@ class EntityManager
 			return _mEntities[eid].getComponent!T;
 		
 		throw new EntityDoesNotExistException(
-			eid, "Cannot get the component '" ~ _hub.componentGetName(id) ~
+			eid, "Cannot get the component '" ~ _hub.componentGetName!T ~
 			"' to the entity!", "You should verify if an entity exists " ~
 			"before getting a component from it");
 	}
@@ -143,9 +143,8 @@ class EntityManager
 			return _mEntities[eid].getComponents;
 		
 		throw new EntityDoesNotExistException(
-			eid, "Cannot get the components '" ~ _hub.componentGetName(id) ~
-			"' from the entity!", "You should verify if an entity exists " ~
-			"before getting components from it");
+			eid, "Cannot get the components from the entity!",
+			"You should verify if an entity exists " ~ "before getting components from it");
 	}
 
 	public ComponentTypeId[] getComponentTypes(EntityId eid)
