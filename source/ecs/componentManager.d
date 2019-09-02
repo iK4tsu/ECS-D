@@ -3,6 +3,8 @@ module ecs.componentManager;
 import ecs.icomponent;
 import ecs.hub;
 
+import ecs.exceptions.component;
+
 alias ComponentName = string;
 alias ComponentTypeId = uint;
 
@@ -46,7 +48,10 @@ class ComponentManager
 	{
 		if (hasComponent!T)
 			return cast(T)(_components[getType!T]);
-		return null;
+
+		throw new ComponentDoesNotExistException(
+			"Cannot get component!", "You should check if a component " ~
+			"exists before getting it.");
 	}
 
 
