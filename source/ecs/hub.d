@@ -126,12 +126,12 @@ class Hub
 
 	public EntityId entityGetId(Entity e)
 	{
-		return _entityManager.getId(e);
+		return _entityManager.getEntityId(e);
 	}
 
 	public EntityId entityGetId(EntityType type)
 	{
-		return _entityManager.getId(type);
+		return _entityManager.getEntityId(type);
 	}
 
 
