@@ -141,6 +141,11 @@ final class Hub
 		return _entityManager.typeExists(type);
 	}
 
+	public bool entityExists(EntityId eid)
+	{
+		return _entityManager.hasEntity(eid);
+	}
+
 
 	/********************************************* COMPONENT MANAGER FUNCTIONS *********************************************/
 	public ComponentTypeId componentCreate(T)()
