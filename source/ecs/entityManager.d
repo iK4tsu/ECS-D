@@ -199,7 +199,7 @@ class EntityManager
 
 		throw new EntityDoesNotExistException(
 			eid, "Cannot get entity!", "You should verify if an entity exists " ~
-			"before getting it");
+			"before getting it.");
 	}
 
 	public string getName(EntityId eid)
@@ -209,12 +209,17 @@ class EntityManager
 
 		throw new EntityDoesNotExistException(
 			eid, "Cannot get the entity's name!", "You should verify if an " ~
-			"entity exists before getting it's name");
+			"entity exists before getting it's name.");
 	}
 
 	public string getDescription(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid].getDescription : null;
+		if (hasEntity(eid))
+			return _mEntities[eid].getDescription;
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get the entity's description!", "You should verify if " ~
+			"an entity exists before getting it's description.");
 	}
 
 	public EntityType getType(EntityId eid)
