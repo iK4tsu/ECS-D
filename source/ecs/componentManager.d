@@ -103,10 +103,9 @@ class ComponentManager
 	assert(!manager.hasComponent!Goo);
 
 	assert(cast(Foo) manager.getComponent!Foo !is null);
-	assert(cast(Goo) manager.getComponent!Goo is null);
 
-	assert(manager.getType!Foo == 1);
-	assert(manager.getType!Goo == 0);
+	assert(manager.getComponentTypeId!Foo == 1);
+	assert(manager.getComponentTypeId!Goo == 0);
 }
 
 @system unittest
