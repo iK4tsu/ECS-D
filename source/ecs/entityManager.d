@@ -250,7 +250,10 @@ class EntityManager
 		foreach(id, _type; _mTypes)
 			if (_type == type)
 				return getEntity(id);
-		return null;
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get entity!", "You should verify if an entity exists " ~
+			"before getting it.");
 	}
 
 	public EntityId[] getDeletedEntities()
