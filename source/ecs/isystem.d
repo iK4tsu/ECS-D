@@ -22,7 +22,7 @@ version(unittest)
 		public void init(ref Hub hub)
 		{
 			_hub = hub;
-			fooID = _hub.componentGetType!Foo;
+			fooID = _hub.componentGetTypeId!Foo;
 		}
 
 		public void update(EntityId eid)

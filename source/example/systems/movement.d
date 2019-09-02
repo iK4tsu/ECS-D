@@ -33,8 +33,8 @@ class Movement : ISystem
 	public void init(ref Hub hub)
 	{
 		_hub = hub;
-		positionId = _hub.componentGetType!Position;
-		movableId = _hub.componentGetType!Movable;
+		positionId = _hub.componentGetTypeId!Position;
+		movableId = _hub.componentGetTypeId!Movable;
 	}
 
 	// all the game logic you need
