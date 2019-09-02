@@ -89,9 +89,10 @@ class ComponentManager
 
 	public ComponentTypeId getComponentTypeId(T)()
 	{
-		foreach(key, component; _components)
-			if (cast(T)(component) !is null)
-				return key;
+		if (hasComponent!T)
+			foreach(key, component; _components)
+				if (cast(T)(component) !is null)
+					return key;
 
 		throw new ComponentDoesNotExistException(
 			"Cannot get the component's id!", "You should check if a component " ~
@@ -111,7 +112,6 @@ class ComponentManager
 	assert(cast(Foo) manager.getComponent!Foo !is null);
 
 	assert(manager.getComponentTypeId!Foo == 1);
-	assert(manager.getComponentTypeId!Goo == 0);
 }
 
 @system unittest
