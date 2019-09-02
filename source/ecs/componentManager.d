@@ -44,6 +44,12 @@ class ComponentManager
 	}
 
 
+	public bool hasComponent(ComponentTypeId id)
+	{
+		return (id in _components) !is null;
+	}
+
+
 	public T getComponent(T)()
 	{
 		if (hasComponent!T)
