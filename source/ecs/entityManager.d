@@ -194,7 +194,12 @@ class EntityManager
 
 	public Entity getEntity(EntityId eid)
 	{
-		return hasEntity(eid) ? _mEntities[eid] : null;
+		if (hasEntity(eid))
+			return _mEntities[eid];
+
+		throw new EntityDoesNotExistException(
+			eid, "Cannot get entity!", "You should verify if an entity exists " ~
+			"before getting it");
 	}
 
 	public string getName(EntityId eid)
