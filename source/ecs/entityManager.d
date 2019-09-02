@@ -71,6 +71,18 @@ final class EntityManager
 	}
 
 
+	public T addComponent(T)(EntityId eid, T t, ComponentTypeId id)
+	{
+		if (hasEntity(eid))
+			return _mEntities[eid].addComponent!(T)(t, id);
+		
+		throw new EntityDoesNotExistException(
+			eid, "Cannot add the component '" ~ _hub.componentGetName(id) ~
+			"' to the entity!", "You should verify if an entity exists " ~
+			"before adding a component to it.");
+	}
+
+
 	public void removeComponent(EntityId eid, ComponentTypeId id)
 	{
 		if (hasEntity(eid))
