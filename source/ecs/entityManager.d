@@ -261,7 +261,7 @@ class EntityManager
 		return _deletedEntities;
 	}
 
-	public EntityId getId(Entity e)
+	public EntityId getEntityId(Entity e)
 	{
 		import std.algorithm : canFind;
 		if (canFind(_mEntities.values, e))
@@ -272,7 +272,7 @@ class EntityManager
 			"before getting it's id.");
 	}
 
-	public EntityId getId(EntityType type)
+	public EntityId getEntityId(EntityType type)
 	{
 		if (typeExists(type))
 			return getId(getEntity(type));
