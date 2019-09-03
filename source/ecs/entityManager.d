@@ -63,10 +63,12 @@ final class EntityManager
 			"if an entity exists before killing it.");
 	}
 
+
 	public bool hasEntity(EntityId eid)
 	{
 		return (eid in _mEntities) !is null;
 	}
+
 
 	public Entity getEntity(EntityId eid)
 	{
@@ -78,15 +80,6 @@ final class EntityManager
 			"before getting it.");
 	}
 
-	public string getName(EntityId eid)
-	{
-		if (hasEntity(eid))
-			return _mEntities[eid].getName;
-
-		throw new EntityDoesNotExistException(
-			eid, "Cannot get the entity's name!", "You should verify if an " ~
-			"entity exists before getting it's name.");
-	}
 
 	public string getDescription(EntityId eid)
 	{
