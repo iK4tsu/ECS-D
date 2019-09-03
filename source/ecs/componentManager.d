@@ -64,7 +64,7 @@ final class ComponentManager
 	public T get(T)()
 	{
 		if (exists!T)
-			return cast(T)(components[id!T]);
+			return cast(T)(components[idOf!T]);
 
 		throw new ComponentDoesNotExistException(
 			"Cannot get the component!", "You should check if a component " ~
@@ -124,25 +124,26 @@ final class ComponentManager
 }
 
 
-/*
+
 @system unittest
 {
 	ComponentManager manager = new ComponentManager();
-	manager.createComponent!Foo;
+	manager.create!Foo;
 
-	assert(manager.hasComponent!Foo);
-	assert(!manager.hasComponent!Goo);
+	assert(manager.exists!Foo);
+	assert(!manager.exists!Goo);
 
-	assert(cast(Foo) manager.getComponent!Foo !is null);
+	assert(cast(Foo) manager.get!Foo !is null);
 
-	assert(manager.getComponentTypeId!Foo == 1);
+	assert(manager.idOf!Foo == 1);
 }
 
 @system unittest
 {
 	ComponentManager manager = new ComponentManager();
-	manager.createComponent!Foo;
+	manager.create!Foo;
+	manager.create!Goo;
 
-	assert(manager.createComponent!Goo == 2);
-	assert(manager.createComponent!Foo == 1);
-}*/
+	assert(manager.idOf!Foo == 1);
+	assert(manager.idOf!Goo == 2);
+}

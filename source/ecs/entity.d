@@ -62,7 +62,8 @@ class Entity : IEntity
 		throw new EntityAlreadyContainsComponentException(
 			id, "Cannot add component '" ~
 			manager.component.name(id) ~
-			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
+			"' to '" ~ _name
+	 ~ "'!", "You should check if an entity " ~
 			"contains a component before adding it.");
 	}
 
@@ -91,7 +92,8 @@ class Entity : IEntity
 		throw new EntityDoesNotContainComponentException(
 			id, "Cannot remove component '" ~
 			manager.component.name(id) ~ "' from '" ~
-			_name ~ "'!", "You should check if an entity has a " ~
+			_name
+	 ~ "'!", "You should check if an entity has a " ~
 			"component before removing it.");
 	}
 
@@ -125,7 +127,8 @@ class Entity : IEntity
 		throw new EntityDoesNotContainComponentException(
 			id, "Cannot disable component '" ~
 			manager.component.name(id) ~
-			"' in '" ~ _name ~ "'!", "You should check if " ~
+			"' in '" ~ _name
+	 ~ "'!", "You should check if " ~
 			"an entity has a component before disabling it");
 	}
 
@@ -156,7 +159,8 @@ class Entity : IEntity
 		throw new EntityComponentIsNotDisabledException(
 			id, "Cannot disable component '" ~
 			manager.component.name(id) ~
-			"' from '" ~ _name ~ "'!", "You should check " ~
+			"' from '" ~ _name
+	 ~ "'!", "You should check " ~
 			"if a component is disabled beafore enabling it.");
 	}
 
@@ -227,7 +231,7 @@ class Entity : IEntity
 
 	public bool hasComponent(T)()
 	{
-		ComponentTypeId id = manager.component.getComponentTypeId!T;
+		ComponentTypeId id = manager.component.idOf!T;
 		return hasComponent(id);
 	}
 
@@ -306,63 +310,42 @@ class Entity : IEntity
 	}
 
 
-	public string getName() { return _name; }
-	public string getDescription() { return _description; }
-	public EntityType getType() { return _type; }
+	public string name() { return _name; }
+	public string description() { return _description; }
+	public EntityType type() { return _type; }
 
-	public void setDescription(const string description) { _description = description; }
+	public inout(const string) name(inout string __name) @safe pure
+	{
+		_name = __name;
+		return __name;
+	}
+
+	public inout(const string) description(inout string __description) @safe pure
+	{
+		_description = __description;
+		return __description;
+	}
+
+	public inout(const string) type(inout string __type) @safe pure
+	{
+		_type = __type;
+		return __type;
+	}
 }
 
-/*
-@system unittest
-{
-	Entity e = new Entity("I'm alive", "Group");
-
-	assert(e.getId == 1);
-	
-	ComponentTypeId fooID = 1;
-	ComponentTypeId gooID = 2;
-	e.addComponent!Foo(fooID);
-
-	assert(e.hasAnyComponent([fooID, gooID]));
-	assert(e.hasComponent(fooID));
-
-	assert(!e.hasComponent(gooID));
-
-	assert(cast(Foo) e.getComponent!Foo !is null);
-	assert(cast(Goo) e.getComponent!Goo is null);
-}
 
 @system unittest
 {
-	Entity e = new Entity("I'm also alive", "Alive");
+	Entity e = new Entity(1);
 
-	ComponentTypeId fooID = 1;
-	ComponentTypeId gooID = 2;
-	e.addComponent!Foo(fooID);
-
-	assert(!e.isComponentDisabled(fooID));
-	assert(!e.isComponentDisabled(gooID));
-
-	e.disableComponent(fooID);
-
-	assert(e.isComponentDisabled(fooID));
-	assert(!e.hasComponent(fooID));
-
-	e.enableComponent(fooID);
-	e.removeComponent(fooID);
-
-	assert(!e.hasComponent(fooID));
+	assert(e._id == 1);
 }
 
 @system unittest
 {
-	Entity e = new Entity("Just e it", "e");
+	Entity e = new Entity(2);
 
-	assert(e.getName == "Just e it");
-	assert(e.getType == "e");
-
-	e.setDescription("Feel the e");
-
-	assert(e.getDescription == "Feel the e");
-}*/
+	assert(e.name("Just e it") == e.name);
+	assert(e.type("e") == e.type);
+	assert(e.description("Feel the e") == e.description);
+}

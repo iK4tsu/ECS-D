@@ -34,7 +34,9 @@ final class EntityManager
 
 		_mEntities[e._id] = e;
 
-		hub.system.addEntity(e);
+		if (hub !is null)
+			hub.system.addEntity(e);
+
 		return e;
 	}
 
@@ -105,48 +107,55 @@ final class EntityManager
 	//}
 }
 
-/*
+
 @system unittest
 {
 	EntityManager manager = new EntityManager();
-	Entity e = manager.createEntity("Am I just a number?", "Math");
+	Entity e = manager.create();
 
-	assert(manager.hasEntity(e.getId));
-	EntityId eid = e.getId;
-	assert(!manager.hasEntity(++eid));
+	assert(manager.exists(e._id));
+
+	EntityId eid = e._id;
+	assert(!manager.exists(++eid));
 }
 
+
 @system unittest
 {
 	EntityManager manager = new EntityManager();
-	Entity e = manager.createEntity("Should I worry", "Sad");
+	Entity e = manager.create();
 
-	assert(e == manager.getEntity("Sad"));
-	assert(manager.getDeletedEntities.length == 0);
-	
-	manager.killEntity(e.getId);
+	assert(manager.getDeletedIds.length == 0);
 
-	assert(manager.getDeletedEntities.length == 1);
-	assert(manager.getDeletedEntities[0] == e.getId);
-	assert(!manager.hasEntity(e.getId));
+	ComponentTypeId eid = e._id;
+	manager.kill(eid);
+
+	assert(manager.getDeletedIds.length == 1);
+	assert(manager.getDeletedIds[0] == eid);
+	assert(!manager.exists(eid));
 }
 
+
 @system unittest
 {
 	EntityManager manager = new EntityManager();
-	Entity e1 = manager.createEntity("I'm gonna die", "Dead");
-	Entity e2 = manager.createEntity("I'm subject number 2!", "Guinea Pig");
+	Entity e1 = manager.create();
+	Entity e2 = manager.create();
 
-	assert(e1.getId == 1);
-	assert(e2.getId == 2);
+	assert(e1._id == 1);
+	assert(e2._id == 2);
 
-	manager.killEntity(e1.getId);
-	e1 = manager.createEntity("Wait I revived?", "Blessing");
+	ComponentTypeId eid = e1._id;
+	manager.kill(e1._id);
 
-	assert(manager.getDeletedEntities.length == 0);
-	assert(e1.getId == 1);
+	assert(manager.getDeletedIds.length == 1);
 
-	Entity e3 = manager.createEntity("I'm subject number 3!", "Guinea Pig");
+	Entity e3 = manager.create();
+
+	assert(manager.getDeletedIds.length == 0);
+	assert(e3._id == eid);
+
+	Entity e4 = manager.create();
 	
-	assert(e3.getId == 3);
-}*/
+	assert(e4._id == 3);
+}

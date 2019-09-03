@@ -37,29 +37,29 @@ final class Hub
 }
 
 
-/*
+
 @system unittest
 {
-	Hub _hub = new Hub();
+	Hub hub = new Hub();
 
-	ComponentTypeId fooID = _hub.componentCreate!Foo;
-	_hub.componentCreate!Goo;
-	_hub.systemCreate!FooSys;
-	Entity e = _hub.entity.createEntity("Nobody", "Alone");
+	hub.component.create!Foo;
+	hub.component.create!Goo;
+	hub.system.create!FooSys;
 
+	Entity e = hub.entity.create();
 	e.addComponent!Foo;
 	
 	assert(e.getComponent!Foo.someData == int.init);
-	assert(e.hasComponent(fooID));
-	assert(_hub.systemExists!FooSys);
+	assert(e.hasComponent!Foo);
+	assert(hub.system.exists!FooSys);
 
-	_hub.updateSystems;
-
-	assert(e.getComponent!Foo.someData == 1);
-
-	e.disableComponent(fooID);
-	_hub.updateSystems;
-	e.enableComponent(fooID);
+	hub.update;
 
 	assert(e.getComponent!Foo.someData == 1);
-}*/
+
+	e.disableComponent!Foo;
+	hub.update;
+	e.enableComponent!Foo;
+
+	assert(e.getComponent!Foo.someData == 1);
+}
