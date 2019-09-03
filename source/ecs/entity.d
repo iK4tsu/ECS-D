@@ -49,42 +49,6 @@ class Entity : IEntity
 	 * As it will get the id internaly
 	 * If you decide otherwise, you'll also need to perform other functions manualy
 	 */
-	public T addComponent(T)(ComponentTypeId id)
-	{
-		if (!hasComponent(id))
-		{
-			T t = new T();
-			_components[id] = t;
-			return t;
-		}
-
-		throw new EntityAlreadyContainsComponentException(
-			id, "Cannot add component '" ~
-			_entityManager.hub.componentGetName(id) ~
-			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
-			"contains a component before adding it.");
-	}
-
-
-	public T addComponent(T)(T t, ComponentTypeId id)
-	{
-		if (t is null)
-			return t;
-
-		if (!hasComponent(id))
-		{
-			_components[id] = t;
-			return t;
-		}
-
-		throw new EntityAlreadyContainsComponentException(
-			id, "Cannot add component '" ~
-			_entityManager.hub.componentGetName(id) ~
-			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
-			"contains a component before adding it.");
-	}
-
-
 	public T addComponent(T)(T t)
 	{
 		if (t is null)
