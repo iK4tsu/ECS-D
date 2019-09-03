@@ -213,6 +213,13 @@ class Entity : IEntity
 	}
 
 
+	public void enableComponent(T)()
+	{
+		ComponentTypeId id = _entityManager.component.getComponentTypeId!T;
+		enableComponent(id);
+	}
+
+
 	/*
 	 * Get a specific component
 	 * You pass a T type of component and you'll recive the same type if it exists
