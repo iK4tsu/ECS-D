@@ -29,16 +29,18 @@ final class EntityManager
 	public Entity createEntity(const string name, const EntityType type)
 	{
 		Entity e = _deletedEntities.length > 0 ?
-			new Entity(this, pullDeletedId, name, type) :
+			new Entity(this, popDeletedId, name, type) :
 			new Entity(this, 0, name, type);
+
 		_mEntities[e.getId] = e;
 		_mTypes[e.getId] = type;
+
 		hub.system.addEntity(e);
 		return e;
 	}
 
 
-	public EntityId pullDeletedId()
+	public EntityId popDeletedId()
 	{
 		EntityId eid = _deletedEntities[0];
 		_deletedEntities = _deletedEntities.length > 1 ? _deletedEntities[1 .. $] : null;
@@ -59,30 +61,6 @@ final class EntityManager
 		throw new EntityDoesNotExistException(eid, 
 			"Cannot destroy entity!", "You should check " ~
 			"if an entity exists before killing it.");
-	}
-
-
-	public T addComponent(T)(EntityId eid, ComponentTypeId id)
-	{
-		if (hasEntity(eid))
-			return _mEntities[eid].addComponent!(T)(id);
-		
-		throw new EntityDoesNotExistException(
-			eid, "Cannot add the component '" ~ hub.co_mponentGetName(id) ~
-			"' to the entity!", "You should verify if an entity exists " ~
-			"before adding a component to it.");
-	}
-
-
-	public T addComponent(T)(EntityId eid, T t, ComponentTypeId id)
-	{
-		if (hasEntity(eid))
-			return _mEntities[eid].addComponent!(T)(t, id);
-		
-		throw new EntityDoesNotExistException(
-			eid, "Cannot add the component '" ~ hub.co_mponentGetName(id) ~
-			"' to the entity!", "You should verify if an entity exists " ~
-			"before adding a component to it.");
 	}
 
 
