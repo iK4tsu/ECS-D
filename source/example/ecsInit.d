@@ -28,7 +28,7 @@ void exampleInit()
 	ComponentTypeId positionId = _hub.componentGetTypeId!Position;
 	ComponentTypeId movableId = _hub.componentGetTypeId!Movable;
 
-	assert(_hub._entityManager.hasEntity(playerId));
+	assert(_hub.entity.hasEntity(playerId));
 	assert(_hub.entityHasComponents(playerId, [positionId, movableId]));
 
 
