@@ -60,7 +60,7 @@ class Entity : IEntity
 
 		throw new EntityAlreadyContainsComponentException(
 			id, "Cannot add component '" ~
-			_entityManager._hub.componentGetName(id) ~
+			_entityManager.hub.componentGetName(id) ~
 			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
 			"contains a component before adding it.");
 	}
@@ -79,7 +79,47 @@ class Entity : IEntity
 
 		throw new EntityAlreadyContainsComponentException(
 			id, "Cannot add component '" ~
-			_entityManager._hub.componentGetName(id) ~
+			_entityManager.hub.componentGetName(id) ~
+			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
+			"contains a component before adding it.");
+	}
+
+
+	public T addComponent(T)(T t)
+	{
+		if (t is null)
+			return t;
+		
+		ComponentTypeId id = _entityManager.hub.componentGetTypeId!T;
+
+		if (!hasComponent(id))
+		{
+			_components[id] = t;
+			return t;
+		}
+
+		throw new EntityAlreadyContainsComponentException(
+			id, "Cannot add component '" ~
+			_entityManager.hub.componentGetName(id) ~
+			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
+			"contains a component before adding it.");
+	}
+
+
+	public T addComponent(T)()
+	{
+		ComponentTypeId id = _entityManager.hub.componentGetTypeId!T;
+
+		if (!hasComponent(id))
+		{
+			T t = new T();
+			_components[id] = t;
+			return t;
+		}
+
+		throw new EntityAlreadyContainsComponentException(
+			id, "Cannot add component '" ~
+			_entityManager.hub.componentGetName(id) ~
 			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
 			"contains a component before adding it.");
 	}
@@ -102,7 +142,7 @@ class Entity : IEntity
 
 		throw new EntityDoesNotContainComponentException(
 			id, "Cannot remove component '" ~
-			_entityManager._hub.componentGetName(id) ~ "' from '" ~
+			_entityManager.hub.componentGetName(id) ~ "' from '" ~
 			_name ~ "'!", "You should check if an entity has a " ~
 			"component before removing it.");
 	}
@@ -129,7 +169,7 @@ class Entity : IEntity
 
 		throw new EntityDoesNotContainComponentException(
 			id, "Cannot disable component '" ~
-			_entityManager._hub.componentGetName(id) ~
+			_entityManager.hub.componentGetName(id) ~
 			"' in '" ~ _name ~ "'!", "You should check if " ~
 			"an entity has a component before disabling it");
 	}
@@ -153,7 +193,7 @@ class Entity : IEntity
 
 		throw new EntityComponentIsNotDisabledException(
 			id, "Cannot disable component '" ~
-			_entityManager._hub.componentGetName(id) ~
+			_entityManager.hub.componentGetName(id) ~
 			"' from '" ~ _name ~ "'!", "You should check " ~
 			"if a component is disabled beafore enabling it.");
 	}
