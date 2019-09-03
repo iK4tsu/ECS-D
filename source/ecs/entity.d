@@ -90,7 +90,7 @@ class Entity : IEntity
 		if (t is null)
 			return t;
 		
-		ComponentTypeId id = _entityManager.hub.componentGetTypeId!T;
+		ComponentTypeId id = _entityManager.component.getComponentTypeId!T;
 
 		if (!hasComponent(id))
 		{
@@ -108,7 +108,7 @@ class Entity : IEntity
 
 	public T addComponent(T)()
 	{
-		ComponentTypeId id = _entityManager.hub.componentGetTypeId!T;
+		ComponentTypeId id = _entityManager.component.getComponentTypeId!T;
 
 		if (!hasComponent(id))
 		{
@@ -145,6 +145,13 @@ class Entity : IEntity
 			_entityManager.hub.componentGetName(id) ~ "' from '" ~
 			_name ~ "'!", "You should check if an entity has a " ~
 			"component before removing it.");
+	}
+
+
+	public void removeComponent(T)()
+	{
+		ComponentTypeId id = _entityManager.component.getComponentTypeId!T;
+		removeComponent(id);
 	}
 
 
@@ -313,7 +320,7 @@ class Entity : IEntity
 	public void setDescription(const string description) { _description = description; }
 }
 
-
+/*
 @system unittest
 {
 	Entity e = new Entity("I'm alive", "Group");
@@ -365,4 +372,4 @@ class Entity : IEntity
 	e.setDescription("Feel the e");
 
 	assert(e.getDescription == "Feel the e");
-}
+}*/
