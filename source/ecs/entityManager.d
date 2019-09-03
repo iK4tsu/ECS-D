@@ -99,16 +99,6 @@ final class EntityManager
 	}
 
 
-	public EntityId getEntityId(EntityType type)
-	{
-		if (typeExists(type))
-			return getEntityId(getEntity(type));
-
-		throw new EntityDoesNotExistException(
-			-1, "Cannot get entity's type!", "You should verify if an entity " ~
-			"exists before getting it's type.");
-	}
-
 	public bool typeExists(EntityType type)
 	{
 		import std.algorithm : canFind;
