@@ -16,19 +16,19 @@ alias EntityType = string;
 
 class Entity : IEntity
 {
-	private EntityId _id;
+	public EntityId _id;
 	private IComponent[ComponentTypeId] _components;
 	private IComponent[ComponentTypeId] _disabledComponents;
 	private const EntityType _type;
 	private const string _name;
 	private string _description;
-	private EntityManager _entityManager;
+	private EntityManager manager;
 	
 
 
 	public this(const string name, const EntityType type) { this(null, 0, name, type); }
 	public this(EntityId id, const string name, const EntityType type) {  this(null, id, name, type); }
-	public this(EntityManager manager, EntityId id, const string name, const EntityType type)
+	public this(EntityManager _manager, EntityId id, const string name, const EntityType type)
 	{
 		if (!id)
 			_id = next_id++;
@@ -37,7 +37,7 @@ class Entity : IEntity
 
 		_type = type;
 		_name = name;
-		_entityManager = manager;
+		manager = _manager;
 	}
 
 
@@ -54,7 +54,7 @@ class Entity : IEntity
 		if (t is null)
 			return t;
 		
-		ComponentTypeId id = _entityManager.component.getComponentTypeId!T;
+		ComponentTypeId id = manager.component.getComponentTypeId!T;
 
 		if (!hasComponent(id))
 		{
@@ -64,7 +64,7 @@ class Entity : IEntity
 
 		throw new EntityAlreadyContainsComponentException(
 			id, "Cannot add component '" ~
-			_entityManager.hub.componentGetName(id) ~
+			manager.hub.componentGetName(id) ~
 			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
 			"contains a component before adding it.");
 	}
@@ -93,7 +93,7 @@ class Entity : IEntity
 
 		throw new EntityDoesNotContainComponentException(
 			id, "Cannot remove component '" ~
-			_entityManager.hub.componentGetName(id) ~ "' from '" ~
+			manager.hub.componentGetName(id) ~ "' from '" ~
 			_name ~ "'!", "You should check if an entity has a " ~
 			"component before removing it.");
 	}
@@ -101,7 +101,7 @@ class Entity : IEntity
 
 	public void removeComponent(T)()
 	{
-		ComponentTypeId id = _entityManager.component.getComponentTypeId!T;
+		ComponentTypeId id = manager.component.getComponentTypeId!T;
 		removeComponent(id);
 	}
 
@@ -127,7 +127,7 @@ class Entity : IEntity
 
 		throw new EntityDoesNotContainComponentException(
 			id, "Cannot disable component '" ~
-			_entityManager.hub.componentGetName(id) ~
+			manager.hub.componentGetName(id) ~
 			"' in '" ~ _name ~ "'!", "You should check if " ~
 			"an entity has a component before disabling it");
 	}
@@ -135,7 +135,7 @@ class Entity : IEntity
 
 	public void disableComponent(T)()
 	{
-		ComponentTypeId id = _entityManager.component.getComponentTypeId!T;
+		ComponentTypeId id = manager.component.getComponentTypeId!T;
 		disableComponent(id);
 	}
 
@@ -158,7 +158,7 @@ class Entity : IEntity
 
 		throw new EntityComponentIsNotDisabledException(
 			id, "Cannot disable component '" ~
-			_entityManager.hub.componentGetName(id) ~
+			manager.hub.componentGetName(id) ~
 			"' from '" ~ _name ~ "'!", "You should check " ~
 			"if a component is disabled beafore enabling it.");
 	}
@@ -166,7 +166,7 @@ class Entity : IEntity
 
 	public void enableComponent(T)()
 	{
-		ComponentTypeId id = _entityManager.component.getComponentTypeId!T;
+		ComponentTypeId id = manager.component.getComponentTypeId!T;
 		enableComponent(id);
 	}
 
@@ -280,7 +280,6 @@ class Entity : IEntity
 	public string getName() { return _name; }
 	public string getDescription() { return _description; }
 	public EntityType getType() { return _type; }
-	public EntityId getId() { return _id; }
 
 	public void setDescription(const string description) { _description = description; }
 }
