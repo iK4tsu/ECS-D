@@ -22,6 +22,7 @@ void exampleInit()
 	generateEntities(_hub);
 
 	EntityId playerId = _hub.entityGetId("Player");
+	Entity player = _hub.entity.getEntity(playerId);
 
 
 	import example.components;
@@ -51,6 +52,6 @@ void exampleInit()
 		}
 
 		_hub.updateSystems;
-		writeln("Your 'x' position: ", _hub.entityGetComponent!Position(playerId).x);
+		writeln("Your 'x' position: ", player.getComponent!Position.x);
 	} while (true);
 }
