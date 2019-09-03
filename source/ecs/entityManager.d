@@ -12,7 +12,7 @@ import ecs.exceptions.entity;
 final class EntityManager
 {
 	private Entity[EntityId] _mEntities;
-	private EntityType[EntityId] _mTypes;
+	//private EntityType[EntityId] _mTypes;
 	private EntityId[] _deletedEntities;
 	public Hub hub;
 	public ComponentManager component;
@@ -32,8 +32,7 @@ final class EntityManager
 			new Entity(this, popDeletedId) :
 			new Entity(this, 0);
 
-		_mEntities[e.getId] = e;
-		_mTypes[e.getId] = type;
+		_mEntities[e._id] = e;
 
 		hub.system.addEntity(e);
 		return e;
@@ -50,7 +49,7 @@ final class EntityManager
 
 	public void kill(EntityId eid)
 	{
-		if (hasEntity(eid))
+		if (exists(eid))
 		{
 			destroy(_mEntities[eid]);
 			_mEntities.remove(eid);
@@ -72,7 +71,7 @@ final class EntityManager
 
 	public Entity get(EntityId eid)
 	{
-		if (hasEntity(eid))
+		if (exists(eid))
 			return _mEntities[eid];
 
 		throw new EntityDoesNotExistException(
@@ -81,16 +80,16 @@ final class EntityManager
 	}
 
 
-	public Entity get(EntityType type)
-	{
-		foreach(id, _type; _mTypes)
-			if (_type == type)
-				return getEntity(id);
-
-		throw new EntityDoesNotExistException(
-			-1, "Cannot get entity!", "You should verify if an entity exists " ~
-			"before getting it.");
-	}
+	//public Entity get(EntityType type)
+	//{
+	//	foreach(id, _type; _mTypes)
+	//		if (_type == type)
+	//			return getEntity(id);
+//
+	//	throw new EntityDoesNotExistException(
+	//		-1, "Cannot get entity!", "You should verify if an entity exists " ~
+	//		"before getting it.");
+	//}
 
 
 	public EntityId[] getDeletedIds()
@@ -99,11 +98,11 @@ final class EntityManager
 	}
 
 
-	public bool existsType(EntityType type)
-	{
-		import std.algorithm : canFind;
-		return canFind(_mTypes.values, type);
-	}
+	//public bool existsType(EntityType type)
+	//{
+	//	import std.algorithm : canFind;
+	//	return canFind(_mTypes.values, type);
+	//}
 }
 
 /*
