@@ -255,7 +255,7 @@ class Entity : IEntity
 
 	public bool hasComponents(T...)()
 	{
-		return hasComponents(manager.component.ids!T);
+		return hasComponents(manager.component.idsOf!T);
 	}
 
 
