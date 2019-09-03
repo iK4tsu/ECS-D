@@ -20,189 +20,189 @@ alias EntityType = string;
 
 final class Hub
 {
-	public EntityManager _entityManager;
-	public ComponentManager _componentManager;
-	public System _system;
+	public EntityManager entity;
+	public ComponentManager component;
+	public System system;
 
 	public this()
 	{
-		_entityManager = new EntityManager(this);
-		_componentManager = new ComponentManager(this);
-		_system = new System(this);
+		entity = new EntityManager(this);
+		component = new ComponentManager(this);
+		system = new System(this);
 	}
 
 
 	/********************************************* ENTITY MANAGER FUNCTIONS *********************************************/
 	public T entityAddComponent(T)(EntityId eid)
 	{
-		return componentExists!T ? _entityManager.addComponent!(T)(eid, componentGetTypeId!T) : null;
+		return componentExists!T ? entity.addComponent!(T)(eid, componentGetTypeId!T) : null;
 	}
 
 	public T entityAddComponent(T)(T t, EntityId eid)
 	{
-		return componentExists!T ? _entityManager.addComponent!(T)(eid, t, componentGetTypeId!T) : null;
+		return componentExists!T ? entity.addComponent!(T)(eid, t, componentGetTypeId!T) : null;
 	}
 
 	public void entityRemoveComponent(EntityId eid, ComponentTypeId id)
 	{
-		_entityManager.removeComponent(eid, id);
+		entity.removeComponent(eid, id);
 	}
 
 	public T entityGetComponent(T)(EntityId id)
 	{
-		return _entityManager.getComponent!(T)(id);
+		return entity.getComponent!(T)(id);
 	}
 
 	public EntityId entityCreate(const string name, const EntityType type)
 	{
-		EntityId id = _entityManager.createEntity(name, type);
-		_system.addEid(id);
+		EntityId id = entity.createEntity(name, type);
+		system.addEid(id);
 		return id;
 	}
 
 	public void entityKill(EntityId id)
 	{
-		_system.removeEid(id);
-		_entityManager.killEntity(id);
+		system.removeEid(id);
+		entity.killEntity(id);
 	}
 
 	public Entity entityGetEntity(EntityId id)
 	{
-		return _entityManager.getEntity(id);
+		return entity.getEntity(id);
 	}
 
 	public Entity entityGetEntity(EntityType type)
 	{
-		return _entityManager.getEntity(type);
+		return entity.getEntity(type);
 	}
 
 	public void entityEnableComponent(EntityId eid, ComponentTypeId id)
 	{
-		_entityManager.enableComponent(eid, id);
+		entity.enableComponent(eid, id);
 	}
 
 	public void entityDisableComponent(EntityId eid, ComponentTypeId id)
 	{
-		_entityManager.disableComponent(eid, id);
+		entity.disableComponent(eid, id);
 	}
 
 	public bool entityIsComponentDisabled(EntityId eid, ComponentTypeId id)
 	{
-		return _entityManager.isComponentDisabled(eid, id);
+		return entity.isComponentDisabled(eid, id);
 	}
 
 	public bool entityHasComponents(EntityId eid, ComponentTypeId[] ids)
 	{
-		return _entityManager.hasComponents(eid, ids);
+		return entity.hasComponents(eid, ids);
 	}
 
 	public bool entityHasAnyComponent(EntityId eid, ComponentTypeId[] ids)
 	{
-		return _entityManager.hasAnyComponent(eid, ids);
+		return entity.hasAnyComponent(eid, ids);
 	}
 
 	public bool entityHasComponent(EntityId eid, ComponentTypeId id)
 	{
-		return _entityManager.hasComponent(eid, id);
+		return entity.hasComponent(eid, id);
 	}
 
 	public string entityGetName(EntityId eid)
 	{
-		return _entityManager.getName(eid);
+		return entity.getName(eid);
 	}
 
 	public string entityGetDescription(EntityId eid)
 	{
-		return _entityManager.getDescription(eid);
+		return entity.getDescription(eid);
 	}
 
 	public EntityType entityGetType(EntityId eid)
 	{
-		return _entityManager.getType(eid);
+		return entity.getType(eid);
 	}
 
 	public void entitySetDescription(EntityId eid, const string description)
 	{
-		_entityManager.setDescription(eid, description);
+		entity.setDescription(eid, description);
 	}
 
 	public EntityId[] entityGetDeleted()
 	{
-		return _entityManager.getDeletedEntities;
+		return entity.getDeletedEntities;
 	}
 
 	public EntityId entityGetId(Entity e)
 	{
-		return _entityManager.getEntityId(e);
+		return entity.getEntityId(e);
 	}
 
 	public EntityId entityGetId(EntityType type)
 	{
-		return _entityManager.getEntityId(type);
+		return entity.getEntityId(type);
 	}
 
 	public bool entityTypeExists(EntityType type)
 	{
-		return _entityManager.typeExists(type);
+		return entity.typeExists(type);
 	}
 
 	public bool entityExists(EntityId eid)
 	{
-		return _entityManager.hasEntity(eid);
+		return entity.hasEntity(eid);
 	}
 
 
 	/********************************************* COMPONENT MANAGER FUNCTIONS *********************************************/
 	public ComponentTypeId componentCreate(T)()
 	{
-		return _componentManager.createComponent!T;
+		return component.createComponent!T;
 	}
 
 	public bool componentExists(T)()
 	{
-		return _componentManager.hasComponent!T;
+		return component.hasComponent!T;
 	}
 
 	public T componentGet(T)()
 	{
-		return _componentManager.getComponent!T;
+		return component.getComponent!T;
 	}
 
 	public ComponentName componentGetName(ComponentTypeId id)
 	{
-		return _componentManager.getComponentName(id);
+		return component.getComponentName(id);
 	}
 
 	public ComponentName componentGetName(T)()
 	{
-		return _componentManager.getComponentName!T;
+		return component.getComponentName!T;
 	}
 
 	public ComponentTypeId componentGetTypeId(T)()
 	{
-		return _componentManager.getComponentTypeId!T;
+		return component.getComponentTypeId!T;
 	}
 
 
 	/*************************************************** SYSTEM FUNCTIONS **************************************************/
 	public void updateSystems()
 	{
-		_system.update;
+		system.update;
 	}
 
 	public void systemCreate(T)()
 	{
-		_system.createSystem!T;
+		system.createSystem!T;
 	}
 
 	public T systemGet(T)()
 	{
-		return _system.getSystem!T;
+		return system.getSystem!T;
 	}
 
 	public bool systemExists(T)()
 	{
-		return _system.existsSystem!T;
+		return system.existsSystem!T;
 	}
 }
 
