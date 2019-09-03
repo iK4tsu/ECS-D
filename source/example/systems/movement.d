@@ -38,12 +38,12 @@ class Movement : ISystem
 	}
 
 	// all the game logic you need
-	public void update(EntityId eid)
+	public void update(Entity e)
 	{
-		if (_hub.entityHasComponents(eid, [positionId, movableId]))
+		if (e.hasComponents([positionId, movableId]))
 		{
-			position = _hub.entityGetComponent!Position(eid);
-			movable = _hub.entityGetComponent!Movable(eid);
+			position = e.getComponent!Position;
+			movable = e.getComponent!Movable;
 
 			move;
 		}
