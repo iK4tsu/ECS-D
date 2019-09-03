@@ -20,7 +20,7 @@ import example.components.movable;
 class Movement : ISystem
 {
 	// Don't forget to add a Hub aswell;
-	private Hub _hub;
+	private Hub hub;
 
 	// Component ids
 	private ComponentTypeId positionId;
@@ -30,20 +30,20 @@ class Movement : ISystem
 	private Position position;
 	private Movable movable;
 
-	public void init(ref Hub hub)
+	public void init(ref Hub _hub)
 	{
-		_hub = hub;
-		positionId = _hub.componentGetTypeId!Position;
-		movableId = _hub.componentGetTypeId!Movable;
+		hub = _hub;
+		positionId = hub.component.idOf!Position;
+		movableId = hub.component.idOf!Movable;
 	}
 
 	// all the game logic you need
-	public void update(EntityId eid)
+	public void update(Entity e)
 	{
-		if (_hub.entityHasComponents(eid, [positionId, movableId]))
+		if (e.hasComponents([positionId, movableId]))
 		{
-			position = _hub.entityGetComponent!Position(eid);
-			movable = _hub.entityGetComponent!Movable(eid);
+			position = e.getComponent!Position;
+			movable = e.getComponent!Movable;
 
 			move;
 		}

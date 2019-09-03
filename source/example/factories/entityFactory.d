@@ -10,11 +10,11 @@ import example.components;
 void generateEntities(ref Hub hub)
 {
 	// Generate all your entities through the hub
-	EntityId exampleId = hub.entityCreate("exampleId", "noType");
+	Entity example = hub.entity.create();
 	
 	// Add the components for you entity
-	Position examplePosition = hub.entityAddComponent!Position(exampleId);
-	Movable exampleMovable = hub.entityAddComponent!Movable(exampleId);
+	Position examplePosition = example.addComponent!Position;
+	Movable exampleMovable = example.addComponent!Movable;
 
 	// Init all your component variables with values you need
 	examplePosition.x = 2;
@@ -24,5 +24,5 @@ void generateEntities(ref Hub hub)
 
 	// You can also create an entity this way
 	import example.entities;
-	EntityId playerId = createPlayer(hub);
+	Entity player = createPlayer(hub);
 }

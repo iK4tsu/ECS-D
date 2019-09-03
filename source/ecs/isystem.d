@@ -5,8 +5,8 @@ import ecs.hub;
 
 public interface ISystem
 {
-	public void update(EntityId eid);
-	public void init(ref Hub hub);
+	public void update(Entity e);
+	public void init(ref Hub _hub);
 }
 
 
@@ -15,19 +15,19 @@ version(unittest)
 {
 	class FooSys : ISystem
 	{
-		private Hub _hub;
+		private Hub hub;
 		private Foo foo;
 		private ComponentTypeId fooID;
 
-		public void init(ref Hub hub)
+		public void init(ref Hub _hub)
 		{
-			_hub = hub;
-			fooID = _hub.componentGetTypeId!Foo;
+			hub = _hub;
+			fooID = hub.component.idOf!Foo;
 		}
 
-		public void update(EntityId eid)
+		public void update(Entity e)
 		{
-			foo = _hub.entityGetComponent!Foo(eid);
+			foo = e.getComponent!Foo;
 			if (foo !is null)
 				foo.someData++;
 		}

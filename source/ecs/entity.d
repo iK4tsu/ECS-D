@@ -16,28 +16,25 @@ alias EntityType = string;
 
 class Entity : IEntity
 {
-	private EntityId _id;
+	public EntityId _id;
 	private IComponent[ComponentTypeId] _components;
 	private IComponent[ComponentTypeId] _disabledComponents;
-	private const EntityType _type;
-	private const string _name;
+	private EntityType _type;
+	private string _name;
 	private string _description;
-	private EntityManager _entityManager;
+	private EntityManager manager;
 	
 
 
-	public this(const string name, const EntityType type) { this(null, 0, name, type); }
-	public this(EntityId id, const string name, const EntityType type) {  this(null, id, name, type); }
-	public this(EntityManager manager, EntityId id, const string name, const EntityType type)
+	public this(EntityId id) {  this(null, id); }
+	public this(EntityManager _manager, EntityId id)
 	{
 		if (!id)
 			_id = next_id++;
 		else
 			_id = id;
 
-		_type = type;
-		_name = name;
-		_entityManager = manager;
+		manager = _manager;
 	}
 
 
@@ -49,39 +46,31 @@ class Entity : IEntity
 	 * As it will get the id internaly
 	 * If you decide otherwise, you'll also need to perform other functions manualy
 	 */
-	public T addComponent(T)(ComponentTypeId id)
+	public T addComponent(T)(T t)
 	{
+		if (t is null)
+			return t;
+		
+		ComponentTypeId id = manager.component.idOf!T;
+
 		if (!hasComponent(id))
 		{
-			T t = new T();
 			_components[id] = t;
 			return t;
 		}
 
 		throw new EntityAlreadyContainsComponentException(
 			id, "Cannot add component '" ~
-			_entityManager._hub.componentGetName(id) ~
-			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
+			manager.component.name(id) ~
+			"' to '" ~ _name
+	 ~ "'!", "You should check if an entity " ~
 			"contains a component before adding it.");
 	}
 
 
-	public T addComponent(T)(T t, ComponentTypeId id)
+	public T addComponent(T)()
 	{
-		if (t is null)
-			return t;
-
-		if (!hasComponent(id))
-		{
-			_components[id] = t;
-			return t;
-		}
-
-		throw new EntityAlreadyContainsComponentException(
-			id, "Cannot add component '" ~
-			_entityManager._hub.componentGetName(id) ~
-			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
-			"contains a component before adding it.");
+		return addComponent(new T());
 	}
 
 
@@ -102,9 +91,17 @@ class Entity : IEntity
 
 		throw new EntityDoesNotContainComponentException(
 			id, "Cannot remove component '" ~
-			_entityManager._hub.componentGetName(id) ~ "' from '" ~
-			_name ~ "'!", "You should check if an entity has a " ~
+			manager.component.name(id) ~ "' from '" ~
+			_name
+	 ~ "'!", "You should check if an entity has a " ~
 			"component before removing it.");
+	}
+
+
+	public void removeComponent(T)()
+	{
+		ComponentTypeId id = manager.component.getComponentTypeId!T;
+		removeComponent(id);
 	}
 
 
@@ -129,9 +126,17 @@ class Entity : IEntity
 
 		throw new EntityDoesNotContainComponentException(
 			id, "Cannot disable component '" ~
-			_entityManager._hub.componentGetName(id) ~
-			"' in '" ~ _name ~ "'!", "You should check if " ~
+			manager.component.name(id) ~
+			"' in '" ~ _name
+	 ~ "'!", "You should check if " ~
 			"an entity has a component before disabling it");
+	}
+
+
+	public void disableComponent(T)()
+	{
+		ComponentTypeId id = manager.component.idOf!T;
+		disableComponent(id);
 	}
 
 
@@ -153,9 +158,17 @@ class Entity : IEntity
 
 		throw new EntityComponentIsNotDisabledException(
 			id, "Cannot disable component '" ~
-			_entityManager._hub.componentGetName(id) ~
-			"' from '" ~ _name ~ "'!", "You should check " ~
+			manager.component.name(id) ~
+			"' from '" ~ _name
+	 ~ "'!", "You should check " ~
 			"if a component is disabled beafore enabling it.");
+	}
+
+
+	public void enableComponent(T)()
+	{
+		ComponentTypeId id = manager.component.idOf!T;
+		enableComponent(id);
 	}
 
 
@@ -216,6 +229,13 @@ class Entity : IEntity
 	}
 
 
+	public bool hasComponent(T)()
+	{
+		ComponentTypeId id = manager.component.idOf!T;
+		return hasComponent(id);
+	}
+
+
 	/*
 	 * Returns true if all of the components exist
 	 * You check by using an array of the AA _components keys
@@ -225,11 +245,17 @@ class Entity : IEntity
 	 */
 	public bool hasComponents(ComponentTypeId[] ids)
 	{
-		foreach(id; ids)
-			if (!hasComponent(id))
+		foreach(_id; ids)
+			if (!hasComponent(_id))
 				return false;
 
 		return true;
+	}
+
+
+	public bool hasComponents(T...)()
+	{
+		return hasComponents(manager.component.ids!T);
 	}
 
 
@@ -250,6 +276,12 @@ class Entity : IEntity
 	}
 
 
+	public bool hasAnyComponent(T...)()
+	{
+		return hasAnyComponent(manager.component.idsOf!T);
+	}
+
+
 	/*
 	 * Returns true if a component is disabled
 	 * It doesn't return any info about the existance of the component
@@ -265,64 +297,55 @@ class Entity : IEntity
 	}
 
 
-	public string getName() { return _name; }
-	public string getDescription() { return _description; }
-	public EntityType getType() { return _type; }
-	public EntityId getId() { return _id; }
+	public bool isComponentDisabled(T)()
+	{
+		ComponentTypeId id = manager.component.idOf!T;
+		return isComponentDisabled(id);
+	}
 
-	public void setDescription(const string description) { _description = description; }
+
+	public void kill()
+	{
+		manager.kill(_id);
+	}
+
+
+	public string name() { return _name; }
+	public string description() { return _description; }
+	public EntityType type() { return _type; }
+
+	public inout(const string) name(inout string __name) @safe pure
+	{
+		_name = __name;
+		return __name;
+	}
+
+	public inout(const string) description(inout string __description) @safe pure
+	{
+		_description = __description;
+		return __description;
+	}
+
+	public inout(const string) type(inout string __type) @safe pure
+	{
+		_type = __type;
+		return __type;
+	}
 }
 
 
 @system unittest
 {
-	Entity e = new Entity("I'm alive", "Group");
+	Entity e = new Entity(1);
 
-	assert(e.getId == 1);
-	
-	ComponentTypeId fooID = 1;
-	ComponentTypeId gooID = 2;
-	e.addComponent!Foo(fooID);
-
-	assert(e.hasAnyComponent([fooID, gooID]));
-	assert(e.hasComponent(fooID));
-
-	assert(!e.hasComponent(gooID));
-
-	assert(cast(Foo) e.getComponent!Foo !is null);
-	assert(cast(Goo) e.getComponent!Goo is null);
+	assert(e._id == 1);
 }
 
 @system unittest
 {
-	Entity e = new Entity("I'm also alive", "Alive");
+	Entity e = new Entity(2);
 
-	ComponentTypeId fooID = 1;
-	ComponentTypeId gooID = 2;
-	e.addComponent!Foo(fooID);
-
-	assert(!e.isComponentDisabled(fooID));
-	assert(!e.isComponentDisabled(gooID));
-
-	e.disableComponent(fooID);
-
-	assert(e.isComponentDisabled(fooID));
-	assert(!e.hasComponent(fooID));
-
-	e.enableComponent(fooID);
-	e.removeComponent(fooID);
-
-	assert(!e.hasComponent(fooID));
-}
-
-@system unittest
-{
-	Entity e = new Entity("Just e it", "e");
-
-	assert(e.getName == "Just e it");
-	assert(e.getType == "e");
-
-	e.setDescription("Feel the e");
-
-	assert(e.getDescription == "Feel the e");
+	assert(e.name("Just e it") == e.name);
+	assert(e.type("e") == e.type);
+	assert(e.description("Feel the e") == e.description);
 }

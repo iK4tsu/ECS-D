@@ -10,9 +10,6 @@ import ecs.isystem;
 import ecs.exceptions.entity;
 
 
-import std.traits;
-
-
 alias EntityId = uint;
 alias ComponentTypeId = uint;
 alias EntityType = string;
@@ -20,214 +17,49 @@ alias EntityType = string;
 
 final class Hub
 {
-	public EntityManager _entityManager;
-	public ComponentManager _componentManager;
-	public System _system;
+	public EntityManager entity;
+	public ComponentManager component;
+	public System system;
+
 
 	public this()
 	{
-		_entityManager = new EntityManager(this);
-		_componentManager = new ComponentManager(this);
-		_system = new System(this);
+		component = new ComponentManager(this);
+		system = new System(this);
+		entity = new EntityManager(this, component);
 	}
 
 
-	/********************************************* ENTITY MANAGER FUNCTIONS *********************************************/
-	public T entityAddComponent(T)(EntityId eid)
+	public void update()
 	{
-		return componentExists!T ? _entityManager.addComponent!(T)(eid, componentGetTypeId!T) : null;
-	}
-
-	public T entityAddComponent(T)(T t, EntityId eid)
-	{
-		return componentExists!T ? _entityManager.addComponent!(T)(eid, t, componentGetTypeId!T) : null;
-	}
-
-	public void entityRemoveComponent(EntityId eid, ComponentTypeId id)
-	{
-		_entityManager.removeComponent(eid, id);
-	}
-
-	public T entityGetComponent(T)(EntityId id)
-	{
-		return _entityManager.getComponent!(T)(id);
-	}
-
-	public EntityId entityCreate(const string name, const EntityType type)
-	{
-		EntityId id = _entityManager.createEntity(name, type);
-		_system.addEid(id);
-		return id;
-	}
-
-	public void entityKill(EntityId id)
-	{
-		_system.removeEid(id);
-		_entityManager.killEntity(id);
-	}
-
-	public Entity entityGetEntity(EntityId id)
-	{
-		return _entityManager.getEntity(id);
-	}
-
-	public Entity entityGetEntity(EntityType type)
-	{
-		return _entityManager.getEntity(type);
-	}
-
-	public void entityEnableComponent(EntityId eid, ComponentTypeId id)
-	{
-		_entityManager.enableComponent(eid, id);
-	}
-
-	public void entityDisableComponent(EntityId eid, ComponentTypeId id)
-	{
-		_entityManager.disableComponent(eid, id);
-	}
-
-	public bool entityIsComponentDisabled(EntityId eid, ComponentTypeId id)
-	{
-		return _entityManager.isComponentDisabled(eid, id);
-	}
-
-	public bool entityHasComponents(EntityId eid, ComponentTypeId[] ids)
-	{
-		return _entityManager.hasComponents(eid, ids);
-	}
-
-	public bool entityHasAnyComponent(EntityId eid, ComponentTypeId[] ids)
-	{
-		return _entityManager.hasAnyComponent(eid, ids);
-	}
-
-	public bool entityHasComponent(EntityId eid, ComponentTypeId id)
-	{
-		return _entityManager.hasComponent(eid, id);
-	}
-
-	public string entityGetName(EntityId eid)
-	{
-		return _entityManager.getName(eid);
-	}
-
-	public string entityGetDescription(EntityId eid)
-	{
-		return _entityManager.getDescription(eid);
-	}
-
-	public EntityType entityGetType(EntityId eid)
-	{
-		return _entityManager.getType(eid);
-	}
-
-	public void entitySetDescription(EntityId eid, const string description)
-	{
-		_entityManager.setDescription(eid, description);
-	}
-
-	public EntityId[] entityGetDeleted()
-	{
-		return _entityManager.getDeletedEntities;
-	}
-
-	public EntityId entityGetId(Entity e)
-	{
-		return _entityManager.getEntityId(e);
-	}
-
-	public EntityId entityGetId(EntityType type)
-	{
-		return _entityManager.getEntityId(type);
-	}
-
-	public bool entityTypeExists(EntityType type)
-	{
-		return _entityManager.typeExists(type);
-	}
-
-	public bool entityExists(EntityId eid)
-	{
-		return _entityManager.hasEntity(eid);
-	}
-
-
-	/********************************************* COMPONENT MANAGER FUNCTIONS *********************************************/
-	public ComponentTypeId componentCreate(T)()
-	{
-		return _componentManager.createComponent!T;
-	}
-
-	public bool componentExists(T)()
-	{
-		return _componentManager.hasComponent!T;
-	}
-
-	public T componentGet(T)()
-	{
-		return _componentManager.getComponent!T;
-	}
-
-	public ComponentName componentGetName(ComponentTypeId id)
-	{
-		return _componentManager.getComponentName(id);
-	}
-
-	public ComponentName componentGetName(T)()
-	{
-		return _componentManager.getComponentName!T;
-	}
-
-	public ComponentTypeId componentGetTypeId(T)()
-	{
-		return _componentManager.getComponentTypeId!T;
-	}
-
-
-	/*************************************************** SYSTEM FUNCTIONS **************************************************/
-	public void updateSystems()
-	{
-		_system.update;
-	}
-
-	public void systemCreate(T)()
-	{
-		_system.createSystem!T;
-	}
-
-	public T systemGet(T)()
-	{
-		return _system.getSystem!T;
-	}
-
-	public bool systemExists(T)()
-	{
-		return _system.existsSystem!T;
+		system.update;
 	}
 }
 
 
+
 @system unittest
 {
-	Hub _hub = new Hub();
+	Hub hub = new Hub();
 
-	ComponentTypeId fooID = _hub.componentCreate!Foo;
-	_hub.componentCreate!Goo;
-	_hub.systemCreate!FooSys;
-	EntityId eid = _hub.entityCreate("Nobody", "Alone");
+	hub.component.create!Foo;
+	hub.component.create!Goo;
+	hub.system.create!FooSys;
 
-	_hub.entityAddComponent!Foo(eid);
+	Entity e = hub.entity.create();
+	e.addComponent!Foo;
 	
-	assert(_hub.entityGetComponent!Foo(eid).someData == int.init);
-	assert(_hub.systemExists!FooSys);
+	assert(e.getComponent!Foo.someData == int.init);
+	assert(e.hasComponent!Foo);
+	assert(hub.system.exists!FooSys);
 
-	_hub.updateSystems;
+	hub.update;
 
-	assert(_hub.entityGetComponent!Foo(eid).someData == 1);
+	assert(e.getComponent!Foo.someData == 1);
 
-	_hub.entityDisableComponent(eid, fooID);
-	_hub.updateSystems;
-	_hub.entityEnableComponent(eid, fooID);
+	e.disableComponent!Foo;
+	hub.update;
+	e.enableComponent!Foo;
 
-	assert(_hub.entityGetComponent!Foo(eid).someData == 1);
+	assert(e.getComponent!Foo.someData == 1);
 }
