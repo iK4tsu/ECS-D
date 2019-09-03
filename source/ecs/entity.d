@@ -182,6 +182,13 @@ class Entity : IEntity
 	}
 
 
+	public void disableComponent(T)()
+	{
+		ComponentTypeId id = _entityManager.component.getComponentTypeId!T;
+		disableComponent(id);
+	}
+
+
 	/*
 	 * Enables a component if this is disabled
 	 * You enable it by using the AA's keys
