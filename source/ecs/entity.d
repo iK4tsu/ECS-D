@@ -72,20 +72,7 @@ class Entity : IEntity
 
 	public T addComponent(T)()
 	{
-		ComponentTypeId id = _entityManager.component.getComponentTypeId!T;
-
-		if (!hasComponent(id))
-		{
-			T t = new T();
-			_components[id] = t;
-			return t;
-		}
-
-		throw new EntityAlreadyContainsComponentException(
-			id, "Cannot add component '" ~
-			_entityManager.hub.componentGetName(id) ~
-			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
-			"contains a component before adding it.");
+		addComponent(new T());
 	}
 
 
