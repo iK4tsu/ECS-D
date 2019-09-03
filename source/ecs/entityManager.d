@@ -63,16 +63,6 @@ final class EntityManager
 			"if an entity exists before killing it.");
 	}
 
-	public bool hasComponents(EntityId eid, ComponentTypeId[] indices)
-	{
-		if (hasEntity(eid))
-			return _mEntities[eid].hasComponents(indices);
-
-		throw new EntityDoesNotExistException(
-			eid, "Cannot check if the entity has the components!",
-			"You should verify if an entity exists before checking the existance of a set of components.");
-	}
-
 	public bool hasAnyComponent(EntityId eid, ComponentTypeId[] indices)
 	{
 		if (hasEntity(eid))
