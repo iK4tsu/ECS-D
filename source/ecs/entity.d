@@ -277,6 +277,12 @@ class Entity : IEntity
 	}
 
 
+	public void destroy()
+	{
+		manager.killEntity(id);
+	}
+
+
 	public string getName() { return _name; }
 	public string getDescription() { return _description; }
 	public EntityType getType() { return _type; }
