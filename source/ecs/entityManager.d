@@ -14,13 +14,15 @@ final class EntityManager
 	private Entity[EntityId] _mEntities;
 	private EntityType[EntityId] _mTypes;
 	private EntityId[] _deletedEntities;
-	public Hub _hub;
+	public Hub hub;
+	public ComponentManager component;
 
 
-	public this() { this(null); }
-	public this(Hub hub)
+	public this() { this(null, null); }
+	public this(Hub _hub, ComponentManager _component)
 	{
-		_hub = hub;
+		hub = _hub;
+		component = _component;
 	}
 
 
@@ -31,6 +33,7 @@ final class EntityManager
 			new Entity(this, 0, name, type);
 		_mEntities[e.getId] = e;
 		_mTypes[e.getId] = type;
+		hub.system.addEntity(e);
 		return e;
 	}
 
@@ -65,7 +68,7 @@ final class EntityManager
 			return _mEntities[eid].addComponent!(T)(id);
 		
 		throw new EntityDoesNotExistException(
-			eid, "Cannot add the component '" ~ _hub.componentGetName(id) ~
+			eid, "Cannot add the component '" ~ hub.co_mponentGetName(id) ~
 			"' to the entity!", "You should verify if an entity exists " ~
 			"before adding a component to it.");
 	}
@@ -77,7 +80,7 @@ final class EntityManager
 			return _mEntities[eid].addComponent!(T)(t, id);
 		
 		throw new EntityDoesNotExistException(
-			eid, "Cannot add the component '" ~ _hub.componentGetName(id) ~
+			eid, "Cannot add the component '" ~ hub.co_mponentGetName(id) ~
 			"' to the entity!", "You should verify if an entity exists " ~
 			"before adding a component to it.");
 	}
@@ -92,7 +95,7 @@ final class EntityManager
 		}
 
 		throw new EntityDoesNotExistException(
-			eid, "Cannot remove the component '" ~ _hub.componentGetName(id) ~
+			eid, "Cannot remove the component '" ~ hub.componentGetName(id) ~
 			"' to the entity!", "You should verify if an entity exists " ~
 			"before remoing a component from it.");
 	}
@@ -104,7 +107,7 @@ final class EntityManager
 			return _mEntities[eid].getComponent!T;
 		
 		throw new EntityDoesNotExistException(
-			eid, "Cannot get the component '" ~ _hub.componentGetName!T ~
+			eid, "Cannot get the component '" ~ hub.componentGetName!T ~
 			"' to the entity!", "You should verify if an entity exists " ~
 			"before getting a component from it.");
 	}
@@ -119,7 +122,7 @@ final class EntityManager
 		}
 
 		throw new EntityDoesNotExistException(
-			eid, "Cannot enable the component '" ~ _hub.componentGetName(id) ~
+			eid, "Cannot enable the component '" ~ hub.componentGetName(id) ~
 			"' in the entity!", "You should verify if an entity exists " ~
 			"before enabling a component in it.");
 	}
@@ -133,7 +136,7 @@ final class EntityManager
 		}
 
 		throw new EntityDoesNotExistException(
-			eid, "Cannot disable the component '" ~ _hub.componentGetName(id) ~
+			eid, "Cannot disable the component '" ~ hub.componentGetName(id) ~
 			"' in the entity!", "You should verify if an entity exists " ~
 			"before disabling a component in it.");
 	}
@@ -144,7 +147,7 @@ final class EntityManager
 			return _mEntities[eid].isComponentDisabled(id);
 
 		throw new EntityDoesNotExistException(
-			eid, "Cannot check if the component '" ~ _hub.componentGetName(id) ~
+			eid, "Cannot check if the component '" ~ hub.componentGetName(id) ~
 			"' is disabled in the entity!", "You should verify if an entity exists " ~
 			"before checking a component's status.");
 	}
@@ -175,7 +178,7 @@ final class EntityManager
 			return _mEntities[eid].hasComponent(id);
 
 		throw new EntityDoesNotExistException(
-			eid, "Cannot check if the entity contains the component '" ~ _hub.componentGetName(id) ~
+			eid, "Cannot check if the entity contains the component '" ~ hub.componentGetName(id) ~
 			"'!", "You should verify if an entity exists before checking it's existance.");
 	}
 
@@ -311,7 +314,7 @@ final class EntityManager
 	EntityId eid = e.getId;
 	assert(!manager.hasEntity(++eid));
 }
-
+/*
 @system unittest
 {
 	EntityManager manager = new EntityManager();
@@ -325,7 +328,7 @@ final class EntityManager
 	assert(manager.getDeletedEntities.length == 1);
 	assert(manager.getDeletedEntities[0] == e.getId);
 	assert(!manager.hasEntity(e.getId));
-}
+}*/
 
 @system unittest
 {
