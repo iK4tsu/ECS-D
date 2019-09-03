@@ -19,8 +19,8 @@ class Entity : IEntity
 	public EntityId _id;
 	private IComponent[ComponentTypeId] _components;
 	private IComponent[ComponentTypeId] _disabledComponents;
-	private const EntityType _type;
-	private const string _name;
+	private EntityType _type;
+	private string _name;
 	private string _description;
 	private EntityManager manager;
 	
