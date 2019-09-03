@@ -51,7 +51,7 @@ class Entity : IEntity
 		if (t is null)
 			return t;
 		
-		ComponentTypeId id = manager.component.getComponentTypeId!T;
+		ComponentTypeId id = manager.component.idOf!T;
 
 		if (!hasComponent(id))
 		{
@@ -61,7 +61,7 @@ class Entity : IEntity
 
 		throw new EntityAlreadyContainsComponentException(
 			id, "Cannot add component '" ~
-			manager.hub.componentGetName(id) ~
+			manager.component.name(id) ~
 			"' to '" ~ _name ~ "'!", "You should check if an entity " ~
 			"contains a component before adding it.");
 	}
@@ -69,7 +69,7 @@ class Entity : IEntity
 
 	public T addComponent(T)()
 	{
-		addComponent(new T());
+		return addComponent(new T());
 	}
 
 
@@ -90,7 +90,7 @@ class Entity : IEntity
 
 		throw new EntityDoesNotContainComponentException(
 			id, "Cannot remove component '" ~
-			manager.hub.componentGetName(id) ~ "' from '" ~
+			manager.component.name(id) ~ "' from '" ~
 			_name ~ "'!", "You should check if an entity has a " ~
 			"component before removing it.");
 	}
@@ -124,7 +124,7 @@ class Entity : IEntity
 
 		throw new EntityDoesNotContainComponentException(
 			id, "Cannot disable component '" ~
-			manager.hub.componentGetName(id) ~
+			manager.component.name(id) ~
 			"' in '" ~ _name ~ "'!", "You should check if " ~
 			"an entity has a component before disabling it");
 	}
@@ -132,7 +132,7 @@ class Entity : IEntity
 
 	public void disableComponent(T)()
 	{
-		ComponentTypeId id = manager.component.getComponentTypeId!T;
+		ComponentTypeId id = manager.component.idOf!T;
 		disableComponent(id);
 	}
 
@@ -155,7 +155,7 @@ class Entity : IEntity
 
 		throw new EntityComponentIsNotDisabledException(
 			id, "Cannot disable component '" ~
-			manager.hub.componentGetName(id) ~
+			manager.component.name(id) ~
 			"' from '" ~ _name ~ "'!", "You should check " ~
 			"if a component is disabled beafore enabling it.");
 	}
@@ -163,7 +163,7 @@ class Entity : IEntity
 
 	public void enableComponent(T)()
 	{
-		ComponentTypeId id = manager.component.getComponentTypeId!T;
+		ComponentTypeId id = manager.component.idOf!T;
 		enableComponent(id);
 	}
 
@@ -274,7 +274,7 @@ class Entity : IEntity
 
 	public bool hasAnyComponent(T...)()
 	{
-		return hasAnyComponent(manager.component.ids!T);
+		return hasAnyComponent(manager.component.idsOf!T);
 	}
 
 
@@ -295,14 +295,14 @@ class Entity : IEntity
 
 	public bool isComponentDisabled(T)()
 	{
-		ComponentTypeId id = manager.component.id!T;
+		ComponentTypeId id = manager.component.idOf!T;
 		return isComponentDisabled(id);
 	}
 
 
-	public void destroy()
+	public void kill()
 	{
-		manager.killEntity(id);
+		manager.kill(_id);
 	}
 
 
