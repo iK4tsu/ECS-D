@@ -40,7 +40,7 @@ class Movement : ISystem
 	// all the game logic you need
 	public void update(Entity e)
 	{
-		if (e.hasComponents([positionId, movableId]))
+		if (e.hasComponents!(Position, Movable))
 		{
 			position = e.getComponent!Position;
 			movable = e.getComponent!Movable;
