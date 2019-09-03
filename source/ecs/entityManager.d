@@ -64,16 +64,6 @@ final class EntityManager
 	}
 
 
-	public IComponent[] getComponents(EntityId eid)
-	{
-		if (hasEntity(eid))
-			return _mEntities[eid].getComponents;
-		
-		throw new EntityDoesNotExistException(
-			eid, "Cannot get the components from the entity!",
-			"You should verify if an entity exists " ~ "before getting components from it.");
-	}
-
 	public ComponentTypeId[] getComponentTypes(EntityId eid)
 	{
 		if (hasEntity(eid))
