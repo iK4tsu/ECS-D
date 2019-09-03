@@ -92,21 +92,12 @@ final class EntityManager
 			"before getting it.");
 	}
 
+
 	public EntityId[] getDeletedEntities()
 	{
 		return _deletedEntities;
 	}
 
-	public EntityId getEntityId(Entity e)
-	{
-		import std.algorithm : canFind;
-		if (canFind(_mEntities.values, e))
-			return e.getId;
-
-		throw new EntityDoesNotExistException(
-			-1, "Cannot get entity id!", "You should verify if an entity exists " ~
-			"before getting it's id.");
-	}
 
 	public EntityId getEntityId(EntityType type)
 	{
