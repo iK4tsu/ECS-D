@@ -42,12 +42,12 @@ final class System
 		return (T.stringof in systems) !is null; 
 	}
 
-	public void addEid(Entity e)
+	public void addEntity(Entity e)
 	{
 		entities ~= e;
 	}
 
-	public void removeEid(Entity e)
+	public void removeEntity(Entity e)
 	{
 		import std.algorithm : remove;
 		remove!(a => a = e)(entities);
