@@ -225,6 +225,13 @@ class Entity : IEntity
 	}
 
 
+	public bool hasComponent(T)()
+	{
+		ComponentTypeId id = manager.component.getComponentTypeId!T;
+		return hasComponent(id);
+	}
+
+
 	/*
 	 * Returns true if all of the components exist
 	 * You check by using an array of the AA _components keys
@@ -234,11 +241,27 @@ class Entity : IEntity
 	 */
 	public bool hasComponents(ComponentTypeId[] ids)
 	{
-		foreach(id; ids)
-			if (!hasComponent(id))
+		foreach(_id; ids)
+			if (!hasComponent(_id))
 				return false;
 
 		return true;
+	}
+
+
+	public bool hasComponents(T...)()
+	{
+		import std.algorithm : canFind;
+		ComponentTypeId[] _ids;
+
+		foreach(t; T)
+		{
+			ComponentTypeId _id = manager.component.getComponentTypeId!t;
+			if (!canFind(_ids, _id))
+				_ids ~= _id;
+		}
+
+		return hasComponents(_ids);
 	}
 
 
