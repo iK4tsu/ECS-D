@@ -3,7 +3,7 @@ module ecs.exceptions.component.componentAlreadyExistsException;
 import ecs.exceptions.ecsException;
 import std.conv : to;
 
-class ComponentDoesNotExistException : ECS_Exception
+class ComponentAlreadyExistsException : ECS_Exception
 {
 	public this(string message, string hint)
 	{
