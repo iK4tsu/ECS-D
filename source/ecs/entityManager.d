@@ -64,21 +64,6 @@ final class EntityManager
 	}
 
 
-	public void removeComponent(EntityId eid, ComponentTypeId id)
-	{
-		if (hasEntity(eid))
-		{
-			_mEntities[eid].removeComponent(id);
-			return;
-		}
-
-		throw new EntityDoesNotExistException(
-			eid, "Cannot remove the component '" ~ hub.componentGetName(id) ~
-			"' to the entity!", "You should verify if an entity exists " ~
-			"before remoing a component from it.");
-	}
-
-
 	public T getComponent(T)(EntityId eid)
 	{
 		if (hasEntity(eid))
