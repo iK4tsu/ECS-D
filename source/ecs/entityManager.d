@@ -64,18 +64,6 @@ final class EntityManager
 	}
 
 
-	public T getComponent(T)(EntityId eid)
-	{
-		if (hasEntity(eid))
-			return _mEntities[eid].getComponent!T;
-		
-		throw new EntityDoesNotExistException(
-			eid, "Cannot get the component '" ~ hub.componentGetName!T ~
-			"' to the entity!", "You should verify if an entity exists " ~
-			"before getting a component from it.");
-	}
-
-
 	public void enableComponent(EntityId eid, ComponentTypeId id)
 	{
 		if (hasEntity(eid))
