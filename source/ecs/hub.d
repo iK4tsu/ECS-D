@@ -10,9 +10,6 @@ import ecs.isystem;
 import ecs.exceptions.entity;
 
 
-import std.traits;
-
-
 alias EntityId = uint;
 alias ComponentTypeId = uint;
 alias EntityType = string;
@@ -23,6 +20,7 @@ final class Hub
 	public EntityManager entity;
 	public ComponentManager component;
 	public System system;
+
 
 	public this()
 	{

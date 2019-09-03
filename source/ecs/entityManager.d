@@ -26,7 +26,7 @@ final class EntityManager
 	}
 
 
-	public Entity createEntity()
+	public Entity create()
 	{
 		Entity e = _deletedEntities.length > 0 ?
 			new Entity(this, popDeletedId) :
@@ -48,7 +48,7 @@ final class EntityManager
 	}
 
 
-	public void killEntity(EntityId eid)
+	public void kill(EntityId eid)
 	{
 		if (hasEntity(eid))
 		{
@@ -64,13 +64,13 @@ final class EntityManager
 	}
 
 
-	public bool hasEntity(EntityId eid)
+	public bool exists(EntityId eid)
 	{
 		return (eid in _mEntities) !is null;
 	}
 
 
-	public Entity getEntity(EntityId eid)
+	public Entity get(EntityId eid)
 	{
 		if (hasEntity(eid))
 			return _mEntities[eid];
@@ -81,7 +81,7 @@ final class EntityManager
 	}
 
 
-	public Entity getEntity(EntityType type)
+	public Entity get(EntityType type)
 	{
 		foreach(id, _type; _mTypes)
 			if (_type == type)
@@ -93,13 +93,13 @@ final class EntityManager
 	}
 
 
-	public EntityId[] getDeletedEntities()
+	public EntityId[] getDeletedIds()
 	{
 		return _deletedEntities;
 	}
 
 
-	public bool typeExists(EntityType type)
+	public bool existsType(EntityType type)
 	{
 		import std.algorithm : canFind;
 		return canFind(_mTypes.values, type);
