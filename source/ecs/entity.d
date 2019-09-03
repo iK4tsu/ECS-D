@@ -39,12 +39,11 @@ class Entity : IEntity
 
 
 	/*
-	 * Add a component with a respective key
-	 * The key is the component's id
-	 * Every time you inittialize a new component, an id is generated
-	 * For this reason, you should always use this function through the Hub
-	 * As it will get the id internaly
-	 * If you decide otherwise, you'll also need to perform other functions manualy
+	 * Add a component
+	 * Every time you inittialize a new component, an unique id is generated
+	 * Use this function only if you want to generate the component with values
+	 ***
+	 * Example: e.AddComponent(new Foo(value1, value2, ...));
 	 */
 	public T addComponent(T)(T t)
 	{
@@ -68,6 +67,12 @@ class Entity : IEntity
 	}
 
 
+	/*
+	 * Add a component
+	 * Use this function only if you want to generate the component with init values
+	 ***
+	 * Example: e.AddComponent!Foo;
+	 */
 	public T addComponent(T)()
 	{
 		return addComponent(new T());
@@ -75,10 +80,14 @@ class Entity : IEntity
 
 
 	/*
-	 * Removes a component and the respective key from the AA _components
-	 * The key is the component's id
-	 * It's highly recomended you to always use the Hub when accessing this functions
-	 * However, if you decide to get the component id first you can use it directly, but not recomended
+	 * Removes a component and the respective id from the AA _components
+	 * It's called by passing the component's id
+	 * Every time you inittialize a new component, an unique id is generated
+	 * If you don't know which id you should pass, use the other variant of this function,
+	 *     which is the recomended one, as it will get the correct id for you
+	 ****
+	 * Example: ComponentTypeId fooID = hub.component.idOf!Foo;
+	 *          e.removeComponent(fooID);
 	 */
 	public void removeComponent(ComponentTypeId id)
 	{
@@ -98,22 +107,31 @@ class Entity : IEntity
 	}
 
 
+	/*
+	 * Removes a component and the respective id from the AA _components
+	 * It's recomended to always use this function, as it will do the 'hard work' for you
+	 ****
+	 * Example: e.removeComponent!Foo;
+	 */
 	public void removeComponent(T)()
 	{
-		ComponentTypeId id = manager.component.getComponentTypeId!T;
+		ComponentTypeId id = manager.component.idOf!T;
 		removeComponent(id);
 	}
 
 
 	/*
-	 * Moves an existing component to the disabled component array
+	 * Moves an existing component to the disabled components array
+	 * It is called by passing the component's id
+	 * Every time you inittialize a new component, an unique id is generated
 	 * Use this function if you're certaint you'll need the component again
-	 * If you're unsure, or you have the knowledge that the component is not going to be used again
-	 * Use the removeComponent function instead
-	 * You disable a component by using the AA's keys
-	 * The key is the component's id
-	 * It's highly recomended you to always use the Hub when accessing this functions
-	 * However, if you decide to get the component id first you can use it directly, but not recomended
+	 * If you're unsure, or you do know, the component is not going to be used again,
+	 *     use the removeComponent function instead
+	 * If you don't know which id you should pass, use the other variant of this function,
+	 *     which is the recomended one, as it will get the correct id for you
+	 ****
+	 * Example: ComponentTypeId fooID = hub.component.idOf!Foo;
+	 *          e.disableComponent(fooID);
 	 */
 	public void disableComponent(ComponentTypeId id)
 	{
@@ -133,6 +151,15 @@ class Entity : IEntity
 	}
 
 
+	/*
+	 * Moves an existing component to the disabled components array
+	 * Use this function if you're certaint you'll need the component again
+	 * If you're unsure, or you do know, the component is not going to be used again,
+	 *     use the removeComponent function instead
+	 * It's recomended to always use this function, as it will do the 'hard work' for you
+	 ****
+	 * Example: e.disableComponent!Foo;
+	 */
 	public void disableComponent(T)()
 	{
 		ComponentTypeId id = manager.component.idOf!T;
@@ -142,10 +169,13 @@ class Entity : IEntity
 
 	/*
 	 * Enables a component if this is disabled
-	 * You enable it by using the AA's keys
-	 * The key is the component's id
-	 * It's highly recomended you to always use the Hub when accessing this functions
-	 * However, if you decide to get the component id first you can use it directly, but not recomended
+	 * You enable it by using the component's id
+	 * Every time you inittialize a new component, an unique id is generated
+	 * If you don't know which id you should pass, use the other variant of this function,
+	 *     which is the recomended one, as it will get the correct id for you
+	 ****
+	 * Example: ComponentTypeId fooID = hub.component.idOf!Foo;
+	 *          e.enableComponent(fooId);
 	 */
 	public void enableComponent(ComponentTypeId id)
 	{
@@ -165,6 +195,12 @@ class Entity : IEntity
 	}
 
 
+	/*
+	 * Enables a component if this is disabled
+	 * It's recomended to always use this function, as it will do the 'hard work' for you
+	 ****
+	 * Example: e.enableComponent(fooId);
+	 */
 	public void enableComponent(T)()
 	{
 		ComponentTypeId id = manager.component.idOf!T;
@@ -173,11 +209,9 @@ class Entity : IEntity
 
 
 	/*
-	 * Get a specific component
-	 * You pass a T type of component and you'll recive the same type if it exists
-	 * If you do not, you it'll return null
-	 * It's highly recomended you to always use the Hub when accessing this functions
-	 * However, if you decide otherwise you can do it, but it is not recomended
+	 * Get a specific component of a specific type
+	 * You pass a T typeof component and you'll recive the same type if it exists
+	 * If it doesn't, it'll return null
 	 */
 	public T getComponent(T)()
 	{
@@ -192,11 +226,9 @@ class Entity : IEntity
 	/*
 	 * Get all components
 	 * This will return an array of components which are contained in an entity
-	 * However if you want to use any of this, it is not recomended calling this function
+	 * However if you want to actualy access any of this, this method isn't recomended
 	 * Use the template 'getComponent' as it will return the type of that component
 	 * Or use 'hasComponent', 'hasAnyComponent', 'hasComponents' if you want to know which components an entity is holding
-	 * It's highly recomended you to always use the Hub when accessing this functions
-	 * However, if you decide otherwise, you can use it directly, but it is not recomended
 	 */
 	public IComponent[] getComponents()
 	{
@@ -205,10 +237,8 @@ class Entity : IEntity
 
 
 	/*
-	 * Get all component types
-	 * This will return an array of keys in the AA _components
-	 * It's highly recomended you to always use the Hub when accessing this functions
-	 * However, if you decide otherwise you can use it directly, but it is not recomended
+	 * Get all component types an entity has
+	 * This will return an array of component ids
 	 */
 	public ComponentTypeId[] getComponentTypes()
 	{
@@ -218,10 +248,13 @@ class Entity : IEntity
 
 	/*
 	 * Returns true if the component exists
-	 * You check by using the AA _components keys
-	 * The key is a components id
-	 * It's highly recomended to always use the Hub when accessing this functions
-	 * However, if you decide to get the component id first, you can use it directly, but it is not recomended
+	 * You call this function by passing the component's id
+	 * Every time you create a component, it'll generate an unique id
+	 * If you don't know which id you should pass, use the other variant of this function,
+	 *     which is the recomended one, as it will get the correct id for you
+	 ****
+	 * Example: ComponentTypeId fooID = hub.component.idOf!Foo;
+	 *          e.hasComponent(fooID);
 	 */
 	public bool hasComponent(ComponentTypeId id)
 	{
@@ -229,6 +262,12 @@ class Entity : IEntity
 	}
 
 
+	/*
+	 * Returns true if the component exists
+	 * It's recomended to always use this function, as it will do the 'hard work' for you
+	 ****
+	 * Example: e.hasComponent!Foo;
+	 */
 	public bool hasComponent(T)()
 	{
 		ComponentTypeId id = manager.component.idOf!T;
@@ -237,11 +276,15 @@ class Entity : IEntity
 
 
 	/*
-	 * Returns true if all of the components exist
-	 * You check by using an array of the AA _components keys
-	 * The key is a components id
-	 * It's highly recomended to always use the Hub when accessing this functions
-	 * However, if you decide to get the component id first, you can use it directly, but it is not recomended
+	 * Returns true if all the components exist
+	 * You call this function by passing an array of the component ids
+	 * Every time you create a component, it'll generate an unique id
+	 * If you don't know which ids you should pass, use the other variant of this function,
+	 *     which is the recomended one, as it will get the correct id for you
+	 ****
+	 * Example: ComponentTypeId fooID = hub.component.idOf!Foo;
+	 *          ComponentTypeId gooID = hub.component.idOf!Goo;
+	 *          e.hasComponents([fooID,gooID]);
 	 */
 	public bool hasComponents(ComponentTypeId[] ids)
 	{
@@ -253,6 +296,12 @@ class Entity : IEntity
 	}
 
 
+	/*
+	 * Returns true if all the components exist
+	 * It's recomended to always use this function, as it will do the 'hard work' for you
+	 ****
+	 * Example: e.hasComponents!(Foo, Goo);
+	 */
 	public bool hasComponents(T...)()
 	{
 		return hasComponents(manager.component.idsOf!T);
@@ -260,11 +309,15 @@ class Entity : IEntity
 
 
 	/*
-	 * Returns true if an entity contains at least one of the components
-	 * You check by using an array of the AA _components keys
-	 * The key is a components id
-	 * It's highly recomended to always use the Hub when accessing this functions
-	 * However, if you decide to get the component id first, you can use it directly, but it is not recomended
+	 * Returns true if at least one of the components exist
+	 * You call this function by passing an array of the component ids
+	 * Every time you create a component, it'll generate an unique id
+	 * If you don't know which ids you should pass, use the other variant of this function,
+	 *     which is the recomended one, as it will get the correct id for you
+	 ****
+	 * Example: ComponentTypeId fooID = hub.component.idOf!Foo;
+	 *          ComponentTypeId gooID = hub.component.idOf!Goo;
+	 *          e.hasAnyComponent([fooID,gooID]);
 	 */
 	public bool hasAnyComponent(ComponentTypeId[] ids)
 	{
@@ -276,6 +329,12 @@ class Entity : IEntity
 	}
 
 
+	/*
+	 * Returns true if at least one of the components exist
+	 * It's recomended to always use this function, as it will do the 'hard work' for you
+	 ****
+	 * Example: e.hasAnyComponents!(Foo, Goo);
+	 */
 	public bool hasAnyComponent(T...)()
 	{
 		return hasAnyComponent(manager.component.idsOf!T);
@@ -286,10 +345,13 @@ class Entity : IEntity
 	 * Returns true if a component is disabled
 	 * It doesn't return any info about the existance of the component
 	 * If the entity doesn't contain the component neither in '_components' nor '_disabledComponents' it will just return false
-	 * You check by using the AA _components keys
-	 * The key is a components id
-	 * It's highly recomended to always use the Hub when accessing this functions
-	 * However, if you decide to get the component id first, you can use it directly, but it is not recomended
+	 * You call this function by passing the component's id
+	 * Every time you create a component, it'll generate an unique id
+	 * If you don't know which id you should pass, use the other variant of this function,
+	 *     which is the recomended one, as it will get the correct id for you
+	 ****
+	 * Example: ComponentTypeId fooID = hub.component.idOf!Foo;
+	 *          e.isComponentDisabled(fooID);
 	 */
 	public bool isComponentDisabled(ComponentTypeId id)
 	{
@@ -297,6 +359,14 @@ class Entity : IEntity
 	}
 
 
+	/*
+	 * Returns true if a component is disabled
+	 * It doesn't return any info about the existance of the component
+	 * If the entity doesn't contain the component neither in '_components' nor '_disabledComponents' it will just return false
+	 * It's recomended to always use this function, as it will do the 'hard work' for you
+	 ****
+	 * Example: e.isComponentDisabled!Foo;
+	 */
 	public bool isComponentDisabled(T)()
 	{
 		ComponentTypeId id = manager.component.idOf!T;
@@ -304,6 +374,9 @@ class Entity : IEntity
 	}
 
 
+	/*
+	 * Destroys an entity
+	 */
 	public void kill()
 	{
 		manager.kill(_id);
