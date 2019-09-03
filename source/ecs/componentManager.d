@@ -89,7 +89,7 @@ final class ComponentManager
 	}
 
 
-	public ComponentTypeId getComponentTypeId(T)()
+	public ComponentTypeId id(T)()
 	{
 		if (hasComponent!T)
 			foreach(key, component; _components)
@@ -100,9 +100,26 @@ final class ComponentManager
 			"Cannot get the component's id!", "You should check if a component " ~
 			"exists before getting it's id.");
 	}
+
+
+	public ComponentTypeId[] idsOf(T...)()
+	{
+		import std.algorithm : canFind;
+		ComponentTypeId[] ids;
+
+		foreach(t; T)
+		{
+			ComponentTypeId id = id!t;
+			if (!canFind(ids, id))
+				ids ~= id;
+		}
+
+		return ids;
+	}
 }
 
 
+/*
 @system unittest
 {
 	ComponentManager manager = new ComponentManager();
@@ -123,4 +140,4 @@ final class ComponentManager
 
 	assert(manager.createComponent!Goo == 2);
 	assert(manager.createComponent!Foo == 1);
-}
+}*/
