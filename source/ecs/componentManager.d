@@ -30,7 +30,7 @@ final class ComponentManager
 
 	public T create(T)()
 	{
-		if (!exist!T)
+		if (!exists!T)
 		{
 			T t = new T();
 			ComponentTypeId id = next_id++;
@@ -45,7 +45,7 @@ final class ComponentManager
 	}
 
 
-	public bool exist(T)()
+	public bool exists(T)()
 	{
 		foreach(component; components)
 			if (cast(T) component !is null)
@@ -55,7 +55,7 @@ final class ComponentManager
 	}
 
 
-	public bool exist(ComponentTypeId id)
+	public bool exists(ComponentTypeId id)
 	{
 		return (id in components) !is null;
 	}
@@ -63,8 +63,8 @@ final class ComponentManager
 
 	public T get(T)()
 	{
-		if (hasComponent!T)
-			return cast(T)(components[getComponentTypeId!T]);
+		if (exists!T)
+			return cast(T)(components[id!T]);
 
 		throw new ComponentDoesNotExistException(
 			"Cannot get the component!", "You should check if a component " ~
@@ -74,7 +74,7 @@ final class ComponentManager
 
 	public ComponentName name(ComponentTypeId id)
 	{
-		if (exist(id))
+		if (exists(id))
 			return componentNames[id];
 
 		throw new ComponentDoesNotExistException(
@@ -85,7 +85,7 @@ final class ComponentManager
 
 	public ComponentName name(T)()
 	{
-		if (exist!T)
+		if (exists!T)
 			return componentNames[getComponentTypeId!T];
 
 		throw new ComponentDoesNotExistException(
@@ -94,9 +94,9 @@ final class ComponentManager
 	}
 
 
-	public ComponentTypeId id(T)()
+	public ComponentTypeId idOf(T)()
 	{
-		if (exist!T)
+		if (exists!T)
 			foreach(key, component; components)
 				if (cast(T)(component) !is null)
 					return key;
@@ -114,7 +114,7 @@ final class ComponentManager
 
 		foreach(t; T)
 		{
-			ComponentTypeId id = id!t;
+			ComponentTypeId id = idOf!t;
 			if (!canFind(ids, id))
 				ids ~= id;
 		}
