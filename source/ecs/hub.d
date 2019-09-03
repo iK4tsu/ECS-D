@@ -53,16 +53,16 @@ final class Hub
 		return entity.getComponent!(T)(id);
 	}
 
-	public EntityId entityCreate(const string name, const EntityType type)
-	{
-		EntityId id = entity.createEntity(name, type);
-		system.addEid(id);
-		return id;
-	}
+	//public Entity entityCreate(const string name, const EntityType type)
+	//{
+	//	EntityId id = entity.createEntity(name, type);
+	//	system.addEid(id);
+	//	return id;
+	//}
 
 	public void entityKill(EntityId id)
 	{
-		system.removeEid(id);
+		//system.removeEid(id);
 		entity.killEntity(id);
 	}
 
@@ -214,20 +214,20 @@ final class Hub
 	ComponentTypeId fooID = _hub.componentCreate!Foo;
 	_hub.componentCreate!Goo;
 	_hub.systemCreate!FooSys;
-	EntityId eid = _hub.entityCreate("Nobody", "Alone");
+	Entity e = _hub.entity.createEntity("Nobody", "Alone");
 
-	_hub.entityAddComponent!Foo(eid);
+	e.addComponent!Foo;
 	
-	assert(_hub.entityGetComponent!Foo(eid).someData == int.init);
+	assert(e.getComponent!Foo.someData == int.init);
 	assert(_hub.systemExists!FooSys);
 
 	_hub.updateSystems;
 
-	assert(_hub.entityGetComponent!Foo(eid).someData == 1);
+	assert(e.getComponent!Foo.someData == 1);
 
-	_hub.entityDisableComponent(eid, fooID);
+	e.disableComponent(fooID);
 	_hub.updateSystems;
-	_hub.entityEnableComponent(eid, fooID);
+	e.enableComponent(fooID);
 
-	assert(_hub.entityGetComponent!Foo(eid).someData == 1);
+	assert(e.getComponent!Foo.someData == 1);
 }
