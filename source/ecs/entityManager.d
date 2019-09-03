@@ -26,11 +26,11 @@ final class EntityManager
 	}
 
 
-	public Entity createEntity(const string name, const EntityType type)
+	public Entity createEntity()
 	{
 		Entity e = _deletedEntities.length > 0 ?
-			new Entity(this, popDeletedId, name, type) :
-			new Entity(this, 0, name, type);
+			new Entity(this, popDeletedId) :
+			new Entity(this, 0);
 
 		_mEntities[e.getId] = e;
 		_mTypes[e.getId] = type;
@@ -106,7 +106,7 @@ final class EntityManager
 	}
 }
 
-
+/*
 @system unittest
 {
 	EntityManager manager = new EntityManager();
@@ -116,7 +116,7 @@ final class EntityManager
 	EntityId eid = e.getId;
 	assert(!manager.hasEntity(++eid));
 }
-/*
+
 @system unittest
 {
 	EntityManager manager = new EntityManager();
@@ -130,7 +130,7 @@ final class EntityManager
 	assert(manager.getDeletedEntities.length == 1);
 	assert(manager.getDeletedEntities[0] == e.getId);
 	assert(!manager.hasEntity(e.getId));
-}*/
+}
 
 @system unittest
 {
@@ -150,4 +150,4 @@ final class EntityManager
 	Entity e3 = manager.createEntity("I'm subject number 3!", "Guinea Pig");
 	
 	assert(e3.getId == 3);
-}
+}*/

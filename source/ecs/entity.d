@@ -26,17 +26,14 @@ class Entity : IEntity
 	
 
 
-	public this(const string name, const EntityType type) { this(null, 0, name, type); }
-	public this(EntityId id, const string name, const EntityType type) {  this(null, id, name, type); }
-	public this(EntityManager _manager, EntityId id, const string name, const EntityType type)
+	public this(EntityId id) {  this(null, id); }
+	public this(EntityManager _manager, EntityId id)
 	{
 		if (!id)
 			_id = next_id++;
 		else
 			_id = id;
 
-		_type = type;
-		_name = name;
 		manager = _manager;
 	}
 
