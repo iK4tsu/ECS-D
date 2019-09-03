@@ -26,9 +26,9 @@ final class Hub
 
 	public this()
 	{
-		entity = new EntityManager(this);
 		component = new ComponentManager(this);
 		system = new System(this);
+		entity = new EntityManager(this, component);
 	}
 
 
@@ -50,7 +50,7 @@ final class Hub
 
 	public T entityGetComponent(T)(EntityId id)
 	{
-		return entity.getComponent!(T)(id);
+		return entity.getComponent!T(id);
 	}
 
 	//public Entity entityCreate(const string name, const EntityType type)
@@ -219,6 +219,7 @@ final class Hub
 	e.addComponent!Foo;
 	
 	assert(e.getComponent!Foo.someData == int.init);
+	assert(e.hasComponent(fooID));
 	assert(_hub.systemExists!FooSys);
 
 	_hub.updateSystems;
