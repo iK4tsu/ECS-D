@@ -22,9 +22,9 @@ final class System
 	}
 
 
-	public void createSystem(T)()
+	public void create(T)()
 	{
-		if (!existsSystem!T)
+		if (!exists!T)
 		{
 			T t = new T;
 			systems[__traits(identifier, T)] = t;
@@ -32,12 +32,12 @@ final class System
 		}
 	}
 
-	public T getSystem(T)()
+	public T get(T)()
 	{
-		return existsSystem!T ? cast(T)(systems[__traits(identifier, T)]) : null;
+		return exists!T ? cast(T)(systems[__traits(identifier, T)]) : null;
 	}
 
-	public bool existsSystem(T)()
+	public bool exists(T)()
 	{
 		return (T.stringof in systems) !is null; 
 	}
@@ -70,9 +70,9 @@ import ecs.icomponent;
 @System unittest
 {
 	Hub hub = new Hub();
-	hub.componentCreate!Foo;
-	hub.systemCreate!FooSys;
+	hub.component.create!Foo;
+	hub.system.create!FooSys;
 
-	assert(hub.systemExists!FooSys);
-	assert(cast(FooSys) hub.systemGet!FooSys !is null);
+	assert(hub.system.exists!FooSys);
+	assert(cast(FooSys) hub.system.get!FooSys !is null);
 }
