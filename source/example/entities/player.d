@@ -9,10 +9,10 @@ import example.components.movable;
 
 public Entity createPlayer(ref Hub hub)
 {
-	Entity e = hub.entity.createEntity("Player", "Player");
+	Entity e = hub.entity.create();
 
 	Position position = e.addComponent!Position;
 	Movable movable = e.addComponent(new Movable(4));
 
-	return e; 
+	return e;
 }

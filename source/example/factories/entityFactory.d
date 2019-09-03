@@ -10,7 +10,7 @@ import example.components;
 void generateEntities(ref Hub hub)
 {
 	// Generate all your entities through the hub
-	Entity example = hub.entity.createEntity("exampleId", "noType");
+	Entity example = hub.entity.create();
 	
 	// Add the components for you entity
 	Position examplePosition = example.addComponent!Position;
