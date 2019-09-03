@@ -63,19 +63,6 @@ final class EntityManager
 			"if an entity exists before killing it.");
 	}
 
-	public void disableComponent(EntityId eid, ComponentTypeId id)
-	{
-		if (hasEntity(eid))
-		{
-			_mEntities[eid].disableComponent(id);
-			return;
-		}
-
-		throw new EntityDoesNotExistException(
-			eid, "Cannot disable the component '" ~ hub.componentGetName(id) ~
-			"' in the entity!", "You should verify if an entity exists " ~
-			"before disabling a component in it.");
-	}
 
 	public bool isComponentDisabled(EntityId eid, ComponentTypeId id)
 	{
