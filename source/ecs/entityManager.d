@@ -81,16 +81,6 @@ final class EntityManager
 	}
 
 
-	public string getDescription(EntityId eid)
-	{
-		if (hasEntity(eid))
-			return _mEntities[eid].getDescription;
-
-		throw new EntityDoesNotExistException(
-			eid, "Cannot get the entity's description!", "You should verify if " ~
-			"an entity exists before getting it's description.");
-	}
-
 	public EntityType getType(EntityId eid)
 	{
 		if (hasEntity(eid))
