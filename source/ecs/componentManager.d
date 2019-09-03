@@ -16,33 +16,38 @@ static ComponentTypeId next_id = 1;
 
 final class ComponentManager
 {
-	private IComponent[ComponentTypeId] _components;
-	private ComponentName[ComponentTypeId] _componentNames;
-	private Hub _hub;
+	private IComponent[ComponentTypeId] components;
+	private ComponentName[ComponentTypeId] componentNames;
+	private Hub hub;
 
 
 	public this() { this(null); }
-	public this(Hub hub)
+	public this(Hub _hub)
 	{
-		_hub = hub;
+		hub = _hub;
 	}
 
 
-	public ComponentTypeId createComponent(T)()
+	public T create(T)()
 	{
-		if (!hasComponent!T)
+		if (!exist!T)
 		{
+			T t = new T();
 			ComponentTypeId id = next_id++;
-			_components[id] = new T();
-			_componentNames[id] = __traits(identifier, T);
+			components[id] = t;
+			componentNames[id] = __traits(identifier, T);
+			return t;
 		}
-		return getComponentTypeId!T;
+
+		throw new ComponentAlreadyExistsException(
+			"Cannot create the component!", "You should check if a component " ~
+			"exists before creating it.");
 	}
 
 
-	public bool hasComponent(T)()
+	public bool exist(T)()
 	{
-		foreach(component; _components)
+		foreach(component; components)
 			if (cast(T) component !is null)
 				return true;
 
@@ -50,16 +55,16 @@ final class ComponentManager
 	}
 
 
-	public bool hasComponent(ComponentTypeId id)
+	public bool exist(ComponentTypeId id)
 	{
-		return (id in _components) !is null;
+		return (id in components) !is null;
 	}
 
 
-	public T getComponent(T)()
+	public T get(T)()
 	{
 		if (hasComponent!T)
-			return cast(T)(_components[getComponentTypeId!T]);
+			return cast(T)(components[getComponentTypeId!T]);
 
 		throw new ComponentDoesNotExistException(
 			"Cannot get the component!", "You should check if a component " ~
@@ -67,10 +72,10 @@ final class ComponentManager
 	}
 
 
-	public ComponentName getComponentName(ComponentTypeId id)
+	public ComponentName name(ComponentTypeId id)
 	{
-		if (hasComponent(id))
-			return _componentNames[id];
+		if (exist(id))
+			return componentNames[id];
 
 		throw new ComponentDoesNotExistException(
 			"Cannot get the component's name!", "You should check if a component " ~
@@ -78,10 +83,10 @@ final class ComponentManager
 	}
 
 
-	public ComponentName getComponentName(T)()
+	public ComponentName name(T)()
 	{
-		if (hasComponent!T)
-			return _componentNames[getComponentTypeId!T];
+		if (exist!T)
+			return componentNames[getComponentTypeId!T];
 
 		throw new ComponentDoesNotExistException(
 			"Cannot get the component's name!", "You should check if a component " ~
@@ -91,8 +96,8 @@ final class ComponentManager
 
 	public ComponentTypeId id(T)()
 	{
-		if (hasComponent!T)
-			foreach(key, component; _components)
+		if (exist!T)
+			foreach(key, component; components)
 				if (cast(T)(component) !is null)
 					return key;
 
