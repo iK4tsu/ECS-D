@@ -293,6 +293,13 @@ class Entity : IEntity
 	}
 
 
+	public bool isComponentDisabled(T)()
+	{
+		ComponentTypeId id = manager.component.id!T;
+		return isComponentDisabled(id);
+	}
+
+
 	public void destroy()
 	{
 		manager.killEntity(id);
