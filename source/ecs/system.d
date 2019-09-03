@@ -11,14 +11,14 @@ alias SystemName = string;
 
 final class System
 {
-	private Hub _hub;
-	private ISystem[SystemName] _systems;
-	private EntityId[] _eids;
+	private Hub hub;
+	private ISystem[SystemName] systems;
+	private Entity[] entities;
 
 
-	public this(Hub hub)
+	public this(Hub _hub)
 	{
-		_hub = hub;
+		hub = _hub;
 	}
 
 
@@ -27,39 +27,39 @@ final class System
 		if (!existsSystem!T)
 		{
 			T t = new T;
-			_systems[__traits(identifier, T)] = t;
-			t.init(_hub);
+			systems[__traits(identifier, T)] = t;
+			t.init(hub);
 		}
 	}
 
 	public T getSystem(T)()
 	{
-		return existsSystem!T ? cast(T)(_systems[__traits(identifier, T)]) : null;
+		return existsSystem!T ? cast(T)(systems[__traits(identifier, T)]) : null;
 	}
 
 	public bool existsSystem(T)()
 	{
-		return (T.stringof in _systems) !is null; 
+		return (T.stringof in systems) !is null; 
 	}
 
-	public void addEid(EntityId eid)
+	public void addEid(Entity e)
 	{
-		_eids ~= eid;
+		entities ~= e;
 	}
 
-	public void removeEid(EntityId eid)
+	public void removeEid(Entity e)
 	{
 		import std.algorithm : remove;
-		remove!(a => a = eid)(_eids);
+		remove!(a => a = e)(entities);
 	}
 
 	public void update()
 	{
-		foreach(eid; _eids)
+		foreach(e; entities)
 		{
-			foreach(system; _systems)
+			foreach(system; systems)
 			{
-				system.update(eid);
+				system.update(e);
 			}
 		}
 	}
