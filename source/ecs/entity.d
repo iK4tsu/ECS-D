@@ -282,6 +282,22 @@ class Entity : IEntity
 	}
 
 
+	public bool hasAnyComponent(T...)()
+	{
+		import std.algorithm : canFind;
+		ComponentTypeId[] _ids;
+
+		foreach(t; T)
+		{
+			ComponentTypeId _id = manager.component.getComponentTypeId!t;
+			if (!canFind(_ids, _id))
+				_ids ~= _id;
+		}
+
+		return hasAnyComponent(_ids);
+	}
+
+
 	/*
 	 * Returns true if a component is disabled
 	 * It doesn't return any info about the existance of the component
