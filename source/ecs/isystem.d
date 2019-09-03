@@ -6,7 +6,7 @@ import ecs.hub;
 public interface ISystem
 {
 	public void update(Entity e);
-	public void init(ref Hub hub);
+	public void init(ref Hub _hub);
 }
 
 
@@ -22,7 +22,7 @@ version(unittest)
 		public void init(ref Hub _hub)
 		{
 			hub = _hub;
-			fooID = hub.componentGetTypeId!Foo;
+			fooID = hub.component.idOf!Foo;
 		}
 
 		public void update(Entity e)
