@@ -251,17 +251,7 @@ class Entity : IEntity
 
 	public bool hasComponents(T...)()
 	{
-		import std.algorithm : canFind;
-		ComponentTypeId[] _ids;
-
-		foreach(t; T)
-		{
-			ComponentTypeId _id = manager.component.getComponentTypeId!t;
-			if (!canFind(_ids, _id))
-				_ids ~= _id;
-		}
-
-		return hasComponents(_ids);
+		return hasComponents(manager.component.ids!T);
 	}
 
 
@@ -284,17 +274,7 @@ class Entity : IEntity
 
 	public bool hasAnyComponent(T...)()
 	{
-		import std.algorithm : canFind;
-		ComponentTypeId[] _ids;
-
-		foreach(t; T)
-		{
-			ComponentTypeId _id = manager.component.getComponentTypeId!t;
-			if (!canFind(_ids, _id))
-				_ids ~= _id;
-		}
-
-		return hasAnyComponent(_ids);
+		return hasAnyComponent(manager.component.ids!T);
 	}
 
 
