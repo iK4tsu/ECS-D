@@ -24,14 +24,14 @@ final class EntityManager
 	}
 
 
-	public EntityId createEntity(const string name, const EntityType type)
+	public Entity createEntity(const string name, const EntityType type)
 	{
 		Entity e = _deletedEntities.length > 0 ?
 			new Entity(this, pullDeletedId, name, type) :
 			new Entity(this, 0, name, type);
 		_mEntities[e.getId] = e;
 		_mTypes[e.getId] = type;
-		return e.getId;
+		return e;
 	}
 
 
@@ -305,43 +305,44 @@ final class EntityManager
 @system unittest
 {
 	EntityManager manager = new EntityManager();
-	EntityId eid = manager.createEntity("Am I just a number?", "Math");
+	Entity e = manager.createEntity("Am I just a number?", "Math");
 
-	assert(manager.hasEntity(eid));
+	assert(manager.hasEntity(e.getId));
+	EntityId eid = e.getId;
 	assert(!manager.hasEntity(++eid));
 }
 
 @system unittest
 {
 	EntityManager manager = new EntityManager();
-	EntityId eid = manager.createEntity("Should I worry", "Sad");
+	Entity e = manager.createEntity("Should I worry", "Sad");
 
-	assert(manager.getEntity(eid) == manager.getEntity("Sad"));
+	assert(e == manager.getEntity("Sad"));
 	assert(manager.getDeletedEntities.length == 0);
 	
-	manager.killEntity(eid);
+	manager.killEntity(e.getId);
 
 	assert(manager.getDeletedEntities.length == 1);
-	assert(manager.getDeletedEntities[0] == eid);
-	assert(!manager.hasEntity(eid));
+	assert(manager.getDeletedEntities[0] == e.getId);
+	assert(!manager.hasEntity(e.getId));
 }
 
 @system unittest
 {
 	EntityManager manager = new EntityManager();
-	EntityId eid1 = manager.createEntity("I'm gonna die", "Dead");
-	EntityId eid2 = manager.createEntity("I'm subject number 2!", "Guinea Pig");
+	Entity e1 = manager.createEntity("I'm gonna die", "Dead");
+	Entity e2 = manager.createEntity("I'm subject number 2!", "Guinea Pig");
 
-	assert(eid1 == 1);
-	assert(eid2 == 2);
+	assert(e1.getId == 1);
+	assert(e2.getId == 2);
 
-	manager.killEntity(eid1);
-	eid1 = manager.createEntity("Wait I revived?", "Blessing");
+	manager.killEntity(e1.getId);
+	e1 = manager.createEntity("Wait I revived?", "Blessing");
 
 	assert(manager.getDeletedEntities.length == 0);
-	assert(eid1 == 1);
+	assert(e1.getId == 1);
 
-	EntityId eid3 = manager.createEntity("I'm subject number 3!", "Guinea Pig");
+	Entity e3 = manager.createEntity("I'm subject number 3!", "Guinea Pig");
 	
-	assert(eid3 == 3);
+	assert(e3.getId == 3);
 }
