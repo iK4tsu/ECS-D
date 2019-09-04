@@ -34,25 +34,13 @@ void exampleInit()
 	assert(hub.entity.getAll!(Hero, Position, Movable)[0] == player);
 
 
+	writeln("This is pratical example of how this arquitecture works.");
+	writeln("Write 'up', 'down', 'right' or left to move in each direction respectively.");
+	writeln("Press any key to continue...");
+
+
 	do
 	{
-		writeln("Write 'move' to update your position.");
-		writeln("Each time the loop ends, the user 'movableComponent' will be removed.");
-		writeln("Meaning that if you write 'move' the component will be added and you'll be able to move.");
-		write("> ");
-
-		switch (readln.chomp)
-		{
-			case "move":
-				if (player.isComponentDisabled!Movable)
-					player.enableComponent!Movable;
-				break;
-			default:
-				if (player.hasAnyComponent!Movable)
-					player.disableComponent!Movable;
-		}
-
 		hub.update;
-		writeln("Your 'x' position: ", player.getComponent!Position.x);
 	} while (true);
 }

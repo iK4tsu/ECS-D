@@ -6,6 +6,7 @@ import ecs;
 // imports of the necessary components needed for this system
 import example.components.position;
 import example.components.movable;
+import example.components.input;
 
 
 /*
@@ -30,6 +31,7 @@ final class MovementSystem : ISystem
 	// temporary components for better access
 	private Position position;
 	private Movable movable;
+	private Input input;
 
 	public void init(ref Hub _hub)
 	{
@@ -41,10 +43,11 @@ final class MovementSystem : ISystem
 	// all the game logic you need
 	public void update(Entity e)
 	{
-		if (e.hasComponents!(Position, Movable))
+		if (e.hasComponents!(Position, Movable, Input))
 		{
 			position = e.getComponent!Position;
 			movable = e.getComponent!Movable;
+			input = e.getComponent!Input;
 
 			move;
 		}
@@ -52,6 +55,21 @@ final class MovementSystem : ISystem
 
 	private void move()
 	{
-		position.x += movable.speed;
+		switch (input.word)
+		{
+			case "up":
+				position.y -= movable.speed;
+				break;
+			case "down":
+				position.y += movable.speed;
+				break;
+			case "right":
+				position.x += movable.speed;
+				break;
+			case "left":
+				position.x -= movable.speed;
+				break;
+			default:
+		}
 	}
 }
