@@ -14,4 +14,7 @@ void generateComponents(ref Hub hub)
 	hub.component.create!Position;
 	hub.component.create!Movable;
 	hub.component.create!Hero;
+	hub.component.create!Area2D;
+	hub.component.create!Sprite;
+	hub.component.create!Input;
 }

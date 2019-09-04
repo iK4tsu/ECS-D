@@ -30,4 +30,9 @@ void generateEntities(ref Hub hub)
 	player.name = "Player";
 	player.type = "Player";
 	player.description = "I'm a player!";
+
+
+	Entity game = hub.entity.create();
+	game.addComponent(new Area2D(5,5));
+	game.getComponent!Area2D.entities ~= player;
 }
