@@ -8,11 +8,10 @@ import example.components;
 void generateComponents(ref Hub hub)
 {
 	/*
-	 * generate all your components
-	 * this components are the ones use to build new ones for your entities
-	 * when you add a component to an entity, one of the same type will get pulled from the parent array
-	 * and then it will generate a new one based on the same type
+	 * Generate all your components
+	 * This will be the ones used to build new components of the same type for your entities
 	 */
 	hub.component.create!Position;
 	hub.component.create!Movable;
+	hub.component.create!Hero;
 }

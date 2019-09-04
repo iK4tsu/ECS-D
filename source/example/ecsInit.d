@@ -17,21 +17,21 @@ void exampleInit()
 	Hub hub = new Hub();
 
 
-	// generate components, systems, and entities by this order
+	// Generate components, systems, and entities by this order
 	generateComponents(hub);
 	generateSystems(hub);
 	generateEntities(hub);
 
-	Entity player = hub.entity.create();
-	player.addComponent!Position;
-	player.addComponent(new Movable(4));
-	
-	ComponentTypeId positionId = hub.component.idOf!Position;
-	ComponentTypeId movableId = hub.component.idOf!Movable;
 
-	EntityId playerId = player._id;
-	assert(hub.entity.exists(playerId));
-	assert(player.hasComponents([positionId, movableId]));
+	// You can get an entity by passing a component
+	Entity player = hub.entity.get!Hero;
+
+	// Or a group of components
+	assert(hub.entity.get!(Hero, Position, Movable) == player);
+
+	// You can also get all the entities containing a component or a group of components
+	assert(hub.entity.getAll!Hero[0] == player);
+	assert(hub.entity.getAll!(Hero, Position, Movable)[0] == player);
 
 
 	do

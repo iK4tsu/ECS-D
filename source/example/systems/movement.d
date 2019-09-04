@@ -9,15 +9,16 @@ import example.components.movable;
 
 
 /*
- * Movement system updates the position on a movable entity
+ * MovementSystem updates the position on a movable entity
  *
- * When creating a new system, you have to implement the ISystem interface
+ * When creating a new system, you have to implement ISystem
  * 
- * This interface has some functions:
- *     setHub(Hub hub)                    it's used to comunicate with with all the entity components
- *     update(EntityId id)                it's used to update a specific entity
+ *
+ * The interface has the functions:
+ *     void init(ref Hub _hub)                      it's used to comunicate with all the entity components
+ *     void update(Entity e)                   it's used to update a specific entity
  */
-class Movement : ISystem
+final class MovementSystem : ISystem
 {
 	// Don't forget to add a Hub aswell;
 	private Hub hub;
