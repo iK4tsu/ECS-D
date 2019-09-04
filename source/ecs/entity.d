@@ -14,20 +14,21 @@ static EntityId next_id = 1;
 
 alias EntityType = string;
 
+
 class Entity : IEntity
 {
 	public EntityId _id;
+	public EntityType type;
+	public string name;
+	public string description;
 	private IComponent[ComponentTypeId] _components;
 	private IComponent[ComponentTypeId] _disabledComponents;
-	private EntityType _type;
-	private string _name;
-	private string _description;
 	private EntityManager manager;
 	
 
 
-	public this(EntityId id) {  this(null, id); }
-	public this(EntityManager _manager, EntityId id)
+	@safe public this(EntityId id) {  this(null, id); }
+	@safe public this(EntityManager _manager, EntityId id)
 	{
 		if (!id)
 			_id = next_id++;
@@ -59,10 +60,8 @@ class Entity : IEntity
 		}
 
 		throw new EntityAlreadyContainsComponentException(
-			id, "Cannot add component '" ~
-			manager.component.name(id) ~
-			"' to '" ~ _name
-	 ~ "'!", "You should check if an entity " ~
+			id, "Cannot add component '" ~ manager.component.name(id) ~
+			"' to '" ~ name ~ "'!", "You should check if an entity " ~
 			"contains a component before adding it.");
 	}
 
@@ -99,10 +98,8 @@ class Entity : IEntity
 		}
 
 		throw new EntityDoesNotContainComponentException(
-			id, "Cannot remove component '" ~
-			manager.component.name(id) ~ "' from '" ~
-			_name
-	 ~ "'!", "You should check if an entity has a " ~
+			id, "Cannot remove component '" ~ manager.component.name(id) ~
+			"' from '" ~ name ~ "'!", "You should check if an entity has a " ~
 			"component before removing it.");
 	}
 
@@ -143,10 +140,8 @@ class Entity : IEntity
 		}
 
 		throw new EntityDoesNotContainComponentException(
-			id, "Cannot disable component '" ~
-			manager.component.name(id) ~
-			"' in '" ~ _name
-	 ~ "'!", "You should check if " ~
+			id, "Cannot disable component '" ~manager.component.name(id) ~
+			"' in '" ~ name ~ "'!", "You should check if " ~
 			"an entity has a component before disabling it");
 	}
 
@@ -187,10 +182,8 @@ class Entity : IEntity
 		}
 
 		throw new EntityComponentIsNotDisabledException(
-			id, "Cannot disable component '" ~
-			manager.component.name(id) ~
-			"' from '" ~ _name
-	 ~ "'!", "You should check " ~
+			id, "Cannot disable component '" ~ manager.component.name(id) ~
+			"' from '" ~ name ~ "'!", "You should check " ~
 			"if a component is disabled beafore enabling it.");
 	}
 
@@ -230,6 +223,7 @@ class Entity : IEntity
 	 * Use the template 'getComponent' as it will return the type of that component
 	 * Or use 'hasComponent', 'hasAnyComponent', 'hasComponents' if you want to know which components an entity is holding
 	 */
+	@system pure
 	public IComponent[] getComponents()
 	{
 		return _components.values;
@@ -240,6 +234,7 @@ class Entity : IEntity
 	 * Get all component types an entity has
 	 * This will return an array of component ids
 	 */
+	@system pure
 	public ComponentTypeId[] getComponentTypes()
 	{
 		return _components.keys;
@@ -256,6 +251,7 @@ class Entity : IEntity
 	 * Example: ComponentTypeId fooID = hub.component.idOf!Foo;
 	 *          e.hasComponent(fooID);
 	 */
+	@safe pure
 	public bool hasComponent(ComponentTypeId id)
 	{
 		return (id in _components) !is null;
@@ -353,6 +349,7 @@ class Entity : IEntity
 	 * Example: ComponentTypeId fooID = hub.component.idOf!Foo;
 	 *          e.isComponentDisabled(fooID);
 	 */
+	@safe pure
 	public bool isComponentDisabled(ComponentTypeId id)
 	{
 		return (id in _disabledComponents) !is null;
@@ -381,44 +378,25 @@ class Entity : IEntity
 	{
 		manager.kill(_id);
 	}
-
-
-	public string name() { return _name; }
-	public string description() { return _description; }
-	public EntityType type() { return _type; }
-
-	public inout(const string) name(inout string __name) @safe pure
-	{
-		_name = __name;
-		return __name;
-	}
-
-	public inout(const string) description(inout string __description) @safe pure
-	{
-		_description = __description;
-		return __description;
-	}
-
-	public inout(const string) type(inout string __type) @safe pure
-	{
-		_type = __type;
-		return __type;
-	}
 }
 
 
-@system unittest
+@safe unittest
 {
 	Entity e = new Entity(1);
 
 	assert(e._id == 1);
 }
 
-@system unittest
+@safe unittest
 {
 	Entity e = new Entity(2);
 
-	assert(e.name("Just e it") == e.name);
-	assert(e.type("e") == e.type);
-	assert(e.description("Feel the e") == e.description);
+	e.name = "Just e it";
+	e.type = "e";
+	e.description = "Feel the e";
+
+	assert("Just e it" == e.name);
+	assert("e" == e.type);
+	assert("Feel the e" == e.description);
 }

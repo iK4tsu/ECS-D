@@ -18,14 +18,6 @@ final class ComponentManager
 {
 	private IComponent[ComponentTypeId] components;
 	private ComponentName[ComponentTypeId] componentNames;
-	private Hub hub;
-
-
-	public this() { this(null); }
-	public this(Hub _hub)
-	{
-		hub = _hub;
-	}
 
 
 	public T create(T)()
@@ -45,6 +37,7 @@ final class ComponentManager
 	}
 
 
+	@safe pure
 	public bool exists(T)()
 	{
 		foreach(component; components)
@@ -55,6 +48,7 @@ final class ComponentManager
 	}
 
 
+	@safe pure
 	public bool exists(ComponentTypeId id)
 	{
 		return (id in components) !is null;

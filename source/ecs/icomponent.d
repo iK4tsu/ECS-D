@@ -6,8 +6,8 @@ public interface IComponent {}
 
 version(unittest)
 {
-	class Foo : IComponent { int someData; }
-	class Goo : IComponent { string someData; }
+	@safe pure class Foo : IComponent { int someData; }
+	@safe pure class Goo : IComponent { string someData; }
 }
 
 @safe pure unittest
