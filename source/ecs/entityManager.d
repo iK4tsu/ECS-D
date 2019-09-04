@@ -11,10 +11,10 @@ import ecs.exceptions.entity;
 
 final class EntityManager
 {
-	private Entity[EntityId] _mEntities;
+	private Entity[EntityId] mEntities;
 	//private EntityType[EntityId] _mTypes;
-	private EntityId[] _deletedEntities;
-	public Hub hub;
+	private EntityId[] delEntities;
+	private Hub hub;
 	public ComponentManager component;
 
 
@@ -28,11 +28,11 @@ final class EntityManager
 
 	public Entity create()
 	{
-		Entity e = _deletedEntities.length > 0 ?
+		Entity e = delEntities.length > 0 ?
 			new Entity(this, popDeletedId) :
 			new Entity(this, 0);
 
-		_mEntities[e._id] = e;
+		mEntities[e._id] = e;
 
 		if (hub !is null)
 			hub.system.addEntity(e);
@@ -41,10 +41,11 @@ final class EntityManager
 	}
 
 
+	@safe pure
 	public EntityId popDeletedId()
 	{
-		EntityId eid = _deletedEntities[0];
-		_deletedEntities = _deletedEntities.length > 1 ? _deletedEntities[1 .. $] : null;
+		EntityId eid = delEntities[0];
+		delEntities = delEntities.length > 1 ? delEntities[1 .. $] : null;
 		return eid;
 	}
 
@@ -53,9 +54,9 @@ final class EntityManager
 	{
 		if (exists(eid))
 		{
-			destroy(_mEntities[eid]);
-			_mEntities.remove(eid);
-			_deletedEntities ~= eid;
+			destroy(mEntities[eid]);
+			mEntities.remove(eid);
+			delEntities ~= eid;
 			return;
 		}
 
@@ -65,16 +66,17 @@ final class EntityManager
 	}
 
 
+	@safe pure
 	public bool exists(EntityId eid)
 	{
-		return (eid in _mEntities) !is null;
+		return (eid in mEntities) !is null;
 	}
 
 
 	public Entity get(EntityId eid)
 	{
 		if (exists(eid))
-			return _mEntities[eid];
+			return mEntities[eid];
 
 		throw new EntityDoesNotExistException(
 			eid, "Cannot get entity!", "You should verify if an entity exists " ~
@@ -94,9 +96,10 @@ final class EntityManager
 	//}
 
 
+	@safe pure
 	public EntityId[] getDeletedIds()
 	{
-		return _deletedEntities;
+		return delEntities;
 	}
 
 
