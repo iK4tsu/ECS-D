@@ -94,6 +94,16 @@ final class EntityManager
 	}
 
 
+	public Entity get(T...)()
+	{
+		foreach(entity; mEntities)
+			if (entity.hasComponents!T)
+				return entity;
+		
+		return null;
+	}
+
+
 	public Entity[] getAll(T)()
 	{
 		Entity[] ret;
