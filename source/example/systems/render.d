@@ -9,34 +9,37 @@ import example.components.sprite;
 
 @system pure final class RenderSystem : ISystem
 {
-	private Hub hub;
+	private System system;
 	private Area2D area2d;
 	private Position position;
 	private Sprite sprite;
 
-	@safe pure public void init(ref Hub _hub)
+	@safe pure public void init(System _system)
 	{
-		hub = _hub;
+		system = _system;
 	}
 
-	public void update(Entity e)
+	public void update()
 	{
-		if (e.hasComponent!Area2D)
+		foreach(e; system.entities)
 		{
-			area2d = e.getComponent!Area2D;
-
-			foreach(entity; area2d.entities)
+			if (e.hasComponent!Area2D)
 			{
-				position = entity.getComponent!Position;
-				sprite = entity.getComponent!Sprite;
+				area2d = e.getComponent!Area2D;
 
-				checkPosition;
+				foreach(entity; area2d.entities)
+				{
+					position = entity.getComponent!Position;
+					sprite = entity.getComponent!Sprite;
 
-				area2d.area[position.y][position.x] = sprite.img;
+					checkPosition;
+
+					area2d.area[position.y][position.x] = sprite.img;
+				}
+
+				drawMap;
+				resetMap;
 			}
-
-			drawMap;
-			resetMap;
 		}
 	}
 

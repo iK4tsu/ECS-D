@@ -1,12 +1,13 @@
 module ecs.isystem;
 
 import ecs.entity;
+import ecs.system;
 import ecs.hub;
 
 public interface ISystem
 {
-	public void update(Entity e);
-	public void init(ref Hub _hub);
+	public void update();
+	public void init(System _system);
 }
 
 
@@ -15,21 +16,24 @@ version(unittest)
 {
 	class FooSys : ISystem
 	{
-		private Hub hub;
+		private System system;
 		private Foo foo;
 		private ComponentTypeId fooID;
 
-		public void init(ref Hub _hub)
+		public void init(System _system)
 		{
-			hub = _hub;
-			fooID = hub.component.idOf!Foo;
+			system = _system;
+			fooID = system.hub.component.idOf!Foo;
 		}
 
-		public void update(Entity e)
+		public void update()
 		{
-			foo = e.getComponent!Foo;
-			if (foo !is null)
-				foo.someData++;
+			foreach(e; system.entities)
+			{
+				foo = e.getComponent!Foo;
+				if (foo !is null)
+					foo.someData++;
+			}
 		}
 	}
 }

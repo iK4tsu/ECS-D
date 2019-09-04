@@ -9,21 +9,24 @@ import example.components.hero;
 
 @system pure final class InputSystem : ISystem
 {
-	private Hub hub;
+	private System system;
 	private Input input;
 
-	@safe pure public void init(ref Hub _hub)
+	@safe pure public void init(System _system)
 	{
-		hub = _hub;
+		system = _system;
 	}
 
-	public void update(Entity e)
+	public void update()
 	{
-		if (e.hasComponent!Input)
+		foreach(e; system.entities)
 		{
-			input = e.getComponent!Input;
-			if (e.hasComponent!Hero)
-				input.word = playerInput;
+			if (e.hasComponent!Input)
+			{
+				input = e.getComponent!Input;
+				if (e.hasComponent!Hero)
+					input.word = playerInput;
+			}
 		}
 	}
 

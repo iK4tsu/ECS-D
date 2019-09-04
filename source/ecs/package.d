@@ -5,3 +5,4 @@ public:
 	import ecs.icomponent;
 	import ecs.isystem;
 	import ecs.entity;
+	import ecs.system;

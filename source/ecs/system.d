@@ -11,9 +11,9 @@ alias SystemName = string;
 
 final class System
 {
-	private Hub hub;
+	public Hub hub;
+	public Entity[] entities;
 	private ISystem[] systems;
-	private Entity[] entities;
 
 
 	@safe pure
@@ -29,7 +29,7 @@ final class System
 		{
 			T t = new T();
 			systems ~= t;
-			t.init(hub);
+			t.init(this);
 		}
 	}
 
@@ -73,12 +73,9 @@ final class System
 
 	public void update()
 	{
-		foreach(e; entities)
+		foreach(system; systems)
 		{
-			foreach(system; systems)
-			{
-				system.update(e);
-			}
+			system.update;
 		}
 	}
 }
