@@ -19,8 +19,8 @@ void exampleInit()
 
 	// Generate components, systems, and entities by this order
 	generateComponents(hub);
-	generateSystems(hub);
 	generateEntities(hub);
+	generateSystems(hub);
 
 
 	// You can get an entity by passing a component
@@ -42,5 +42,10 @@ void exampleInit()
 	do
 	{
 		hub.update;
-	} while (true);
+	} while (hub.entity.get!Hero !is null);
+
+
+	hub.update;
+	writeln("You touched the explosive!");
+	writeln("You died...");
 }

@@ -40,6 +40,8 @@ import example.components.sprite;
 				drawMap;
 				resetMap;
 			}
+			//import std.stdio;
+			//writeln(e.getComponents);
 		}
 	}
 

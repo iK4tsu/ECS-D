@@ -15,6 +15,7 @@ import ecs;
 	// Your not supposed to have entities in a component like this
 	// This is only for an exampe 
 	Entity[] entities;
+	EntityId[] eids;
 
 	string[][] area;
 	int dimensionX;

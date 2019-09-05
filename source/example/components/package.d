@@ -7,3 +7,5 @@ public:
 	import example.components.area2d;
 	import example.components.sprite;
 	import example.components.input;
+	import example.components.explosive;
+	import example.components.conection;

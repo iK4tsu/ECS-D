@@ -17,4 +17,6 @@ void generateComponents(ref Hub hub)
 	hub.component.create!Area2D;
 	hub.component.create!Sprite;
 	hub.component.create!Input;
+	hub.component.create!Explosive;
+	hub.component.create!Conection;
 }

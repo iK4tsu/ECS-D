@@ -19,7 +19,7 @@ import example.components.input;
  *     void init(System _system)                      it's used to comunicate with components and all available entities
  *     void update()                                it's used to update entities
  */
-final class MovementSystem : ISystem
+@system pure final class MovementSystem : ISystem
 {
 	// Don't forget to add a System aswell;
 	private System system;
@@ -52,18 +52,25 @@ final class MovementSystem : ISystem
 
 	private void move()
 	{
+		position.oldY = position.y;
+		position.oldX = position.x;
+
 		switch (input.word)
 		{
 			case "up":
+			case "u":
 				position.y -= movable.speed;
 				break;
 			case "down":
+			case "d":
 				position.y += movable.speed;
 				break;
 			case "right":
+			case "r":
 				position.x += movable.speed;
 				break;
 			case "left":
+			case "l":
 				position.x -= movable.speed;
 				break;
 			default:

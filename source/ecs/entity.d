@@ -376,7 +376,7 @@ class Entity : IEntity
 	 */
 	public void kill()
 	{
-		manager.kill(_id);
+		manager.kill(this);
 	}
 }
 

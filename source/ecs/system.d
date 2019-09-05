@@ -13,6 +13,7 @@ final class System
 {
 	public Hub hub;
 	public Entity[] entities;
+	private EntityId[] eids;
 	private ISystem[] systems;
 
 
@@ -60,14 +61,18 @@ final class System
 	public void addEntity(Entity e)
 	{
 		entities ~= e;
+		eids ~= e._id;
 	}
 
 
 	@safe pure
 	public void removeEntity(Entity e)
 	{
-		import std.algorithm : remove;
-		remove!(a => a = e)(entities);
+		import std.algorithm : countUntil, remove;
+		import std.conv : to;
+		size_t index = countUntil(eids, e._id);
+		entities = entities.remove(index);
+		eids = eids.remove(index);
 	}
 
 
