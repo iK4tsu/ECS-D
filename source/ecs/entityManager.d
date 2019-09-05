@@ -50,17 +50,19 @@ final class EntityManager
 	}
 
 
-	public void kill(EntityId eid)
+	public void kill(Entity e)
 	{
-		if (exists(eid))
+		if (exists(e._id))
 		{
-			destroy(mEntities[eid]);
-			mEntities.remove(eid);
-			delEntities ~= eid;
+			EntityId id = e._id;
+			hub.system.removeEntity(e);
+			destroy(e);
+			mEntities.remove(id);
+			delEntities ~= id;
 			return;
 		}
 
-		throw new EntityDoesNotExistException(eid, 
+		throw new EntityDoesNotExistException(-1, 
 			"Cannot destroy entity!", "You should check " ~
 			"if an entity exists before killing it.");
 	}
