@@ -19,4 +19,6 @@ import ecs;
 
 	int x;
 	int y;
+	int oldX;
+	int oldY;
 }
