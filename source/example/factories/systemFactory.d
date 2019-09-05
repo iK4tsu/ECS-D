@@ -13,7 +13,8 @@ void generateSystems(ref Hub hub)
 	 * so the systems who needs to be updated first should be added in the first position
 	 * for example, the render system should be one the last being added
 	 */ 
+	hub.system.create!RenderSystem;
 	hub.system.create!InputSystem;
 	hub.system.create!MovementSystem;
-	hub.system.create!RenderSystem;
+	hub.system.create!PhysicsSystem;
 }
