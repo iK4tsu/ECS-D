@@ -52,3 +52,18 @@ void generateEntities(ref Hub hub)
 	object.addComponent(new Conection(game));
 	explosive.addComponent(new Conection(game));
 }
+
+
+unittest
+{
+	import std.algorithm : remove;
+
+	Hub hub = new Hub();
+	Entity a = hub.entity.create();
+	Entity b = hub.entity.create();
+	Entity c = hub.entity.create();
+
+	Entity[] arr = [a, b, c];
+	assert(remove!(x => x = b)(arr) == []);
+	assert(!is(a == b));
+}
