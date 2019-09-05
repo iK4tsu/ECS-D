@@ -58,19 +58,19 @@ import example.components.input;
 		switch (input.word)
 		{
 			case "up":
-			case "u":
+			case "w":
 				position.y -= movable.speed;
 				break;
 			case "down":
-			case "d":
+			case "s":
 				position.y += movable.speed;
 				break;
 			case "right":
-			case "r":
+			case "d":
 				position.x += movable.speed;
 				break;
 			case "left":
-			case "l":
+			case "a":
 				position.x -= movable.speed;
 				break;
 			default:
