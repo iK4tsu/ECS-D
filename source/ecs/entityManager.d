@@ -56,8 +56,8 @@ final class EntityManager
 		{
 			EntityId id = e._id;
 			hub.system.removeEntity(e);
-			destroy(e);
 			mEntities.remove(id);
+			destroy(e);
 			delEntities ~= id;
 			return;
 		}
@@ -169,23 +169,24 @@ final class EntityManager
 
 @system unittest
 {
-	EntityManager manager = new EntityManager();
-	Entity e = manager.create();
+	Hub hub = new Hub();
+	Entity e = hub.entity.create();
 
-	assert(manager.getDeletedIds.length == 0);
+	assert(hub.entity.getDeletedIds.length == 0);
 
 	ComponentTypeId eid = e._id;
-	manager.kill(eid);
+	hub.entity.kill(e);
 
-	assert(manager.getDeletedIds.length == 1);
-	assert(manager.getDeletedIds[0] == eid);
-	assert(!manager.exists(eid));
+	assert(hub.entity.getDeletedIds.length == 1);
+	assert(hub.entity.getDeletedIds[0] == eid);
+	assert(!hub.entity.exists(eid));
 }
 
 
 @system unittest
 {
-	EntityManager manager = new EntityManager();
+	Hub hub = new Hub();
+	EntityManager manager = hub.entity;
 	Entity e1 = manager.create();
 	Entity e2 = manager.create();
 
@@ -193,7 +194,7 @@ final class EntityManager
 	assert(e2._id == 2);
 
 	ComponentTypeId eid = e1._id;
-	manager.kill(e1._id);
+	manager.kill(e1);
 
 	assert(manager.getDeletedIds.length == 1);
 
