@@ -11,6 +11,9 @@ import example.components.hero;
 {
 	private System system;
 	private Input input;
+	public bool manual = false;
+
+	public bool ismanual() { return manual; }
 
 	@safe pure public void init(System _system)
 	{

@@ -14,6 +14,9 @@ import example.components.area2d;
 	private System system;
 	private Position positionA;
 	private Position positionB;
+	public bool manual = false;
+
+	public bool ismanual() { return manual; }
 
 	@safe pure public void init(System _system)
 	{

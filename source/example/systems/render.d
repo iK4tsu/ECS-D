@@ -13,6 +13,9 @@ import example.components.sprite;
 	private Area2D area2d;
 	private Position position;
 	private Sprite sprite;
+	public bool manual = false;
+
+	public bool ismanual() { return manual; }
 
 	@safe pure public void init(System _system)
 	{
