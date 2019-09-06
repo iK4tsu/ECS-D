@@ -80,7 +80,8 @@ final class System
 	{
 		foreach(system; systems)
 		{
-			system.update;
+			if (!system.ismanual)
+				system.update;
 		}
 	}
 }
