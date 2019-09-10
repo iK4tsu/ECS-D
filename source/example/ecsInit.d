@@ -18,7 +18,6 @@ void exampleInit()
 
 
 	// Generate components, systems, and entities by this order
-	generateComponents(hub);
 	generateEntities(hub);
 	generateSystems(hub);
 
