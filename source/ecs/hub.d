@@ -25,8 +25,8 @@ final class Hub
 	public this()
 	{
 		component = new ComponentManager();
-		system = new System(this);
 		entity = new EntityManager(this, component);
+		system = new System(entity);
 	}
 
 

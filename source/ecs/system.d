@@ -3,6 +3,7 @@ module ecs.system;
 import ecs.isystem;
 import ecs.entity;
 import ecs.hub;
+import ecs.entityManager;
 
 
 import std.traits;
@@ -11,16 +12,16 @@ alias SystemName = string;
 
 final class System
 {
-	public Hub hub;
+	public EntityManager entity;
 	public Entity[] entities;
 	private EntityId[] eids;
 	private ISystem[] systems;
 
 
 	@safe pure
-	public this(Hub _hub)
+	public this(ref EntityManager _entity)
 	{
-		hub = _hub;
+		entity = _entity;
 	}
 
 
