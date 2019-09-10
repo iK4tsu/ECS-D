@@ -12,13 +12,10 @@ import std.typecons;
 alias EntityId = uint;
 static EntityId next_id = 1;
 
-alias EntityType = string;
-
 
 class Entity : IEntity
 {
 	public EntityId _id;
-	public EntityType type;
 	public string name;
 	public string description;
 	private IComponent[ComponentTypeId] _components;
@@ -393,10 +390,8 @@ class Entity : IEntity
 	Entity e = new Entity(2);
 
 	e.name = "Just e it";
-	e.type = "e";
 	e.description = "Feel the e";
 
 	assert("Just e it" == e.name);
-	assert("e" == e.type);
 	assert("Feel the e" == e.description);
 }
