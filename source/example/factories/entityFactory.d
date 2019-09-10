@@ -28,7 +28,6 @@ void generateEntities(ref Hub hub)
 	Entity player = createPlayer(hub);
 	
 	player.name = "Player";
-	player.type = "Player";
 	player.description = "I'm a player!";
 
 
