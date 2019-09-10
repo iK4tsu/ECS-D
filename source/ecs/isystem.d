@@ -19,7 +19,6 @@ version(unittest)
 	{
 		private System system;
 		private Foo foo;
-		private ComponentTypeId fooID;
 		private bool manual;
 
 		public bool ismanual() { return manual; }
@@ -27,7 +26,6 @@ version(unittest)
 		public void init(System _system)
 		{
 			system = _system;
-			fooID = system.hub.component.idOf!Foo;
 			manual = false;
 		}
 
