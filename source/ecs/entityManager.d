@@ -12,7 +12,6 @@ import ecs.exceptions.entity;
 final class EntityManager
 {
 	private Entity[EntityId] mEntities;
-	//private EntityType[EntityId] _mTypes;
 	private EntityId[] delEntities;
 	private Hub hub;
 	public ComponentManager component;
@@ -128,32 +127,12 @@ final class EntityManager
 	}
 
 
-	//public Entity get(EntityType type)
-	//{
-	//	foreach(id, _type; _mTypes)
-	//		if (_type == type)
-	//			return getEntity(id);
-//
-	//	throw new EntityDoesNotExistException(
-	//		-1, "Cannot get entity!", "You should verify if an entity exists " ~
-	//		"before getting it.");
-	//}
-
-
 	@safe pure
 	public EntityId[] getDeletedIds()
 	{
 		return delEntities;
 	}
-
-
-	//public bool existsType(EntityType type)
-	//{
-	//	import std.algorithm : canFind;
-	//	return canFind(_mTypes.values, type);
-	//}
 }
-
 
 @system unittest
 {
