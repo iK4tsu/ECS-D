@@ -59,10 +59,8 @@ final class ComponentManager
 	{
 		if (exists!T)
 			return cast(T)(components[idOf!T]);
-
-		throw new ComponentDoesNotExistException(
-			"Cannot get the component!", "You should check if a component " ~
-			"exists before getting it.");
+		else
+			return create!T;
 	}
 
 
