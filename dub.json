@@ -1,6 +1,6 @@
 {
-	"name": "ecs",
-	"description": "An Entity-Component-System based framework in D",
+	"name": "ecs-d",
+	"description": "An Entity-Component-System based framework written in Dlang",
 	"license": "MIT",
 
 	"authors": [
